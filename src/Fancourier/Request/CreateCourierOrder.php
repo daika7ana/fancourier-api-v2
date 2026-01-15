@@ -61,7 +61,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
 		$arr = [
 				"clientId" => $this->auth->getClientId(), //obligatoriu 
 				"info" => [
-							'awbnumber'	=> $this->awbNumber,
+							'awbNumber'	=> $this->awbNumber,
 							'packages'	=> [
 											'parcel'	=> $this->parcels,
 											'envelope'	=> $this->envelopes
