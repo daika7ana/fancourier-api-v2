@@ -6,8 +6,8 @@ use Fancourier\Response\GetPudo as GetPudoResponse;
 
 class GetPudo extends AbstractRequest implements RequestInterface
 {
-    protected $gateway = 'reports/pickup-points';
-	protected $method = 'GET';
+    protected string $gateway = 'reports/pickup-points';
+	protected string $method = 'GET';
 	
     protected $type = self::PUDO_FANBOX;
 	protected $pudoId;					// if id is set, type will be ignored
@@ -19,7 +19,7 @@ class GetPudo extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
 		if (empty($this->pudoId))
 			{

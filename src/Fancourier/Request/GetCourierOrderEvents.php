@@ -11,8 +11,8 @@ use Fancourier\Response\GetCourierOrderEvents as GetCourierOrderEventsResponse;
  */
 class GetCourierOrderEvents extends AbstractRequest implements RequestInterface
 {
-	protected $gateway = 'reports/order-events';
-	protected $method = 'GET';
+	protected string $gateway = 'reports/order-events';
+	protected string $method = 'GET';
 	
 	protected $language = '';
 
@@ -23,7 +23,7 @@ class GetCourierOrderEvents extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
 		$arr = [];
 		

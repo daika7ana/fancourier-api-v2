@@ -6,8 +6,8 @@ use Fancourier\Response\GetCitiesExternal as GetCitiesExternalResponse;
 
 class GetCitiesExternal extends AbstractRequest implements RequestInterface
 {
-    protected $gateway = 'reports/external-localities';
-	protected $method = 'GET';
+    protected string $gateway = 'reports/external-localities';
+	protected string $method = 'GET';
 
     private $country = '';
     private $county = '';
@@ -21,7 +21,7 @@ class GetCitiesExternal extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
         $arr = [];
 		if ($this->country != '')

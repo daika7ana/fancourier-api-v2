@@ -11,8 +11,8 @@ use Fancourier\Response\CreateCourierOrder as CreateCourierOrderResponse;
  */
 class CreateCourierOrder extends AbstractRequest implements RequestInterface
 {
-	protected $gateway = 'order';
-	protected $method = 'POST';
+	protected string $gateway = 'order';
+	protected string $method = 'POST';
 	
 	protected $awbNumber = '';
 	protected $parcels = 0;
@@ -57,7 +57,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
 		$arr = [
 				"clientId" => $this->auth->getClientId(), //obligatoriu 

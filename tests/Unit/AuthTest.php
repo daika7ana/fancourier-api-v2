@@ -29,7 +29,7 @@ final class AuthTest extends TestCase
         return new class(1, 'u', 'p', $token) extends Auth {
             public int $retrieveCalls = 0;
 
-            protected function retrieve_token() //: bool
+            protected function retrieve_token(): bool
             {
                 $this->retrieveCalls++;
 
@@ -110,22 +110,22 @@ final class AuthTest extends TestCase
     public function send_throws_and_makes_no_http_call_when_auth_has_no_token(): void
     {
         $auth = new class(1, 'u', 'p') extends Auth {
-            public function getToken($refresh = false)
+            public function getToken(bool $refresh = false): string|false
             {
                 return false;
             }
 
-            public function getTokenMessage()
+            public function getTokenMessage(): string
             {
                 return 'login failed';
             }
         };
 
         $request = new class extends AbstractRequest {
-            protected $gateway = 'test/gateway';
-            protected $method = 'POST';
+            protected string $gateway = 'test/gateway';
+            protected string $method = 'POST';
 
-            public function pack()
+            public function pack(): array
             {
                 return [];
             }
@@ -157,17 +157,17 @@ final class AuthTest extends TestCase
     public function send_throws_when_auth_returns_an_empty_token(): void
     {
         $auth = new class(1, 'u', 'p') extends Auth {
-            public function getToken($refresh = false)
+            public function getToken(bool $refresh = false): string|false
             {
                 return '';
             }
         };
 
         $request = new class extends AbstractRequest {
-            protected $gateway = 'test/gateway';
-            protected $method = 'GET';
+            protected string $gateway = 'test/gateway';
+            protected string $method = 'GET';
 
-            public function pack()
+            public function pack(): array
             {
                 return [];
             }

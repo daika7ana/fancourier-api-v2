@@ -11,8 +11,8 @@ use Fancourier\Response\GetAwbConfirmations as GetAwbConfirmationsResponse;
  */
 class GetAwbConfirmations extends AbstractRequest implements RequestInterface
 {
-	protected $gateway = 'reports/get-awb-confirmations';
-	protected $method = 'GET';
+	protected string $gateway = 'reports/get-awb-confirmations';
+	protected string $method = 'GET';
 	
 	protected $awbList = [];
 
@@ -23,7 +23,7 @@ class GetAwbConfirmations extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
 		$arr = [
 				"clientId" => $this->auth->getClientId(), //obligatoriu 

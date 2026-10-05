@@ -6,8 +6,8 @@ use Fancourier\Response\GetCostsExternal as GetCostsExternalResponse;
 
 class GetCostsExternal extends AbstractRequest implements RequestInterface
 {
-    protected $gateway = 'reports/awb/external-tariff';
-	protected $method = 'GET';
+    protected string $gateway = 'reports/awb/external-tariff';
+	protected string $method = 'GET';
 
     private $senderCity;		// sender.locality
     private $senderCounty;	// sender.county
@@ -30,7 +30,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
         $arr = [
 			'clientId'	=> $this->auth->getClientId(),

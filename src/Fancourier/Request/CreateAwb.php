@@ -3,6 +3,7 @@
 namespace Fancourier\Request;
 
 use Fancourier\Response\CreateAwb as CreateAwbResponse;
+use Fancourier\Response\Generic;
 
 use Fancourier\Objects\AwbIntern;
 
@@ -12,15 +13,15 @@ use Fancourier\Objects\AwbIntern;
  */
 class CreateAwb extends AbstractRequest implements RequestInterface
 {
-	protected $gateway = 'intern-awb';
-	protected $method = 'POST';
+	protected string $gateway = 'intern-awb';
+	protected string $method = 'POST';
 
 	protected $platformId;
 
 	protected $awbList = [];
 
     /** @var CreateAwbResponse */
-    protected $response;
+    protected Generic $response;
 
     public function __construct()
     {
@@ -30,7 +31,7 @@ class CreateAwb extends AbstractRequest implements RequestInterface
 
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
 		$this->response->setAwbList($this->awbList);
 

@@ -3,12 +3,13 @@
 namespace Fancourier\Request;
 
 use Fancourier\Auth;
+use Fancourier\Response\ResponseInterface;
 
 interface RequestInterface
 {
-    public function authenticate(Auth $auth);
-    public function setVerify($verifyHost, $verifyPeer);
-    public function setTimeout($conTimeout, $timeout);
-    public function send();
-    public function pack();
+    public function authenticate(Auth $auth): static;
+    public function setVerify(bool $verifyHost = true, bool $verifyPeer = true): static;
+    public function setTimeout(int $conTimeout = 3, int $timeout = 6): static;
+    public function send(): ResponseInterface;
+    public function pack(): array;
 }

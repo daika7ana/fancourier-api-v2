@@ -60,7 +60,7 @@ final class FakeClient extends Client
         return $this->error;
     }
 
-    public function addHeader($name, $value)
+    public function addHeader(string $name, string $value): static
     {
         if (strtolower((string) $name) === 'authorization') {
             $this->lastAuthorization = (string) $value;
@@ -69,7 +69,7 @@ final class FakeClient extends Client
         return $this;
     }
 
-    public function setPutRequest($enabled = false)
+    public function setPutRequest(bool $enabled = false): static
     {
         $this->isPut = (bool) $enabled;
         if ($enabled) {
@@ -79,7 +79,7 @@ final class FakeClient extends Client
         return $this;
     }
 
-    public function setDeleteRequest($enabled = false)
+    public function setDeleteRequest(bool $enabled = false): static
     {
         $this->isDelete = (bool) $enabled;
         if ($enabled) {
@@ -89,28 +89,28 @@ final class FakeClient extends Client
         return $this;
     }
 
-    public function get(string $url)
+    public function get(string $url): string|false
     {
         $this->record('get', $url, []);
 
         return $this->reply();
     }
 
-    public function post(string $url, array $data)
+    public function post(string $url, array $data): string|false
     {
         $this->record('post', $url, $data);
 
         return $this->reply();
     }
 
-    public function postJson(string $url, array $data)
+    public function postJson(string $url, array $data): string|false
     {
         $this->record('post_json', $url, $data);
 
         return $this->reply();
     }
 
-    public function postMultiArray(string $url, array $data)
+    public function postMultiArray(string $url, array $data): string|false
     {
         $this->record('post_ma', $url, $data);
 

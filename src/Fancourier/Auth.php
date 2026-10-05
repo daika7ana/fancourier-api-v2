@@ -6,21 +6,21 @@ use Fancourier\Fancourier;
 use Fancourier\Client;
 
 class Auth {
-	private $clientId;
-	private $username;
-	private $password;
+	private int|string $clientId;
+	private string $username;
+	private string $password;
 
-	private $btoken = '';
-    private $btoken_expires_at = '';
-	private $btoken_message = '';
+	private string $btoken = '';
+    private string $btoken_expires_at = '';
+	private string $btoken_message = '';
 
-	protected $verifyHost = true;
-	protected $verifyPeer = true;
+	protected bool $verifyHost = true;
+	protected bool $verifyPeer = true;
 
-	protected $timeout = 6;
-	protected $con_timeout = 3;
+	protected int $timeout = 6;
+	protected int $con_timeout = 3;
 
-	protected $gateway = 'login';
+	protected string $gateway = 'login';
 
 	public function __construct($clientId, $username, $password, $token = '')
 		{
@@ -32,9 +32,9 @@ class Auth {
 		// if the token is empty, it will automatically retrieve it when performing a request
 		}
 
-	public function getClientId()		{	return $this->clientId;	}
+	public function getClientId(): int|string	{	return $this->clientId;	}
 
-	public function getToken($refresh = false)
+	public function getToken(bool $refresh = false): string|false
 		{
 		$this->btoken_message = '';
 		if ($refresh || ($this->btoken == '') || $this->isTokenExpired())
@@ -60,7 +60,7 @@ class Auth {
 	 * expiry is treated as "not expired" (conservative: keep using the cached
 	 * token instead of forcing a refresh), see defect #27 / API_GAP_ANALYSIS §6.4.
 	 */
-	public function isTokenExpired() //: bool
+	public function isTokenExpired(): bool
 		{
 		if ($this->btoken_expires_at === '')
 			{
@@ -76,19 +76,19 @@ class Auth {
 		return $expiresAt <= time();
 		}
 
-	public function getTokenMessage()
+	public function getTokenMessage(): string
 		{
 		return $this->btoken_message;
 		}
 
-	public function getTokenExpiresAt()
+	public function getTokenExpiresAt(): string
 	{
 		return $this->btoken_expires_at; // Date format: Y-m-d H:i:s (unknown timezone)
 	}
 
 	// Widened private -> protected so the token path is unit-testable without
 	// network (a test subclass can override the retrieval).
-	protected function retrieve_token()
+	protected function retrieve_token(): bool
 		{
 		$client = new Client();
 		$client->setVerify($this->verifyHost, $this->verifyPeer);
@@ -128,14 +128,14 @@ class Auth {
 		}
 
 
-    public function setVerify($host = true, $peer = true)
+    public function setVerify(bool $host = true, bool $peer = true): static
     {
         $this->verifyHost = $host;
         $this->verifyPeer = $peer;
 		return $this;
     }
 
-	public function setTimeout($con_timeout = 3, $timeout = 6)
+	public function setTimeout(int $con_timeout = 3, int $timeout = 6): static
 	{
 		$this->con_timeout = $con_timeout;
 		$this->timeout = $timeout;

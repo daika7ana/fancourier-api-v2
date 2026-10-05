@@ -13,7 +13,7 @@ class GetStreets extends Generic implements ResponseInterface
 	protected $totalPages;	// total page count (computed)
 	
     #[\Override]
-    public function setData($datastr)
+    public function setData(mixed $datastr): static
     {
 		$response_json = json_decode($datastr, true);
 		

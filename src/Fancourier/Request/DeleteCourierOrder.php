@@ -6,8 +6,8 @@ use Fancourier\Response\DeleteCourierOrder as DeleteCourierOrderResponse;
 
 class DeleteCourierOrder extends AbstractRequest implements RequestInterface
 {
-    protected $gateway = 'order';
-	protected $method = 'DELETE';
+    protected string $gateway = 'order';
+	protected string $method = 'DELETE';
 
     private $orderId;
 
@@ -18,7 +18,7 @@ class DeleteCourierOrder extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
         $arr = [
 			'clientId'	=> $this->auth->getClientId(),

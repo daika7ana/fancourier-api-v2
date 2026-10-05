@@ -6,6 +6,7 @@ use Fancourier\Fancourier;
 use Fancourier\Auth;
 use Fancourier\Client;
 use Fancourier\Response\Generic;
+use Fancourier\Response\ResponseInterface;
 
 abstract class AbstractRequest implements RequestInterface
 {
@@ -132,22 +133,20 @@ abstract class AbstractRequest implements RequestInterface
 	const int ORDER_EVENT_CANCELLATION_IN_PROGRESS = 99;
 	
 	
-	protected $gateway;
-	protected $method;
+	protected string $gateway = '';
+	protected string $method = '';
 
-    /** @var Auth */
-    protected $auth;
+    protected ?Auth $auth = null;
 
-    /** @var Client */
-    protected $client;
+    protected Client $client;
 
-    protected $clientOverrides = [
+    /** @var array{verify: bool, timeout: bool} */
+    protected array $clientOverrides = [
         'verify' => false,
         'timeout' => false
     ];
 
-    /** @var Generic */
-    protected $response;
+    protected Generic $response;
 
     public function __construct()
     {
@@ -156,14 +155,14 @@ abstract class AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function authenticate(Auth $auth)
+    public function authenticate(Auth $auth): static
     {
         $this->auth = $auth;
         return $this;
     }
 
     #[\Override]
-    public function setVerify($verifyHost = true, $verifyPeer = true)
+    public function setVerify(bool $verifyHost = true, bool $verifyPeer = true): static
     {
         if ($this->clientOverrides['verify'] !== true) {
             $this->client->setVerify($verifyHost, $verifyPeer);
@@ -174,7 +173,7 @@ abstract class AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function setTimeout($conTimeout = 3, $timeout = 6)
+    public function setTimeout(int $conTimeout = 3, int $timeout = 6): static
     {
         if ($this->clientOverrides['timeout'] !== true) {
             $this->client->setTimeout($conTimeout, $timeout);
@@ -188,8 +187,12 @@ abstract class AbstractRequest implements RequestInterface
      * @return Generic
      */
     #[\Override]
-    public function send()
+    public function send(): ResponseInterface
     {
+        if ($this->auth === null) {
+            throw new \RuntimeException('No Auth instance set; call authenticate() before send()');
+        }
+
         if (empty($this->gateway)) {
             throw new \DomainException("No request gateway implemented");
         }
@@ -242,7 +245,7 @@ abstract class AbstractRequest implements RequestInterface
      *
      * @param string|false $token
      */
-    private function assertUsableToken($token): void
+    private function assertUsableToken(string|false $token): void
     {
         if (false === $token || $token === '') {
             $message = 'Authentication failed: no bearer token';
@@ -261,7 +264,7 @@ abstract class AbstractRequest implements RequestInterface
      * @param array<string, mixed> $data
      * @return string|false
      */
-    private function dispatch(array $data)
+    private function dispatch(array $data): string|false
     {
 		if ($this->method == 'GET')
 			{

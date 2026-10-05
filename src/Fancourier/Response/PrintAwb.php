@@ -5,7 +5,7 @@ namespace Fancourier\Response;
 class PrintAwb extends Generic implements ResponseInterface
 {
     #[\Override]
-    public function setData($datastr)
+    public function setData(mixed $datastr): static
     {
 		$response_json = json_decode($datastr, true);
 		

@@ -6,8 +6,8 @@ use Fancourier\Response\GetBranches as GetBranchesResponse;
 
 class GetBranches extends AbstractRequest implements RequestInterface
 {
-    protected $gateway = 'reports/branches';
-	protected $method = 'GET';
+    protected string $gateway = 'reports/branches';
+	protected string $method = 'GET';
 
     private $county = '';
     private $city = '';
@@ -19,7 +19,7 @@ class GetBranches extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
         $arr = [];
 		if ($this->county != '')

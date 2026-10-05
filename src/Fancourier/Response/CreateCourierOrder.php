@@ -8,7 +8,7 @@ class CreateCourierOrder extends Generic implements ResponseInterface
 	protected $result;
 	
     #[\Override]
-    public function setData($datastr)
+    public function setData(mixed $datastr): static
     {
 		try {
 			$response_json = json_decode($datastr, true);

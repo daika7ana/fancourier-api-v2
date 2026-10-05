@@ -9,7 +9,7 @@ class GetServiceOptions extends Generic implements ResponseInterface
 	protected $result;
 	
     #[\Override]
-    public function setData($datastr)
+    public function setData(mixed $datastr): static
     {
 		$response_json = json_decode($datastr, true);
 		

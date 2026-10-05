@@ -29,7 +29,7 @@ final class AbstractRequestSendTest extends TestCase
                 $this->payload = $payload;
             }
 
-            public function pack()
+            public function pack(): array
             {
                 return $this->payload;
             }
@@ -188,7 +188,7 @@ final class AbstractRequestSendTest extends TestCase
         $auth = new class(1, 'u', 'p') extends Auth {
             public int $refreshCalls = 0;
 
-            public function getToken($refresh = false)
+            public function getToken(bool $refresh = false): string|false
             {
                 if ($refresh) {
                     $this->refreshCalls++;
@@ -199,7 +199,7 @@ final class AbstractRequestSendTest extends TestCase
                 return 'stale-token';
             }
 
-            public function isTokenExpired() //: bool
+            public function isTokenExpired(): bool
             {
                 return true;
             }
@@ -211,7 +211,7 @@ final class AbstractRequestSendTest extends TestCase
             /** @var list<string> */
             public array $authHeaders = [];
 
-            public function addHeader($name, $value)
+            public function addHeader(string $name, string $value): static
             {
                 if (strtolower((string) $name) === 'authorization') {
                     $this->authHeaders[] = (string) $value;
@@ -220,7 +220,7 @@ final class AbstractRequestSendTest extends TestCase
                 return $this;
             }
 
-            public function postJson(string $url, array $data)
+            public function postJson(string $url, array $data): string|false
             {
                 $this->calls++;
 
@@ -255,7 +255,7 @@ final class AbstractRequestSendTest extends TestCase
         $auth = new class(1, 'u', 'p') extends Auth {
             public int $refreshCalls = 0;
 
-            public function getToken($refresh = false)
+            public function getToken(bool $refresh = false): string|false
             {
                 if ($refresh) {
                     $this->refreshCalls++;
@@ -266,7 +266,7 @@ final class AbstractRequestSendTest extends TestCase
                 return 'stale-token';
             }
 
-            public function isTokenExpired() //: bool
+            public function isTokenExpired(): bool
             {
                 return true;
             }
@@ -275,12 +275,12 @@ final class AbstractRequestSendTest extends TestCase
         $client = new class extends Client {
             public int $calls = 0;
 
-            public function addHeader($name, $value)
+            public function addHeader(string $name, string $value): static
             {
                 return $this;
             }
 
-            public function postJson(string $url, array $data)
+            public function postJson(string $url, array $data): string|false
             {
                 $this->calls++;
 
@@ -314,7 +314,7 @@ final class AbstractRequestSendTest extends TestCase
         $auth = new class(1, 'u', 'p', 'fresh-token') extends Auth {
             public int $refreshCalls = 0;
 
-            public function getToken($refresh = false)
+            public function getToken(bool $refresh = false): string|false
             {
                 if ($refresh) {
                     $this->refreshCalls++;
@@ -323,7 +323,7 @@ final class AbstractRequestSendTest extends TestCase
                 return 'fresh-token';
             }
 
-            public function isTokenExpired() //: bool
+            public function isTokenExpired(): bool
             {
                 return false;
             }
@@ -332,12 +332,12 @@ final class AbstractRequestSendTest extends TestCase
         $client = new class extends Client {
             public int $calls = 0;
 
-            public function addHeader($name, $value)
+            public function addHeader(string $name, string $value): static
             {
                 return $this;
             }
 
-            public function postJson(string $url, array $data)
+            public function postJson(string $url, array $data): string|false
             {
                 $this->calls++;
 

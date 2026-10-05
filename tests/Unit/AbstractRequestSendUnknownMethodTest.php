@@ -18,10 +18,10 @@ final class AbstractRequestSendUnknownMethodTest extends TestCase
     public function it_throws_on_an_unsupported_request_method(): void
     {
         $request = new class extends AbstractRequest {
-            protected $gateway = 'test/gateway';
-            protected $method = 'PATCH';
+            protected string $gateway = 'test/gateway';
+            protected string $method = 'PATCH';
 
-            public function pack()
+            public function pack(): array
             {
                 return [];
             }

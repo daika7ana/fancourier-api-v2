@@ -10,7 +10,7 @@ class CreateAwbExternal extends Generic implements ResponseInterface
 	protected $awbList;
 	
     #[\Override]
-    public function setData($datastr)
+    public function setData(mixed $datastr): static
     {
 		try {
 			$response_json = json_decode($datastr, true);

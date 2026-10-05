@@ -11,8 +11,8 @@ use Fancourier\Response\TrackAwb as TrackAwbResponse;
  */
 class TrackAwb extends AbstractRequest implements RequestInterface
 {
-	protected $gateway = 'reports/awb/tracking';
-	protected $method = 'GET';
+	protected string $gateway = 'reports/awb/tracking';
+	protected string $method = 'GET';
 	
 	protected $awbList = [];
 	protected $language = '';
@@ -24,7 +24,7 @@ class TrackAwb extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
 		$arr = [
 				"clientId" => $this->auth->getClientId(), //obligatoriu 

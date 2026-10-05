@@ -6,8 +6,8 @@ use Fancourier\Response\PrintAwb as PrintAwbResponse;
 
 class PrintAwb extends AbstractRequest implements RequestInterface
 {
-    protected $gateway = 'awb/label';
-	protected $method = 'GET';
+    protected string $gateway = 'awb/label';
+	protected string $method = 'GET';
 
     private $awbs = [];
     private $pdf = true;
@@ -23,7 +23,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
         $arr = [
 			'clientId'	=> $this->auth->getClientId(),

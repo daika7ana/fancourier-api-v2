@@ -6,8 +6,8 @@ use Fancourier\Response\GetServiceOptions as GetServiceOptionsResponse;
 
 class GetServiceOptions extends AbstractRequest implements RequestInterface
 {
-    protected $gateway = 'reports/service-options';
-	protected $method = 'GET';
+    protected string $gateway = 'reports/service-options';
+	protected string $method = 'GET';
 
     private $service = 'Standard';
 
@@ -18,7 +18,7 @@ class GetServiceOptions extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
         $arr = [
 			'clientId'	=> $this->auth->getClientId(),

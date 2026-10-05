@@ -4,65 +4,44 @@ namespace Fancourier\Response;
 
 class Generic implements ResponseInterface
 {
-    protected $errorCode;
-    protected $errorMessage;
-    protected $data;
+    protected int|string|null $errorCode = null;
+    protected ?string $errorMessage = null;
+    protected mixed $data = null;
 
-    /**
-     * @return mixed
-     */
     #[\Override]
-    public function getErrorCode()
+    public function getErrorCode(): int|string|null
     {
         return $this->errorCode;
     }
 
-    /**
-     * @param mixed $errorCode
-     * @return Generic
-     */
     #[\Override]
-    public function setErrorCode($errorCode)
+    public function setErrorCode(int|string|null $errorCode): static
     {
         $this->errorCode = $errorCode;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     #[\Override]
-    public function getErrorMessage()
+    public function getErrorMessage(): ?string
     {
         return $this->errorMessage;
     }
 
-    /**
-     * @param mixed $errorMessage
-     * @return Generic
-     */
     #[\Override]
-    public function setErrorMessage($errorMessage)
+    public function setErrorMessage(?string $errorMessage): static
     {
         $this->errorMessage = $errorMessage;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     #[\Override]
-    public function getData()
+    public function getData(): mixed
     {
         return $this->data;
     }
 
-    /**
-     * @param mixed $data
-     * @return Generic
-     */
     #[\Override]
-    public function setData($data)
+    public function setData(mixed $data): static
     {
         $this->data = $data;
         return $this;
@@ -76,11 +55,11 @@ class Generic implements ResponseInterface
      * cannot report success on a non-success body.
      *
      * @param mixed  $body     Decoded body (array) or raw response string.
-     * @param mixed  $code     Error code to store.
+     * @param int|string $code Error code to store.
      * @param string $fallback Message used when the body carries none.
      * @return $this
      */
-    protected function setErrorFromBody($body = null, $code = -1, string $fallback = 'Unknown error')
+    protected function setErrorFromBody(mixed $body = null, int|string $code = -1, string $fallback = 'Unknown error'): static
     {
         $message = null;
 
@@ -106,7 +85,7 @@ class Generic implements ResponseInterface
         return $this->setErrorMessage($message)->setErrorCode($code);
     }
 
-    public function isOk()
+    public function isOk(): bool
     {
         return empty($this->getErrorCode()) && empty($this->getErrorMessage());
     }

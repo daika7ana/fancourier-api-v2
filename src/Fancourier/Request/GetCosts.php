@@ -6,8 +6,8 @@ use Fancourier\Response\GetCosts as GetCostsResponse;
 
 class GetCosts extends AbstractRequest implements RequestInterface
 {
-    protected $gateway = 'reports/awb/internal-tariff';
-	protected $method = 'GET';
+    protected string $gateway = 'reports/awb/internal-tariff';
+	protected string $method = 'GET';
 
     private $paymentType = self::TYPE_RECIPIENT;	// info['payment']
     private $city;
@@ -31,7 +31,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
         $arr = [
 			'clientId'	=> $this->auth->getClientId(),

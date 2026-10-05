@@ -6,8 +6,8 @@ use Fancourier\Response\GetAwbEvents as GetAwbEventsResponse;
 
 class GetAwbEvents extends AbstractRequest implements RequestInterface
 {
-    protected $gateway = 'reports/awb-events';
-	protected $method = 'GET';
+    protected string $gateway = 'reports/awb-events';
+	protected string $method = 'GET';
 
     protected $language = '';
 
@@ -18,7 +18,7 @@ class GetAwbEvents extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
 		$arr = [];
 		if ($this->language != '')

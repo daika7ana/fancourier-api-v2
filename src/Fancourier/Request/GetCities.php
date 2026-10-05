@@ -6,8 +6,8 @@ use Fancourier\Response\GetCities as GetCitiesResponse;
 
 class GetCities extends AbstractRequest implements RequestInterface
 {
-    protected $gateway = 'reports/localities';
-	protected $method = 'GET';
+    protected string $gateway = 'reports/localities';
+	protected string $method = 'GET';
 	
     protected $county = '';
 
@@ -18,7 +18,7 @@ class GetCities extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
 		$arr = [];
 		if ($this->county != '')

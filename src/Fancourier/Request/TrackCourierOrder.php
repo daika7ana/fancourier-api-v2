@@ -11,8 +11,8 @@ use Fancourier\Response\TrackCourierOrder as TrackCourierOrderResponse;
  */
 class TrackCourierOrder extends AbstractRequest implements RequestInterface
 {
-	protected $gateway = 'reports/orders/tracking';
-	protected $method = 'GET';
+	protected string $gateway = 'reports/orders/tracking';
+	protected string $method = 'GET';
 	
 	protected $orderList = [];
 	protected $language = '';
@@ -24,7 +24,7 @@ class TrackCourierOrder extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
 		$arr = [
 				"clientId" => $this->auth->getClientId(), //obligatoriu 

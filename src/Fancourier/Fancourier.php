@@ -38,16 +38,15 @@ class Fancourier
 {
     const string API_URL			= 'https://api.fancourier.ro/';
 
-    /** @var Auth */
-    protected $auth;
+    protected Auth $auth;
 
-    protected $verifyHost = true;
-    protected $verifyPeer = true;
+    protected bool $verifyHost = true;
+    protected bool $verifyPeer = true;
 
-    protected $conTimeout = 3;
-    protected $timeout = 6;
+    protected int $conTimeout = 3;
+    protected int $timeout = 6;
 
-    public function __construct($clientId, $username, $password, $bearer_token = '')
+    public function __construct(string $clientId, string $username, string $password, string $bearer_token = '')
     {
         $this->auth = new Auth($clientId, $username, $password, $bearer_token);
     }
@@ -57,7 +56,7 @@ class Fancourier
      * @param bool $verifyHost
      * @param bool $verifyPeer
      */
-    public function setVerify($verifyHost = true, $verifyPeer = true)
+    public function setVerify(bool $verifyHost = true, bool $verifyPeer = true): static
     {
         $this->verifyHost = $verifyHost;
         $this->verifyPeer = $verifyPeer;
@@ -70,7 +69,7 @@ class Fancourier
      * @param int $conTimeout
      * @param int $timeout
      */
-    public function setTimeout($conTimeout = 3, $timeout = 6)
+    public function setTimeout(int $conTimeout = 3, int $timeout = 6): static
     {
         $this->conTimeout = $conTimeout;
         $this->timeout = $timeout;
@@ -82,54 +81,72 @@ class Fancourier
      * @param CreateAwb $request
      * @return \Fancourier\Response\CreateAwb
      */
-    public function createAwb(CreateAwb $request)
+    public function createAwb(CreateAwb $request): Response\CreateAwb
     {
-        return $this->send($request);
+        /** @var Response\CreateAwb $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param CreateAwbExternal $request
      * @return \Fancourier\Response\CreateAwbExternal
      */
-    public function createAwbExternal(CreateAwbExternal $request)
+    public function createAwbExternal(CreateAwbExternal $request): Response\CreateAwbExternal
     {
-        return $this->send($request);
+        /** @var Response\CreateAwbExternal $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param PrintAwb $request
      * @return \Fancourier\Response\PrintAwb
      */
-    public function printAwb(PrintAwb $request)
+    public function printAwb(PrintAwb $request): Response\PrintAwb
     {
-        return $this->send($request);
+        /** @var Response\PrintAwb $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param DeleteAwb $request
      * @return \Fancourier\Response\DeleteAwb
      */
-    public function deleteAwb(DeleteAwb $request)
+    public function deleteAwb(DeleteAwb $request): Response\DeleteAwb
     {
-        return $this->send($request);
+        /** @var Response\DeleteAwb $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param GetCosts $request
      * @return \Fancourier\Response\GetCosts
      */
-    public function getCosts(GetCosts $request)
+    public function getCosts(GetCosts $request): Response\GetCosts
     {
-        return $this->send($request);
+        /** @var Response\GetCosts $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param GetCostsExternal $request
      * @return \Fancourier\Response\GetCostsExternal
      */
-    public function getCostsExternal(GetCostsExternal $request)
+    public function getCostsExternal(GetCostsExternal $request): Response\GetCostsExternal
     {
-        return $this->send($request);
+        /** @var Response\GetCostsExternal $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
 //    public function requestCourier(RequestCourier $request)
@@ -140,185 +157,245 @@ class Fancourier
     /**
      * @return \Fancourier\Response\GetServices
      */
-    public function getServices()
+    public function getServices(): Response\GetServices
     {
-        return $this->send(new GetServices());
+        /** @var Response\GetServices $response */
+        $response = $this->send(new GetServices());
+
+        return $response;
     }
 
     /**
      * @param GetServiceOptions $request
      * @return \Fancourier\Response\GetServiceOptions
      */
-    public function getServiceOptions(GetServiceOptions $request)
+    public function getServiceOptions(GetServiceOptions $request): Response\GetServiceOptions
     {
-        return $this->send($request);
+        /** @var Response\GetServiceOptions $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @return \Fancourier\Response\GetCounties
      */
-    public function getCounties()
+    public function getCounties(): Response\GetCounties
     {
-        return $this->send(new GetCounties());
+        /** @var Response\GetCounties $response */
+        $response = $this->send(new GetCounties());
+
+        return $response;
     }
 
     /**
      * @param GetCities $request
      * @return \Fancourier\Response\GetCities
      */
-    public function getCities($request)
+    public function getCities(GetCities $request): Response\GetCities
     {
-        return $this->send($request);
+        /** @var Response\GetCities $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param GetStreets $request
      * @return \Fancourier\Response\GetStreets
      */
-    public function getStreets($request)
+    public function getStreets(GetStreets $request): Response\GetStreets
     {
-        return $this->send($request);
+        /** @var Response\GetStreets $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param GetPudo $request
      * @return \Fancourier\Response\GetPudo
      */
-    public function getPudo($request)
+    public function getPudo(GetPudo $request): Response\GetPudo
     {
-        return $this->send($request);
+        /** @var Response\GetPudo $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param GetShippingSlip $request
      * @return \Fancourier\Response\GetShippingSlip
      */
-    public function getShippingSlip(GetShippingSlip $request)
+    public function getShippingSlip(GetShippingSlip $request): Response\GetShippingSlip
     {
-        return $this->send($request);
+        /** @var Response\GetShippingSlip $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param GetAwbEvents $request
      * @return \Fancourier\Response\GetAwbEvents
      */
-    public function getAwbEvents(GetAwbEvents $request)
+    public function getAwbEvents(GetAwbEvents $request): Response\GetAwbEvents
     {
-        return $this->send($request);
+        /** @var Response\GetAwbEvents $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param TrackAwb $request
      * @return \Fancourier\Response\Generic
      */
-    public function trackAwb(TrackAwb $request)
+    public function trackAwb(TrackAwb $request): Response\Generic
     {
-        return $this->send($request);
+        /** @var Response\Generic $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @return \Fancourier\Response\GetCountries
      */
-    public function getCountries()
+    public function getCountries(): Response\GetCountries
     {
-        return $this->send(new GetCountries());
+        /** @var Response\GetCountries $response */
+        $response = $this->send(new GetCountries());
+
+        return $response;
     }
 
     /**
      * @param GetCountiesExternal $request
      * @return \Fancourier\Response\GetCountiesExternal
      */
-    public function getCountiesExternal(GetCountiesExternal $request)
+    public function getCountiesExternal(GetCountiesExternal $request): Response\GetCountiesExternal
     {
-        return $this->send($request);
+        /** @var Response\GetCountiesExternal $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param GetCitiesExternal $request
      * @return \Fancourier\Response\GetCitiesExternal
      */
-    public function getCitiesExternal(GetCitiesExternal $request)
+    public function getCitiesExternal(GetCitiesExternal $request): Response\GetCitiesExternal
     {
-        return $this->send($request);
+        /** @var Response\GetCitiesExternal $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param CreateCourierOrder $request
      * @return \Fancourier\Response\CreateCourierOrder
      */
-    public function createCourierOrder(CreateCourierOrder $request)
+    public function createCourierOrder(CreateCourierOrder $request): Response\CreateCourierOrder
     {
-        return $this->send($request);
+        /** @var Response\CreateCourierOrder $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param DeleteCourierOrder $request
      * @return \Fancourier\Response\DeleteCourierOrder
      */
-    public function deleteCourierOrder(DeleteCourierOrder $request)
+    public function deleteCourierOrder(DeleteCourierOrder $request): Response\DeleteCourierOrder
     {
-        return $this->send($request);
+        /** @var Response\DeleteCourierOrder $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param GetCourierOrders $request
      * @return \Fancourier\Response\GetCourierOrders
      */
-    public function getCourierOrders(GetCourierOrders $request)
+    public function getCourierOrders(GetCourierOrders $request): Response\GetCourierOrders
     {
-        return $this->send($request);
+        /** @var Response\GetCourierOrders $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param GetCourierOrderEvents $request
      * @return \Fancourier\Response\GetCourierOrderEvents
      */
-    public function getCourierOrderEvents(GetCourierOrderEvents $request)
+    public function getCourierOrderEvents(GetCourierOrderEvents $request): Response\GetCourierOrderEvents
     {
-        return $this->send($request);
+        /** @var Response\GetCourierOrderEvents $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param TrackCourierOrder $request
      * @return \Fancourier\Response\TrackCourierOrder
      */
-    public function trackCourierOrder(TrackCourierOrder $request)
+    public function trackCourierOrder(TrackCourierOrder $request): Response\TrackCourierOrder
     {
-        return $this->send($request);
+        /** @var Response\TrackCourierOrder $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param GetBankTransfers $request
      * @return \Fancourier\Response\GetBankTransfers
      */
-    public function getBankTransfers(GetBankTransfers $request)
+    public function getBankTransfers(GetBankTransfers $request): Response\GetBankTransfers
     {
-        return $this->send($request);
+        /** @var Response\GetBankTransfers $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param GetBranches $request
      * @return \Fancourier\Response\GetBranches
      */
-    public function getBranches(GetBranches $request)
+    public function getBranches(GetBranches $request): Response\GetBranches
     {
-        return $this->send($request);
+        /** @var Response\GetBranches $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param GetAwbConfirmations $request
      * @return \Fancourier\Response\GetAwbConfirmations
      */
-    public function getAwbConfirmations(GetAwbConfirmations $request)
+    public function getAwbConfirmations(GetAwbConfirmations $request): Response\GetAwbConfirmations
     {
-        return $this->send($request);
+        /** @var Response\GetAwbConfirmations $response */
+        $response = $this->send($request);
+
+        return $response;
     }
 
     /**
      * @param RequestInterface $request
      * @return \Fancourier\Response\ResponseInterface
      */
-    protected function send(RequestInterface $request)
+    protected function send(RequestInterface $request): Response\ResponseInterface
     {
         return $request
             ->authenticate($this->auth)
@@ -331,7 +408,7 @@ class Fancourier
      * @param bool $refresh Force token refresh even if token given in constructor
      * @return string|false
      */
-    public function getToken(bool $refresh = false)
+    public function getToken(bool $refresh = false): string|false
     {
         return $this->auth->getToken($refresh);
     }
@@ -339,7 +416,7 @@ class Fancourier
     /**
      * @return string
      */
-    public function getTokenExpiresAt()
+    public function getTokenExpiresAt(): string
     {
         return $this->auth->getTokenExpiresAt();
     }
@@ -347,7 +424,7 @@ class Fancourier
     /**
      * @return string
      */
-    public function getTokenMessage()
+    public function getTokenMessage(): string
     {
         return $this->auth->getTokenMessage();
     }

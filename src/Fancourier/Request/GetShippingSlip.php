@@ -6,8 +6,8 @@ use Fancourier\Response\GetShippingSlip as GetShippingSlipResponse;
 
 class GetShippingSlip extends AbstractRequest implements RequestInterface
 {
-    protected $gateway = 'reports/awb';
-	protected $method = 'GET';
+    protected string $gateway = 'reports/awb';
+	protected string $method = 'GET';
 
     private $date = '';
     private $page = 0;
@@ -22,7 +22,7 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
         $arr = [
 				'clientId' => $this->auth->getClientId(),

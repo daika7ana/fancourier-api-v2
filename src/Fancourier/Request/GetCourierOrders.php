@@ -6,8 +6,8 @@ use Fancourier\Response\GetCourierOrders as GetCourierOrdersResponse;
 
 class GetCourierOrders extends AbstractRequest implements RequestInterface
 {
-    protected $gateway = 'reports/orders';
-	protected $method = 'GET';
+    protected string $gateway = 'reports/orders';
+	protected string $method = 'GET';
 
     private $date = '';
     private $page = 0;
@@ -22,7 +22,7 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
     }
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
         $arr = [
 				'clientId' => $this->auth->getClientId(),

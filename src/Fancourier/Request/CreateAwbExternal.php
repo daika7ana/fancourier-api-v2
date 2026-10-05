@@ -3,6 +3,7 @@
 namespace Fancourier\Request;
 
 use Fancourier\Response\CreateAwbExternal as CreateAwbExternalResponse;
+use Fancourier\Response\Generic;
 
 use Fancourier\Objects\AwbExtern;
 
@@ -13,15 +14,15 @@ use Fancourier\Objects\AwbExtern;
  */
 class CreateAwbExternal extends AbstractRequest implements RequestInterface
 {
-	protected $gateway = 'extern-awb';
-	protected $method = 'POST';
+	protected string $gateway = 'extern-awb';
+	protected string $method = 'POST';
 
 	protected $platformId;
 
 	protected $awbList = [];
 
     /** @var CreateAwbExternalResponse */
-    protected $response;
+    protected Generic $response;
 
     public function __construct()
     {
@@ -31,7 +32,7 @@ class CreateAwbExternal extends AbstractRequest implements RequestInterface
 
 
     #[\Override]
-    public function pack()
+    public function pack(): array
     {
 		$this->response->setAwbList($this->awbList);
 

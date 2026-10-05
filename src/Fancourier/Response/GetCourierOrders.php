@@ -12,7 +12,7 @@ class GetCourierOrders extends Generic implements ResponseInterface
 	protected $currentPage;
 	
     #[\Override]
-    public function setData($datastr)
+    public function setData(mixed $datastr): static
     {
 		$response_json = json_decode($datastr, true);
 		

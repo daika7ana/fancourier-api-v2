@@ -2,22 +2,23 @@
 namespace Fancourier;
 
 class Client {
-	private $curl; // \CurlHandle|false
+	private \CurlHandle|false|null $curl = null;
 
-	private $error		= '';
+	private string $error		= '';
 
-	private $is_put		= false;
-	private $is_delete	= false;
+	private bool $is_put		= false;
+	private bool $is_delete		= false;
 	
-	private $verify_host = true;
-	private $verify_peer = true;
+	private bool $verify_host = true;
+	private bool $verify_peer = true;
 
-	private $timeout = 6;
-	private $con_timeout = 3;
+	private int $timeout = 6;
+	private int $con_timeout = 3;
 
-	private $useragent	= 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0';
+	private string $useragent	= 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0';
 
-	private $headers	= [];	// custom headers
+	/** @var array<string, string> */
+	private array $headers	= [];	// custom headers
 
 	public function __construct(?string $useragent = null)
 		{
@@ -30,9 +31,13 @@ class Client {
 	/*
 	* Init curl and set common options. Called by get/post functions
 	*/
-	private function init()
+	private function init(): void
 		{
 		$this->curl = curl_init();
+		if ($this->curl === false)
+			{
+			throw new \RuntimeException('Failed to initialise cURL');
+			}
 		// init default data
 		curl_setopt($this->curl, CURLOPT_USERAGENT, $this->useragent);
 
@@ -53,7 +58,7 @@ class Client {
 		$this->set_custom_headers();
 		}
 
-	private function set_custom_headers()
+	private function set_custom_headers(): void
 		{
 		if (count($this->headers) > 0)
 			{
@@ -67,7 +72,7 @@ class Client {
 			}
 		}
 
-	private function close()
+	private function close(): void
 		{
 		curl_close($this->curl);
 		// reset put/delete requests
@@ -75,7 +80,7 @@ class Client {
 		$this->is_delete = false;
 		}
 
-	public function get(string $url)//: string|false
+	public function get(string $url): string|false
 		{
 		//echo '<div style="font-family:monospace; padding: 5px; border: 1px solid red; margin: 5px">'.$url.'</div>';
 		$this->init();
@@ -109,9 +114,9 @@ class Client {
 	Use this static function to prepare a file for posting it using cURL
 	Pass the resulting object of this function inside the $data array of the post function
 	*/
-	public static function prepare_file(string $file) //: \CURLFile
+	public static function prepare_file(string $file): \CURLFile
 		{
-		$mime = mime_content_type($file);
+		$mime = mime_content_type($file) ?: 'application/octet-stream';
 		$info = pathinfo($file);
 		$name = $info['basename'];
 		return new \CURLFile($file, $mime, $name);
@@ -122,13 +127,13 @@ class Client {
 	Use this static function to prepare a string for posting it using cURL to a file field
 	Pass the resulting object of this function inside the $data array of the post function
 	*/
-	public static function prepare_file_string(string $data, string $postname, string $mime = 'text/plain') //: \CURLStringFile
+	public static function prepare_file_string(string $data, string $postname, string $mime = 'text/plain'): \CURLStringFile
 		{
 		return new \CURLStringFile($data, $postname, $mime);
 		}
 
 
-	public function post(string $url, array $data)
+	public function post(string $url, array $data): string|false
 		{
 		$this->init();
 
@@ -152,7 +157,7 @@ class Client {
 		}
 	
 	// curl doesn't like multilevel arrays in CURLOPT_POSTFIELDS, so we have to manually build the data with http_build_query
-	public function postMultiArray(string $url, array $data)
+	public function postMultiArray(string $url, array $data): string|false
 		{
 		$this->init();
 
@@ -183,7 +188,7 @@ class Client {
 		return $this->complete_transfer($response);
 		}
 	
-	public function postJson(string $url, array $data)//: string|false
+	public function postJson(string $url, array $data): string|false
 		{
 		$this->addHeader('Content-Type', 'application/json'); // add content-type to headers
 		$this->init();
@@ -220,10 +225,9 @@ class Client {
 	* empty body means something went wrong, and reporting it as a success would
 	* show `isOk() === true` for a broken request.
 	*
-	* @param string|bool $response
 	* @return string|false
 	*/
-	private function complete_transfer($response)
+	private function complete_transfer(string $response): string|false
 		{
 		$curl_error = curl_error($this->curl);
 
@@ -245,7 +249,7 @@ class Client {
 		return $response;
 		}
 
-	private function set_error(string $error)
+	private function set_error(string $error): static
 		{
 		$this->error = $error;
 		return $this;
@@ -259,7 +263,7 @@ class Client {
 	/*
 	* Add a custom header to curl
 	*/
-	public function addHeader($name, $value)
+	public function addHeader(string $name, string $value): static
 		{
 		$this->headers[ $name ] = $value;
 		return $this;
@@ -268,7 +272,7 @@ class Client {
 	/*
 	* Remove a custom header from curl requests
 	*/
-	public function deleteHeader($name)
+	public function deleteHeader(string $name): static
 		{
 		if (array_key_exists($name, $this->headers))
 			{
@@ -278,7 +282,7 @@ class Client {
 		}
 	
 	/* set put request (automatically disables delete request) */
-	public function setPutRequest($enabled = false)
+	public function setPutRequest(bool $enabled = false): static
 		{
 		$this->is_put = $enabled;
 		$this->is_delete = false;
@@ -286,7 +290,7 @@ class Client {
 		}
 	
 	/* set delete request (automatically disables put request) */
-	public function setDeleteRequest($enabled = false)
+	public function setDeleteRequest(bool $enabled = false): static
 		{
 		$this->is_delete = $enabled;
 		$this->is_put = false;
@@ -294,7 +298,7 @@ class Client {
 		}
 
 	/* if you need to skip host/peer validation */
-	public function setVerify($host = true, $peer = true)
+	public function setVerify(bool $host = true, bool $peer = true): static
 		{
 		$this->verify_host = $host;
 		$this->verify_peer = $peer;
@@ -302,7 +306,7 @@ class Client {
 		}
 
 	/* if you need a custom request timeout */
-	public function setTimeout($con_timeout = 3, $timeout = 6)
+	public function setTimeout(int $con_timeout = 3, int $timeout = 6): static
 		{
 		$this->con_timeout = $con_timeout;
 		$this->timeout = $timeout;
