@@ -332,7 +332,7 @@ class Fancourier
     }
 
     /**
-     * @param bool Force token refresh even if token given in constructor
+     * @param bool $refresh Force token refresh even if token given in constructor
      * @return string|false
      */
     public function getToken(bool $refresh = false)

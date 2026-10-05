@@ -188,7 +188,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @param float $length
+     * @param float $length_cm
      * @return CreateCourierOrder
      */
     public function setSizes($length_cm, $height_cm, $width_cm)
@@ -296,7 +296,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     }
 
      /**
-     * @return mixed
+     * @return array
      */
     public function getPickupHours(): array
     {

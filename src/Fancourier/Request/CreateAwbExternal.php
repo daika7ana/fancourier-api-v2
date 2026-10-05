@@ -20,6 +20,9 @@ class CreateAwbExternal extends AbstractRequest implements RequestInterface
 
 	protected $awbList = [];
 
+    /** @var CreateAwbExternalResponse */
+    protected $response;
+
     public function __construct()
     {
         parent::__construct();

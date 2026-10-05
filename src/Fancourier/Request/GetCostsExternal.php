@@ -80,7 +80,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @param mixed $city
+     * @param mixed $deliveryMode
      * @return GetCostsExternal
      */
     public function setDeliveryMode($deliveryMode)

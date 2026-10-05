@@ -87,7 +87,7 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @param int $page
+     * @param int $perPage
      * @return GetBankTransfers
      */
     public function setPerPage($perPage)

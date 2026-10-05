@@ -19,6 +19,9 @@ class CreateAwb extends AbstractRequest implements RequestInterface
 
 	protected $awbList = [];
 
+    /** @var CreateAwbResponse */
+    protected $response;
+
     public function __construct()
     {
         parent::__construct();

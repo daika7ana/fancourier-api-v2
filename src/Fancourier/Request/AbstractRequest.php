@@ -116,6 +116,10 @@ abstract class AbstractRequest implements RequestInterface
 			{
 			$responseString = $this->client->set_delete_request(true)->post_ma(Fancourier::API_URL . $this->gateway, $data);
 			}
+		else
+			{
+			throw new \DomainException("Unsupported request method: ".$this->method);
+			}
 
         if (false === $responseString) {
             $this->response->setErrorCode(-1)->setErrorMessage($this->client->get_error());

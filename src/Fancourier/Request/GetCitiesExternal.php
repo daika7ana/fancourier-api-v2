@@ -75,7 +75,7 @@ class GetCitiesExternal extends AbstractRequest implements RequestInterface
 
     /**
      * @param mixed $county
-     * @return GetRates
+     * @return $this
      */
     public function setCounty($county)
     {
@@ -94,7 +94,7 @@ class GetCitiesExternal extends AbstractRequest implements RequestInterface
 
     /**
      * @param int $page
-     * @return GetRates
+     * @return $this
      */
     public function setPage($page)
     {
@@ -111,8 +111,8 @@ class GetCitiesExternal extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @param int $page
-     * @return GetRates
+     * @param int $perPage
+     * @return $this
      */
     public function setPerPage($perPage)
     {

@@ -448,7 +448,7 @@ class AwbIntern
     }
 
     /**
-     * @param float $length
+     * @param float $length_cm
      * @return AwbIntern
      */
     public function setSizes($length_cm, $height_cm, $width_cm)
@@ -549,7 +549,7 @@ class AwbIntern
     /**
 	 * Replace all options with string containing options
      * @param string $options
-     * @return GetCosts
+     * @return $this
      */
     public function setOptions($options)
     {
@@ -904,7 +904,7 @@ class AwbIntern
     }
 
     /**
-     * @param mixed $Sender
+     * @param mixed $sender
      * @return AwbIntern
      */
     public function setSenderName($sender)

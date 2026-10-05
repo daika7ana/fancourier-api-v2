@@ -79,7 +79,7 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
 
     /**
      * @param int $page
-     * @return GetRates
+     * @return $this
      */
     public function setPage($page)
     {
@@ -96,8 +96,8 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @param int $page
-     * @return GetRates
+     * @param int $perPage
+     * @return $this
      */
     public function setPerPage($perPage)
     {

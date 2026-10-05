@@ -326,7 +326,7 @@ class AwbExtern
     }
 
     /**
-     * @param float $length
+     * @param float $length_cm
      * @return AwbExtern
      */
     public function setSizes($length_cm, $height_cm, $width_cm)
@@ -621,7 +621,7 @@ class AwbExtern
     }
 
     /**
-     * @param mixed $Sender
+     * @param mixed $sender
      * @return AwbExtern
      */
     public function setSenderName($sender)
