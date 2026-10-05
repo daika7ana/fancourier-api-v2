@@ -15,7 +15,7 @@ class AwbTrackerTest extends TestCase
             'awbNumber' => '2000000000082',
             'content' => 'Order #135',
             'date' => '2023-11-28 00:00:00',
-            'paymentDate' => '',
+            'paymentDate' => '2023-12-01 00:00:00',
             'returnAwbNumber' => '2000000000099',
             'redirectionAwbNumber' => '2000000000098',
             'reimbursementAwbNumber' => '2000000000097',
@@ -33,7 +33,9 @@ class AwbTrackerTest extends TestCase
         $this->assertSame('2000000000099', $tracker->getReturnAwbNumber());
         $this->assertSame('2000000000098', $tracker->getRedirectionAwbNumber());
         $this->assertSame('2000000000097', $tracker->getReimbursementAwbNumber());
-        $this->assertSame('2000000000096', $tracker->getOpodAwbNumber());
+        $this->assertSame('2000000000096', $tracker->getOPODAwbNumber());
+        // UPGRADE_PLAN §7 #21 — paymentDate is parsed and now exposed.
+        $this->assertSame('2023-12-01 00:00:00', $tracker->getPaymentDate());
         $this->assertSame('24H', $tracker->getOTD());
         $this->assertTrue($tracker->hasConfirmation());
         $this->assertSame(['name' => 'Ion Popescu', 'date' => '2023-11-29'], $tracker->getConfirmation());
@@ -69,6 +71,7 @@ class AwbTrackerTest extends TestCase
         $this->assertSame('', $tracker->getContent());
         $this->assertSame([], $tracker->getConfirmation());
         $this->assertSame('', $tracker->getOTD());
-        // UPGRADE_PLAN §7 #21 — Phase 3: paymentDate is parsed but has no getter yet.
+        // UPGRADE_PLAN §7 #21 — getter defaults to '' when absent.
+        $this->assertSame('', $tracker->getPaymentDate());
     }
 }

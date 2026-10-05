@@ -75,7 +75,7 @@ class Pudo
 
 	public function getAddress(): array
 		{
-		return $this->address ?? '';
+		return $this->address ?? [];
 		}
 
 	public function getSchedule(): array

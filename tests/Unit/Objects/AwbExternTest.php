@@ -3,6 +3,7 @@
 namespace Fancourier\Tests\Unit\Objects;
 
 use Fancourier\Objects\AwbExtern;
+use Fancourier\Request\AbstractRequest;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -31,7 +32,8 @@ class AwbExternTest extends TestCase
         $this->assertFalse($awb->hasErrors());
         $this->assertSame([], $awb->getErrors());
         $this->assertNull($awb->getAwb());
-        // UPGRADE_PLAN §7 #18 — Phase 3: the default paymentType value is wrong.
+        // UPGRADE_PLAN §7 #18 — default payment is the shared sender type.
+        $this->assertSame(AbstractRequest::TYPE_SENDER, $awb->getPaymentType());
     }
 
     #[Test]
@@ -55,7 +57,7 @@ class AwbExternTest extends TestCase
             ->setNotes('fragile')
             ->setContents('books')
             ->setCostCenter('CC1')
-            ->setUitCode('UIT1');
+            ->setUITCode('UIT1');
 
         $this->assertSame($awb, $result);
         $this->assertSame('Export', $awb->getService());
@@ -73,7 +75,7 @@ class AwbExternTest extends TestCase
         $this->assertSame('fragile', $awb->getNotes());
         $this->assertSame('books', $awb->getContents());
         $this->assertSame('CC1', $awb->getCostCenter());
-        $this->assertSame('UIT1', $awb->getUitCode());
+        $this->assertSame('UIT1', $awb->getUITCode());
     }
 
     #[Test]
@@ -219,6 +221,7 @@ class AwbExternTest extends TestCase
         $this->assertSame(['parcel' => 0, 'envelope' => 0], $packed['info']['packages']);
         $this->assertSame(['length' => 0, 'height' => 0, 'width' => 0], $packed['info']['dimensions']);
         $this->assertSame('', $packed['info']['cod']);
+        $this->assertSame('RON', $packed['info']['currency']);
         $this->assertSame([], $packed['info']['options']);
         $this->assertSame([
             'country' => '',
@@ -265,7 +268,8 @@ class AwbExternTest extends TestCase
         $this->assertSame(3.5, $packed['info']['weight']);
         $this->assertSame(250.0, $packed['info']['declaredValue']);
         $this->assertSame(100.0, $packed['info']['cod']);
-        // UPGRADE_PLAN §7 #15/#23 — Phase 3: currency is intentionally not emitted.
+        // UPGRADE_PLAN §7 #15/#23 — currency is now emitted when set.
+        $this->assertSame('EUR', $packed['info']['currency']);
     }
 
     #[Test]

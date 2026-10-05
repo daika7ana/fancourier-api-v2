@@ -61,9 +61,14 @@ class AwbTracker
 		return $this->reimbursementAwbNumber ?? '';
 		}
 	
-	public function getOpodAwbNumber(): string
+	public function getOPODAwbNumber(): string
 		{
 		return $this->oPODAwbNumber ?? '';
+		}
+	
+	public function getPaymentDate(): string
+		{
+		return $this->paymentDate ?? '';
 		}
 	
 	public function getMessage(): string

@@ -76,17 +76,12 @@ class AwbIntern
 	protected $NUE_isValueUnderThreshold = null;				// info.isValueUnderThreshold
 	protected $NUE_countryCode = '';							// info.countryCode
 	protected $NUE_vatId = '';									// info.vatId
-	protected $NUE_company;										// info.company
+	protected $NUE_company = '';								// info.company
 	
 	public function __construct()
 		{
 		}
 	
-/*	public function isValid(): bool
-		{
-		return false;
-		}
-*/
 	public function pack(): array
 		{
 		
@@ -174,8 +169,8 @@ class AwbIntern
 		if (is_bool($this->NUE_isValueUnderThreshold))
 			{
 			$arr['info']['isValueUnderThreshold'] = $this->NUE_isValueUnderThreshold;
-			$arr['info']['countryCode'] = $this->NUE_countryCode = '';
-			$arr['info']['vatId'] = $this->NUE_vatId = '';
+			$arr['info']['countryCode'] = $this->NUE_countryCode;
+			$arr['info']['vatId'] = $this->NUE_vatId;
 			$arr['info']['company'] = $this->NUE_company;
 			}
 
@@ -584,7 +579,7 @@ class AwbIntern
 	/**
      * @return string
      */
-    public function getUitCode()
+    public function getUITCode()
     {
         return $this->uitCode;
     }
@@ -593,7 +588,7 @@ class AwbIntern
      * @param mixed $uitCode
      * @return AwbIntern
      */
-    public function setUitCode($uitCode)
+    public function setUITCode($uitCode)
     {
         $this->uitCode = $uitCode;
         return $this;
@@ -1155,7 +1150,7 @@ class AwbIntern
      */
     public function getIsValueUnderThreshold()
     {
-        if (is_bool($this->NUE_isValueUnderThreshold))
+        if (!is_bool($this->NUE_isValueUnderThreshold))
         {
             throw new \Exception('isValueUnderThreshold is not set!');
         }

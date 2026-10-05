@@ -65,7 +65,8 @@ class PudoTest extends TestCase
         $this->assertSame('', $pudo->getId());
         $this->assertSame('', $pudo->getName());
         $this->assertSame([], $pudo->getSchedule());
-        // UPGRADE_PLAN §7 #10 — Phase 3: getAddress() fallback is '' not [], skip assertion.
+        // UPGRADE_PLAN §7 #10 — getAddress() must fall back to [], not ''.
+        $this->assertSame([], $pudo->getAddress());
         $this->assertFalse($pudo->getHighDemand());
     }
 }

@@ -65,7 +65,10 @@ class CourierOrderTest extends TestCase
         // getEnvelopes()/getParcels() read missing array keys when packages is empty
         // (undefined-key warning), so they are only exercised with populated data above.
         $this->assertSame(0.0, $order->getWeight());
-        // UPGRADE_PLAN §7 #7 — Phase 3: getHeight()/getLength()/getWidth() default to [].
+        // UPGRADE_PLAN §7 #7 — dimensions must default to a float, not [].
+        $this->assertSame(0.0, $order->getHeight());
+        $this->assertSame(0.0, $order->getLength());
+        $this->assertSame(0.0, $order->getWidth());
         $this->assertSame([], $order->getDimensions());
         $this->assertSame([], $order->getPickupHours());
     }

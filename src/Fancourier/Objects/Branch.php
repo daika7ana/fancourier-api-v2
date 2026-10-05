@@ -40,7 +40,8 @@ class Branch
 		$this->addr_cityId = $data['address']['localityId'];
 		$this->addr_street = $data['address']['street'];
 		$this->addr_streetNo = $data['address']['streetNo'];
-		$this->addr_zipcode = $data['address']['zipCode'];
+		// /reports/branches returns the key as lowercase "zipcode"; older payloads use "zipCode".
+		$this->addr_zipcode = $data['address']['zipCode'] ?? $data['address']['zipcode'] ?? '';
 		$this->addr_building = $data['address']['building'];
 		$this->addr_entrance = $data['address']['entrance'];
 		$this->addr_floor = $data['address']['floor'];

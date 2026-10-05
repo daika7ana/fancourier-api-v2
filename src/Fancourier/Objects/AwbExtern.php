@@ -2,6 +2,8 @@
 
 namespace Fancourier\Objects;
 
+use \Fancourier\Request\AbstractRequest;
+
 class AwbExtern
 {
 	// response fields only
@@ -65,7 +67,7 @@ class AwbExtern
 	
 	protected $CoD = '';	// cash on delivery, optional			// info.cod
 	protected $currency = 'RON';								// info.currency (apare doar in borderou in documentatie, nu stiu daca afecteaza crearea de awb)
-    protected $paymentType = 'sender';			// info.payment
+    protected $paymentType = AbstractRequest::TYPE_SENDER;	// info.payment
     protected $refund = '';	// refund payment			// info.refund
     protected $returnPayment = ''; //refund	// info.returnPayment
 
@@ -74,11 +76,6 @@ class AwbExtern
 		{
 		}
 	
-/*	public function isValid(): bool
-		{
-		return false;
-		}
-*/
 	public function pack(): array
 		{
 		
@@ -103,7 +100,8 @@ class AwbExtern
 					
 					"cod" => $this->CoD,	// optional - daca se doreste trimiterea cu ramburs
 				//	"repayment" => $this->CoD, //optional - daca se doreste trimiterea cu ramburs - this was used in earlier versions of the 2.0 api - no longer used
-				//	"currency" => $this->currency, //nu functioneaza
+					// ponytail: default is 'RON', so "when set" is always true; emitted unconditionally to match AwbIntern. Add a nullable/unset state if the API ever needs currency suppressed.
+					"currency" => $this->currency, // optional
 					"payment" => $this->paymentType,
 					"refund" => $this->refund,
 					"returnPayment" => $this->returnPayment,
@@ -592,7 +590,7 @@ class AwbExtern
 	/**
      * @return string
      */
-    public function getUitCode()
+    public function getUITCode()
     {
         return $this->uitCode;
     }
@@ -601,7 +599,7 @@ class AwbExtern
      * @param mixed $uitCode
      * @return AwbExtern
      */
-    public function setUitCode($uitCode)
+    public function setUITCode($uitCode)
     {
         $this->uitCode = $uitCode;
         return $this;

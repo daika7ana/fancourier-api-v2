@@ -25,6 +25,7 @@ class AwbInternTest extends TestCase
         $this->assertSame(0, $awb->getDeclaredValue());
         $this->assertSame(CreateAwb::TYPE_RECIPIENT, $awb->getPaymentType());
         $this->assertSame(CreateAwb::TYPE_SENDER, $awb->getReturnPayment());
+        $this->assertSame('', $awb->getCompany());
         $this->assertSame(['length' => 0, 'height' => 0, 'width' => 0], $awb->getSizes());
         $this->assertSame([], $awb->getOptions());
         $this->assertFalse($awb->hasErrors());
@@ -54,7 +55,7 @@ class AwbInternTest extends TestCase
             ->setNotes('fragile')
             ->setContents('books')
             ->setCostCenter('CC1')
-            ->setUitCode('UIT1');
+            ->setUITCode('UIT1');
 
         $this->assertSame($awb, $result);
         $this->assertSame('Cont Colector', $awb->getService());
@@ -72,7 +73,7 @@ class AwbInternTest extends TestCase
         $this->assertSame('fragile', $awb->getNotes());
         $this->assertSame('books', $awb->getContents());
         $this->assertSame('CC1', $awb->getCostCenter());
-        $this->assertSame('UIT1', $awb->getUitCode());
+        $this->assertSame('UIT1', $awb->getUITCode());
     }
 
     #[Test]
@@ -264,14 +265,39 @@ class AwbInternTest extends TestCase
     public function it_adds_non_eu_fields_only_when_threshold_is_boolean(): void
     {
         $awb = new AwbIntern();
-        $awb->setIsValueUnderThreshold(true)->setCompany('ACME');
+        $awb->setIsValueUnderThreshold(true)
+            ->setCompany('ACME')
+            ->setCountryCode('US')
+            ->setVatId('VAT123');
 
         $packed = $awb->pack();
 
         $this->assertTrue($packed['info']['isValueUnderThreshold']);
-        // UPGRADE_PLAN §7 #5/#6 — Phase 3: getIsValueUnderThreshold() guard is
-        // inverted and pack() overwrites countryCode/vatId, so those values are
-        // deliberately not asserted here.
+        // UPGRADE_PLAN §7 #6 — stored NUE_* values must be emitted, not blanked.
+        $this->assertSame('US', $packed['info']['countryCode']);
+        $this->assertSame('VAT123', $packed['info']['vatId']);
+        $this->assertSame('ACME', $packed['info']['company']);
+        $this->assertSame('US', $awb->getCountryCode());
+        $this->assertSame('VAT123', $awb->getVatId());
+    }
+
+    #[Test]
+    public function it_returns_the_threshold_when_it_is_set(): void
+    {
+        // UPGRADE_PLAN §7 #5 — the guard was inverted and threw when the value was set.
+        $awb = (new AwbIntern())->setIsValueUnderThreshold(false);
+
+        $this->assertFalse($awb->getIsValueUnderThreshold());
+    }
+
+    #[Test]
+    public function it_throws_when_the_threshold_is_not_set(): void
+    {
+        // UPGRADE_PLAN §7 #5 — guard must throw only when the value is genuinely unset.
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('isValueUnderThreshold is not set!');
+
+        (new AwbIntern())->getIsValueUnderThreshold();
     }
 
     #[Test]

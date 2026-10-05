@@ -84,17 +84,17 @@ class CourierOrder
 	
 	public function getHeight(): float
 		{
-		return $this->dimensions['height'] ?? [];
+		return (float)($this->dimensions['height'] ?? 0.0);
 		}
 	
 	public function getLength(): float
 		{
-		return $this->dimensions['length'] ?? [];
+		return (float)($this->dimensions['length'] ?? 0.0);
 		}
 	
 	public function getWidth(): float
 		{
-		return $this->dimensions['width'] ?? [];
+		return (float)($this->dimensions['width'] ?? 0.0);
 		}
 	
 	public function getPickupDate(): string
