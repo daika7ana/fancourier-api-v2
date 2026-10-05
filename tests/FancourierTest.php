@@ -2,30 +2,40 @@
 
 namespace Fancourier\Tests;
 
+use Fancourier\Fancourier;
 use Fancourier\Request\CreateAwb;
-use Fancourier\Objects\AWBIntern;
 use Fancourier\Request\DeleteAwb;
+use Fancourier\Request\GetCosts;
 use Fancourier\Request\PrintAwb;
 use Fancourier\Request\TrackAwb;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Fancourier\Fancourier;
-use Fancourier\Request\GetCosts;
 
+/**
+ * Live integration tests. These hit https://api.fancourier.ro/, create and
+ * delete real AWBs on the shared test account, and require network access.
+ * They are excluded by default (see phpunit.xml.dist) and only run when
+ * FANCOURIER_LIVE_TOKEN is set, e.g.:
+ *
+ *   FANCOURIER_LIVE_TOKEN=... vendor/bin/phpunit --group integration
+ */
+#[Group('integration')]
 class FancourierTest extends TestCase
 {
+    private Fancourier $fan;
 
-    public $fan;
-	public $awbNo;
-
-    public function __construct($name = null, array $data = [], $dataName = '')
+    protected function setUp(): void
     {
-        parent::__construct($name, $data, $dataName);
+        if ((string) getenv('FANCOURIER_LIVE_TOKEN') === '') {
+            $this->markTestSkipped('Set FANCOURIER_LIVE_TOKEN to run live integration tests.');
+        }
 
         $this->fan = Fancourier::testInstance();
     }
 
-    /** @test */
-    public function it_can_get_costs()
+    #[Test]
+    public function it_can_get_costs(): void
     {
         $request = new GetCosts();
         $request
@@ -41,8 +51,8 @@ class FancourierTest extends TestCase
         $this->assertIsArray($response->getData());
     }
 
-    /** @test */
-    public function it_can_create_an_awb()
+    #[Test]
+    public function it_can_create_an_awb(): void
     {
         $awb = new \Fancourier\Objects\AwbIntern();
         $awb
@@ -50,36 +60,31 @@ class FancourierTest extends TestCase
             ->setWeight(2)
             ->setReimbursement(125)
             ->setDeclaredValue(125)
-            ->setSizes(10,5,1) // in cm // or use setLength(), setHeight(), setWidth()
+            ->setSizes(10, 5, 1) // in cm // or use setLength(), setHeight(), setWidth()
             ->setNotes('testing notes')
             ->setContents('SKU-1, SKU-2')
-            ->setRecipientName("John Ivy")
+            ->setRecipientName('John Ivy')
             ->setPhone('0723000000')
             ->setCounty('Arad')
             ->setCity('Aciuta')
             ->setStreet('Str Lunga')
             ->setNumber('1');
-            
+
         $request = new CreateAwb();
         $request->addAwb($awb);
 
         $response = $this->fan->createAwb($request);
 
         $this->assertTrue($response->isOk());
-		if ($response->isOk()) {
-		
-		$this->awbNo = $awb->getAwb();
-		}
         $this->assertIsArray($response->getData());
         $this->assertIsInt($awb->getAwb());
     }
 
-    /** @test */
-    public function it_can_track_an_existing_awb()
+    #[Test]
+    public function it_can_track_an_existing_awb(): void
     {
         $request = new TrackAwb();
-        $request
-            ->setAwb('2347300120337');
+        $request->setAwb('2347300120337');
 
         $response = $this->fan->trackAwb($request);
 
@@ -87,8 +92,8 @@ class FancourierTest extends TestCase
         $this->assertIsArray($response->getData());
     }
 
-    /** @test */
-    public function it_can_get_a_printable_pdf_awb()
+    #[Test]
+    public function it_can_get_a_printable_pdf_awb(): void
     {
         $request = new PrintAwb();
         $request->setPdf(true)->setAwb('2347300120337');
@@ -99,8 +104,8 @@ class FancourierTest extends TestCase
         $this->assertIsString($response->getData());
     }
 
-    /** @test */
-    public function is_can_get_a_html_version_for_an_awb()
+    #[Test]
+    public function it_can_get_a_html_version_for_an_awb(): void
     {
         $request = new PrintAwb();
         $request->setPdf(false)->setAwb('2347300120337');
@@ -109,11 +114,10 @@ class FancourierTest extends TestCase
 
         $this->assertTrue($response->isOk());
         $this->assertIsString($response->getData());
-     //   $this->assertStringContainsString('<html>', $response->getData());
     }
 
-    /** @test */
-    public function it_can_delete_an_existing_awb()
+    #[Test]
+    public function it_can_delete_an_existing_awb(): void
     {
         $request = new DeleteAwb();
         $request->setAwb('2347300120340');
@@ -121,21 +125,9 @@ class FancourierTest extends TestCase
         $response = $this->fan->deleteAwb($request);
 
         $this->assertIsBool($response->getData());
-    //    $this->assertTrue($response->getData());
     }
 
-    /** @test */
-	/*
-    public function it_can_track_multiple_aws_in_bulk()
-    {
-        $request = new TrackAwbBulk();
-        $request->setAwbs(['2162900120047']);
-
-        $response = $this->fan->trackAwbBulk($request);
-
-        $this->assertTrue($response->isOk());
-        $this->assertIsArray($response->getBody());
-        $this->assertCount(1, $response->getBody());
-    }
-	*/
+    // Bulk tracking (trackAwbBulk / TrackAwbBulk) is not implemented in the
+    // current API surface; the previously commented-out test referenced a
+    // nonexistent class. See UPGRADE_PLAN.md §8.1.
 }

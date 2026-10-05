@@ -1,10 +1,9 @@
 .idea
 /vendor
 composer.phar
-composer.lock
 .DS_Store
 .bak
 .phpunit.result.cache
+.phpunit.cache/
 build/
- 
 examples/examples_token.txt

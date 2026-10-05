@@ -1,7 +1,7 @@
 {
-    "name": "shusaura85/fancourier-api",
-    "description": "Library for FanCourier API v2.0",
-	"type": "library",
+    "name": "daika7ana/fancourier-api",
+    "description": "Internal fork: Library for FanCourier API v2.0",
+    "type": "library",
     "authors": [
         {
             "name": "Shu Saura",
@@ -9,15 +9,16 @@
         }
     ],
     "license": "MIT",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
-        "php": ">=7.0",
+        "php": "^8.3",
         "ext-curl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-fileinfo": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.4"
+        "phpunit/phpunit": "^12",
+        "phpstan/phpstan": "^2",
+        "laravel/pint": "^1"
     },
     "autoload": {
         "psr-4": {
