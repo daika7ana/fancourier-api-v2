@@ -2,6 +2,7 @@
 
 namespace Fancourier\Request;
 
+use Fancourier\Enums\DeliveryMode;
 use Fancourier\Response\GetCostsExternal as GetCostsExternalResponse;
 
 class GetCostsExternal extends AbstractRequest implements RequestInterface
@@ -82,11 +83,12 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @param string $deliveryMode
+     * @param string|DeliveryMode $deliveryMode
      * @return static
      */
-    public function setDeliveryMode(string $deliveryMode): static
+    public function setDeliveryMode(string|DeliveryMode $deliveryMode): static
     {
+	    $deliveryMode = $deliveryMode instanceof DeliveryMode ? $deliveryMode->value : $deliveryMode;
 	    $deliveryMode = strtolower($deliveryMode);
 		if ( ($deliveryMode == 'rutier') || ($deliveryMode == 'aerian') )
 		{

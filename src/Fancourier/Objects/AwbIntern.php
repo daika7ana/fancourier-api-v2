@@ -2,6 +2,7 @@
 
 namespace Fancourier\Objects;
 
+use \Fancourier\Enums\PaymentType;
 use \Fancourier\Request\CreateAwb;
 
 class AwbIntern
@@ -289,9 +290,9 @@ class AwbIntern
         return $this->paymentType;
     }
 
-    public function setPaymentType(string $paymentType): static
+    public function setPaymentType(string|PaymentType $paymentType): static
     {
-        $this->paymentType = $paymentType;
+        $this->paymentType = $paymentType instanceof PaymentType ? $paymentType->value : $paymentType;
         return $this;
     }
 
@@ -311,9 +312,9 @@ class AwbIntern
         return $this->returnPayment;
     }
 
-    public function setReturnPayment(string $reimbursementPaymentType): static
+    public function setReturnPayment(string|PaymentType $reimbursementPaymentType): static
     {
-        $this->returnPayment = $reimbursementPaymentType;
+        $this->returnPayment = $reimbursementPaymentType instanceof PaymentType ? $reimbursementPaymentType->value : $reimbursementPaymentType;
         return $this;
     }
 

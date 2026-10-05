@@ -2,6 +2,7 @@
 
 namespace Fancourier\Request;
 
+use Fancourier\Enums\PaymentType;
 use Fancourier\Response\GetCosts as GetCostsResponse;
 
 class GetCosts extends AbstractRequest implements RequestInterface
@@ -103,11 +104,13 @@ class GetCosts extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @param string $paymentType
+     * @param string|PaymentType $paymentType
      * @return static
      */
-    public function setPaymentType(string $paymentType): static
+    public function setPaymentType(string|PaymentType $paymentType): static
     {
+        $paymentType = $paymentType instanceof PaymentType ? $paymentType->value : $paymentType;
+
         if ($paymentType != self::TYPE_RECIPIENT && $paymentType != self::TYPE_SENDER) {
             throw new \InvalidArgumentException("Invalid paymentType value");
         }

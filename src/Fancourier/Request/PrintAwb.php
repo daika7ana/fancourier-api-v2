@@ -2,6 +2,8 @@
 
 namespace Fancourier\Request;
 
+use Fancourier\Enums\LabelFormat;
+use Fancourier\Enums\Language;
 use Fancourier\Response\PrintAwb as PrintAwbResponse;
 
 class PrintAwb extends AbstractRequest implements RequestInterface
@@ -174,11 +176,12 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @param string $lang
+     * @param string|Language $lang
      * @return static
      */
-    public function setLang(string $lang): static
+    public function setLang(string|Language $lang): static
     {
+        $lang = $lang instanceof Language ? $lang->value : $lang;
         $lang = strtolower($lang);
         if (!in_array($lang, ['ro', 'en'])) {
             $lang = 'ro';
@@ -197,11 +200,12 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @param string $pageSize - Can be <empty>, 'A4', 'A5' and 'A6' (only for ePOD)
+     * @param string|LabelFormat $pageSize - Can be <empty>, 'A4', 'A5' and 'A6' (only for ePOD)
      * @return static
      */
-    public function setSize(string $pageSize = ''): static
+    public function setSize(string|LabelFormat $pageSize = ''): static
     {
+        $pageSize = $pageSize instanceof LabelFormat ? $pageSize->value : $pageSize;
         $pageSize = strtoupper($pageSize);
         if (!in_array($pageSize, ['A4', 'A5', 'A6'])) {
             $pageSize = '';

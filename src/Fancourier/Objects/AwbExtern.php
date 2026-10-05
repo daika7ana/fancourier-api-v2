@@ -2,6 +2,9 @@
 
 namespace Fancourier\Objects;
 
+use \Fancourier\Enums\DeliveryMode;
+use \Fancourier\Enums\DocumentType;
+use \Fancourier\Enums\PaymentType;
 use \Fancourier\Request\AbstractRequest;
 
 class AwbExtern
@@ -181,11 +184,12 @@ class AwbExtern
     }
 
     /**
-     * @param string $deliveryMode
+     * @param string|DeliveryMode $deliveryMode
      * @return $this
      */
-    public function setDeliveryMode(string $deliveryMode): static
+    public function setDeliveryMode(string|DeliveryMode $deliveryMode): static
     {
+	    $deliveryMode = $deliveryMode instanceof DeliveryMode ? $deliveryMode->value : $deliveryMode;
 	    $deliveryMode = strtolower($deliveryMode);
 		if ( ($deliveryMode == 'rutier') || ($deliveryMode == 'aerian') )
 		{
@@ -200,11 +204,12 @@ class AwbExtern
     }
 
     /**
-     * @param string $documentType
+     * @param string|DocumentType $documentType
      * @return $this
      */
-    public function setDocumentType(string $documentType): static
+    public function setDocumentType(string|DocumentType $documentType): static
     {
+	    $documentType = $documentType instanceof DocumentType ? $documentType->value : $documentType;
 	    $documentType = strtolower($documentType);
 		if ( ($documentType == 'document') || ($documentType == 'non document') )
 		{
@@ -373,9 +378,9 @@ class AwbExtern
         return $this->paymentType;
     }
 
-    public function setPaymentType(string $paymentType): static
+    public function setPaymentType(string|PaymentType $paymentType): static
     {
-        $this->paymentType = $paymentType;
+        $this->paymentType = $paymentType instanceof PaymentType ? $paymentType->value : $paymentType;
         return $this;
     }
 
@@ -395,9 +400,9 @@ class AwbExtern
         return $this->returnPayment;
     }
 
-    public function setReturnPayment(string $reimbursementPaymentType): static
+    public function setReturnPayment(string|PaymentType $reimbursementPaymentType): static
     {
-        $this->returnPayment = $reimbursementPaymentType;
+        $this->returnPayment = $reimbursementPaymentType instanceof PaymentType ? $reimbursementPaymentType->value : $reimbursementPaymentType;
         return $this;
     }
 

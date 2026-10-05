@@ -2,6 +2,7 @@
 
 namespace Fancourier\Request;
 
+use Fancourier\Enums\OrderType;
 use Fancourier\Response\CreateCourierOrder as CreateCourierOrderResponse;
 
 /**
@@ -276,12 +277,12 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @param string $orderType
+     * @param string|OrderType $orderType
      * @return static
      */
-    public function setOrderType(string $orderType): static
+    public function setOrderType(string|OrderType $orderType): static
     {
-        $this->orderType = $orderType;
+        $this->orderType = $orderType instanceof OrderType ? $orderType->value : $orderType;
         return $this;
     }
 

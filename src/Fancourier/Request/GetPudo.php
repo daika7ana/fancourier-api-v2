@@ -2,6 +2,7 @@
 
 namespace Fancourier\Request;
 
+use Fancourier\Enums\PudoType;
 use Fancourier\Response\GetPudo as GetPudoResponse;
 
 class GetPudo extends AbstractRequest implements RequestInterface
@@ -44,12 +45,12 @@ class GetPudo extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @param string $pudoType
+     * @param string|PudoType $pudoType
      * @return static
      */
-    public function setType(string $pudoType): static
+    public function setType(string|PudoType $pudoType): static
     {
-        $this->type = $pudoType;
+        $this->type = $pudoType instanceof PudoType ? $pudoType->value : $pudoType;
         return $this;
     }
 
