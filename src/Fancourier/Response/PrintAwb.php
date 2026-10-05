@@ -15,13 +15,11 @@ class PrintAwb extends Generic implements ResponseInterface
 			
 			if (isset($response_json['status']) && in_array($response_json['status'], ['fail','error']))
 				{
-				$this->setErrorMessage($response_json['message']);
-				$this->setErrorCode($response_json['status']);
+				$this->setErrorFromBody($response_json, $response_json['status']);
 				}
 			else
 				{
-				$this->setErrorMessage($datastr);
-				$this->setErrorCode(-1);
+				$this->setErrorFromBody($datastr);
 				}
 			}
 		else

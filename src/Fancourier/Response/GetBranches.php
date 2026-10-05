@@ -29,14 +29,12 @@ class GetBranches extends Generic implements ResponseInterface
 				}
 			else
 				{
-				$this->setErrorMessage($response_json['message']);
-				$this->setErrorCode(-1);
+				$this->setErrorFromBody($response_json);
 				}
 			}
 		else
 			{
-			$this->setErrorMessage($datastr);
-			$this->setErrorCode(-1);
+			$this->setErrorFromBody($datastr);
 			}
 
 
@@ -48,8 +46,8 @@ class GetBranches extends Generic implements ResponseInterface
 		return $this->result ?? [];
 		}
 	
-	public function get($id): array
+	public function get($id): ?Branch
 		{
-		return $this->result[$id] ?? false;
+		return $this->result[$id] ?? null;
 		}
 }

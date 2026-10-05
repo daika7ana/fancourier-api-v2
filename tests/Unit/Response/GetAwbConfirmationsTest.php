@@ -25,12 +25,27 @@ class GetAwbConfirmationsTest extends TestCase
     #[Test]
     public function it_keeps_a_zip_body_as_raw_data(): void
     {
-        // UPGRADE_PLAN §7 #9 — getRAWbytes()/getLength() are defective; only assert raw storage.
         $raw = "PK\x03\x04fake-zip-bytes";
         $response = (new GetAwbConfirmations())->setData($raw);
 
         $this->assertTrue($response->isOk());
         $this->assertSame($raw, $response->getData());
+        $this->assertSame($raw, $response->getRAWbytes());
+        $this->assertSame(strlen($raw), $response->getLength());
+    }
+
+    /**
+     * Defect #9 (UPGRADE_PLAN §7): getRAWbytes() is nullable and getLength()
+     * returns an int.
+     */
+    #[Test]
+    public function it_exposes_null_raw_bytes_when_no_zip_was_received(): void
+    {
+        $response = (new GetAwbConfirmations())->setData($this->fixture('getAwbConfirmations.success'));
+
+        $this->assertTrue($response->isOk());
+        $this->assertNull($response->getRAWbytes());
+        $this->assertSame(0, $response->getLength());
     }
 
     #[Test]
@@ -50,5 +65,6 @@ class GetAwbConfirmationsTest extends TestCase
 
         $this->assertTrue($response->isOk());
         $this->assertNull($response->getData());
+        $this->assertNull($response->getRAWbytes());
     }
 }

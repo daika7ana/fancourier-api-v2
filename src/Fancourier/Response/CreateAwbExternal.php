@@ -18,11 +18,18 @@ class CreateAwbExternal extends Generic implements ResponseInterface
 		catch (\TypeError $e)
 			{ }
 		
-		if (json_last_error() === JSON_ERROR_NONE)
+		if (json_last_error() === JSON_ERROR_NONE && is_array($response_json))
 			{
 			$this->result = [];
 			
-			if (count($response_json) > 0)
+			// ponytail: this endpoint normally returns a bare list, so a
+			// top-level status object is treated as an error. Revisit if the
+			// API starts tagging a successful list with status:"success".
+			if (isset($response_json['status']) && ($response_json['status'] !== 'success'))
+				{
+				$this->setErrorFromBody($response_json);
+				}
+			elseif (count($response_json) > 0)
 				{
 				parent::setData($response_json);
 /*
@@ -43,14 +50,12 @@ Array
 				}
 			else
 				{
-				$this->setErrorMessage($response_json['message']);
-				$this->setErrorCode(-1);
+				$this->setErrorFromBody($response_json);
 				}
 			}
 		else
 			{
-			$this->setErrorMessage($datastr);
-			$this->setErrorCode(-1);
+			$this->setErrorFromBody($datastr);
 			}
 
 

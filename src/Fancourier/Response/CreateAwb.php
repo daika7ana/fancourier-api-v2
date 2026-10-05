@@ -18,11 +18,15 @@ class CreateAwb extends Generic implements ResponseInterface
 		catch (\TypeError $e)
 			{ }
 		
-		if (json_last_error() === JSON_ERROR_NONE)
+		if (json_last_error() === JSON_ERROR_NONE && is_array($response_json))
 			{
 			$this->result = [];
 			
-			if (isset($response_json['response']))
+			if (isset($response_json['status']) && ($response_json['status'] !== 'success'))
+				{
+				$this->setErrorFromBody($response_json);
+				}
+			elseif (isset($response_json['response']))
 				{
 				parent::setData($response_json['response']);
 /*
@@ -77,14 +81,12 @@ class CreateAwb extends Generic implements ResponseInterface
 				}
 			else
 				{
-				$this->setErrorMessage($response_json['message'] ?? $response_json['errors'] ?? 'Unknown error');
-				$this->setErrorCode(-1);
+				$this->setErrorFromBody($response_json);
 				}
 			}
 		else
 			{
-			$this->setErrorMessage($datastr);
-			$this->setErrorCode(-1);
+			$this->setErrorFromBody($datastr);
 			}
 
 

@@ -22,22 +22,27 @@ class CreateCourierOrder extends Generic implements ResponseInterface
 			
 			if (isset($response_json['status']) && ($response_json['status'] == 'success'))
 				{
-				parent::setData($response_json['data']['id']);
+				parent::setData($response_json['data']['id'] ?? null);
 				}
 			else
 				{
-				$this->setErrorMessage($response_json['message']);
-				$this->setErrorCode(-1);
+				$this->setErrorFromBody($response_json);
 				}
 			}
 		else
 			{
-			$this->setErrorMessage($datastr);
-			$this->setErrorCode(-1);
+			$this->setErrorFromBody($datastr);
 			}
 
 
         return $this;
     }
 	
+	public function getId(): string|int|null
+		{
+		$id = $this->getData();
+
+		return is_string($id) || is_int($id) ? $id : null;
+		}
+
 }

@@ -19,14 +19,12 @@ class DeleteAwb extends Generic implements ResponseInterface
 				}
 			else
 				{
-				$this->setErrorMessage($response_json['message']);
-				$this->setErrorCode(-1);
+				$this->setErrorFromBody($response_json);
 				}
 			}
 		else
 			{
-			$this->setErrorMessage($datastr);
-			$this->setErrorCode(-1);
+			$this->setErrorFromBody($datastr);
 			}
 
 

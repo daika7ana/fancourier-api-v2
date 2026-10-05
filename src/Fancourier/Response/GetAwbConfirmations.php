@@ -26,21 +26,24 @@ class GetAwbConfirmations extends Generic implements ResponseInterface
 					}
 				else
 					{
-					$this->setErrorMessage($response_json['message']);
-					$this->setErrorCode(-1);
+					$this->setErrorFromBody($response_json);
 					}
+				}
+			else
+				{
+				$this->setErrorFromBody($datastr);
 				}
 			}
 
         return $this;
     }
 	
-	public function getRAWbytes(): string
+	public function getRAWbytes(): ?string
 		{
 		return $this->result;
 		}
 	
-	public function getLength(): string
+	public function getLength(): int
 		{
 		return strlen(strval($this->result));
 		}

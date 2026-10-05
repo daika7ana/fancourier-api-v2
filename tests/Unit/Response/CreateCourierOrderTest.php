@@ -16,10 +16,10 @@ class CreateCourierOrderTest extends TestCase
     #[Test]
     public function it_parses_a_success_body(): void
     {
-        // UPGRADE_PLAN §7 #20 — no getId() getter yet; Phase 3. Data is exposed via getData().
         $response = (new CreateCourierOrder())->setData($this->fixture('createCourierOrder.success'));
 
         $this->assertTrue($response->isOk());
+        $this->assertSame('ORDER-1', $response->getId());
         $this->assertSame('ORDER-1', $response->getData());
     }
 
@@ -33,12 +33,16 @@ class CreateCourierOrderTest extends TestCase
         $this->assertSame('Order rejected', $response->getErrorMessage());
     }
 
+    /**
+     * Defect #20 (UPGRADE_PLAN §7): getId() was missing; it exposes data.id.
+     */
     #[Test]
     public function it_falls_back_on_missing_optional_keys(): void
     {
         $response = (new CreateCourierOrder())->setData($this->fixture('createCourierOrder.missing-keys'));
 
         $this->assertTrue($response->isOk());
+        $this->assertNull($response->getId());
         $this->assertNull($response->getData());
     }
 }

@@ -29,12 +29,23 @@ class CreateAwbExternalTest extends TestCase
     }
 
     /**
-     * The JSON error branch of setData() (count($response_json) === 0) reads
-     * $response_json['message'] unconditionally on an empty array, which emits an
-     * undefined-key warning. A malformed body exercises the non-JSON error branch
-     * instead, so this test stays warning-free.
-     *
-     * UPGRADE_PLAN §7 — not inventoried; see also CreateAwbExternal::setData().
+     * Defect #6 (UPGRADE_PLAN §7, uninventoried): the JSON error branch used to
+     * read $response_json['message'] unconditionally on an empty body, emitting
+     * an undefined-key warning. It now routes through Generic::setErrorFromBody().
+     */
+    #[Test]
+    public function it_reports_an_error_on_an_empty_json_body(): void
+    {
+        $response = (new CreateAwbExternal())->setData($this->fixture('createAwbExternal.empty'));
+
+        $this->assertFalse($response->isOk());
+        $this->assertSame(-1, $response->getErrorCode());
+        $this->assertSame('Unknown error', $response->getErrorMessage());
+    }
+
+    /**
+     * A malformed (non-JSON) body exercises the outer error branch; it must not
+     * emit an undefined-key warning either.
      */
     #[Test]
     public function it_reports_an_error_on_a_malformed_body(): void
