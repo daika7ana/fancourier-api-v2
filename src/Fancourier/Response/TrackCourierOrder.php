@@ -6,7 +6,8 @@ use Fancourier\Objects\CourierOrderTracker;
 
 class TrackCourierOrder extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<int|string, CourierOrderTracker>|null */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -40,13 +41,19 @@ class TrackCourierOrder extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, CourierOrderTracker>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];
 		}
 	
 		
-	public function getOrder($orderId) //: CourierOrderTracker|false
+	/**
+	 * @param int|string $orderId
+	 */
+	public function getOrder(int|string $orderId): CourierOrderTracker|false
 		{
 		return $this->result[ $orderId ] ?? false;
 		}

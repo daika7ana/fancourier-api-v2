@@ -4,12 +4,12 @@ namespace Fancourier\Objects;
 
 class ServiceOption
 {
-	protected $code;
-	protected $name;
-	
-	public function __construct($code, $name)
+	protected string $code;
+	protected string $name;
+
+	public function __construct(int|string $code, string $name)
 		{
-		$this->code = $code;
+		$this->code = (string) $code;
 		$this->name = $name;
 		}
 	

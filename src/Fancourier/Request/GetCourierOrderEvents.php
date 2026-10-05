@@ -14,7 +14,7 @@ class GetCourierOrderEvents extends AbstractRequest implements RequestInterface
 	protected string $gateway = 'reports/order-events';
 	protected string $method = 'GET';
 	
-	protected $language = '';
+	protected string $language = '';
 
     public function __construct()
     {
@@ -22,6 +22,7 @@ class GetCourierOrderEvents extends AbstractRequest implements RequestInterface
         $this->response = new GetCourierOrderEventsResponse();
     }
 
+    /** @return array<string, string> */
     #[\Override]
     public function pack(): array
     {
@@ -39,16 +40,16 @@ class GetCourierOrderEvents extends AbstractRequest implements RequestInterface
     /**
      * @return string
      */
-	public function getLanguage()
+	public function getLanguage(): string
 	{
 		return $this->language ?? '';
 	}
 	
     /**
      * @param string $language
-     * @return TrackAwb
+     * @return static
      */
-    public function setLanguage($language)
+    public function setLanguage(string $language): static
     {
 		$language = trim(strtolower($language));
 		if (in_array($language, ['ro', 'en']))

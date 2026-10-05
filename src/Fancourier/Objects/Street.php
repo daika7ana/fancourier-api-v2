@@ -4,26 +4,38 @@ namespace Fancourier\Objects;
 
 class Street
 {
-	protected $id;
-	protected $streetName;
-	protected $type;
-	protected $county;
-	protected $city;
+	protected int $id = 0;
+	protected string $streetName = '';
+	protected string $type = '';
+	protected string $county = '';
+	protected string $city = '';
 	// extra details
-	protected $details;
-	
-	public function __construct($data)
+	/** @var array<string, array<string, mixed>> */
+	protected array $details = [];
+
+	/**
+	 * @param array<string, mixed> $data
+	 */
+	public function __construct(array $data)
 		{
-		$this->id			= intval($data['id']);
-		$this->streetName	= $data['street'];
-		$this->type			= $data['type'];
-		$this->county		= $data['county'];
-		$this->city			= $data['locality'];
-		
+		$this->id			= intval($data['id'] ?? 0);
+		$this->streetName	= (string) ($data['street'] ?? '');
+		$this->type			= (string) ($data['type'] ?? '');
+		$this->county		= (string) ($data['county'] ?? '');
+		$this->city			= (string) ($data['locality'] ?? '');
+
 		$this->details = [];
-		foreach ($data['details'] as $pos=>$details)
+		$details = $data['details'] ?? null;
+		if (is_array($details))
 			{
-			$this->details[ $details['zipCode'] ] = $details;
+			foreach ($details as $pos=>$detail)
+				{
+				if (!is_array($detail))
+					{
+					continue;
+					}
+				$this->details[ (string) ($detail['zipCode'] ?? '') ] = $detail;
+				}
 			}
 		}
 	
@@ -52,18 +64,22 @@ class Street
 		return $this->city;
 		}
 	
-	public function hasZipCode($zipCode): bool
+	public function hasZipCode(string $zipCode): bool
 		{
 		return isset($this->details[$zipCode]);
 		}
-	
-	public function getDetails($zipCode)//: array|false
+
+	/**
+	 * @return array<string, mixed>|false
+	 */
+	public function getDetails(string $zipCode): array|false
 		{
 		return $this->details[$zipCode] ?? false;
 		}
 	
 	
 	/* return array with data similar to fan courier api response (details keys are set to the zipcode instead of numeric) */
+	/** @return array<string, mixed> */
 	public function getArray(): array
 		{
 		$arr = [

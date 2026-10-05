@@ -6,7 +6,8 @@ use Fancourier\Objects\Pudo;
 
 class GetPudo extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<int|string, Pudo>|null */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -41,12 +42,18 @@ class GetPudo extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, Pudo>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];
 		}
 	
-	public function get($pudoId = null) //: Pudo|false
+	/**
+	 * @param int|string|null $pudoId
+	 */
+	public function get(int|string|null $pudoId = null): Pudo|false
 		{
 		if (is_null($pudoId))
 			{

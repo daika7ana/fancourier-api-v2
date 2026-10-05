@@ -14,8 +14,9 @@ class TrackAwb extends AbstractRequest implements RequestInterface
 	protected string $gateway = 'reports/awb/tracking';
 	protected string $method = 'GET';
 	
-	protected $awbList = [];
-	protected $language = '';
+	/** @var array<string> */
+	protected array $awbList = [];
+	protected string $language = '';
 
     public function __construct()
     {
@@ -23,6 +24,7 @@ class TrackAwb extends AbstractRequest implements RequestInterface
         $this->response = new TrackAwbResponse();
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -46,19 +48,19 @@ class TrackAwb extends AbstractRequest implements RequestInterface
 	
     }
 	
-	public function addAwb(string $awb)
+	public function addAwb(string $awb): static
 	{
 		$this->awbList[] = $awb;
 		return $this;
 	}
 	
-	public function setAwb(string $awb)
+	public function setAwb(string $awb): static
 	{
 		return $this->addAwb($awb);
 	}
 	
 	
-	public function resetAwbs()
+	public function resetAwbs(): static
 	{
 		$this->awbList = [];
 		return $this;
@@ -67,16 +69,16 @@ class TrackAwb extends AbstractRequest implements RequestInterface
     /**
      * @return string
      */
-	public function getLanguage()
+	public function getLanguage(): string
 	{
 		return $this->language ?? '';
 	}
 	
     /**
      * @param string $language
-     * @return TrackAwb
+     * @return static
      */
-    public function setLanguage($language)
+    public function setLanguage(string $language): static
     {
 		$language = trim(strtolower($language));
 		if (in_array($language, ['ro', 'en']))

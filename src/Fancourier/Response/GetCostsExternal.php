@@ -4,7 +4,8 @@ namespace Fancourier\Response;
 
 class GetCostsExternal extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<string, mixed>|null Decoded `data`; money keys normalized below, `errors` kept as-is. */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -13,7 +14,14 @@ class GetCostsExternal extends Generic implements ResponseInterface
 		
 		if (json_last_error() === JSON_ERROR_NONE)
 			{
-			$this->result = $response_json['data'] ?? [];
+			$data = $response_json['data'] ?? null;
+			$this->result = is_array($data) ? $data : [];
+			
+			// The API returns money as numeric strings; normalize at the boundary.
+			foreach (['extraKmCost', 'weightCost', 'insuranceCost', 'optionsCost', 'fuelCost', 'costNoVAT', 'vat', 'total'] as $field)
+				{
+				$this->result[$field] = is_numeric($this->result[$field] ?? null) ? (float) $this->result[$field] : 0.0;
+				}
 			
 			if (isset($response_json['status']) && ($response_json['status'] == 'success'))
 				{
@@ -33,6 +41,9 @@ class GetCostsExternal extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, mixed>
+	 */
 	public function getAllErrors(): array
 		{
 		return $this->result['errors'] ?? [];

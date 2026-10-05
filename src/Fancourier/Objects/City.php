@@ -4,19 +4,20 @@ namespace Fancourier\Objects;
 
 class City
 {
-	protected $id;
-	protected $name;
-	protected $county;
-	protected $agency;
-	protected $extKm;
-	
-	public function __construct($id, $name, $county, $agency, $extKm)
+	protected string $id;
+	protected string $name;
+	protected string $county;
+	protected string $agency;
+	protected float $extKm;
+
+	public function __construct(int|string $id, string $name, string $county, string $agency, int|float|string|null $extKm)
 		{
-		$this->id = $id;
+		$this->id = (string) $id;
 		$this->name = $name;
 		$this->county = $county;
 		$this->agency = $agency;
-		$this->extKm = $extKm;
+		// exteriorKm may be null or a numeric string in live payloads.
+		$this->extKm = is_numeric($extKm) ? (float) $extKm : 0.0;
 		}
 	
 	public function getId(): string

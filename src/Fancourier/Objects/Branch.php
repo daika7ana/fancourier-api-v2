@@ -4,48 +4,53 @@ namespace Fancourier\Objects;
 
 class Branch
 {
-	protected $id;
-	protected $name;
-	protected $bank;
-	protected $bankAccount;
-	protected $email;
-	protected $phone;
-	protected $altPhone;
-	protected $contactPerson;
-	protected $addr_county;
-	protected $addr_city;
-	protected $addr_countyId;
-	protected $addr_cityId;
-	protected $addr_street;
-	protected $addr_streetNo;
-	protected $addr_zipcode;
-	protected $addr_building;
-	protected $addr_entrance;
-	protected $addr_floor;
-	protected $addr_apartment;
-	
-	public function __construct($data)
+	protected string $id = '';
+	protected string $name = '';
+	protected string $bank = '';
+	protected string $bankAccount = '';
+	protected string $email = '';
+	protected string $phone = '';
+	protected string $altPhone = '';
+	protected string $contactPerson = '';
+	protected string $addr_county = '';
+	protected string $addr_city = '';
+	protected string $addr_countyId = '';
+	protected string $addr_cityId = '';
+	protected string $addr_street = '';
+	protected string $addr_streetNo = '';
+	protected string $addr_zipcode = '';
+	protected string $addr_building = '';
+	protected string $addr_entrance = '';
+	protected string $addr_floor = '';
+	protected string $addr_apartment = '';
+
+	/**
+	 * @param array<string, mixed> $data
+	 */
+	public function __construct(array $data)
 		{
-		$this->id = $data['id'];
-		$this->name = $data['name'];
-		$this->bank = $data['bank'];
-		$this->bankAccount = $data['bankAccount'];
-		$this->email = $data['email'];
-		$this->phone = $data['phone'];
-		$this->altPhone = $data['secondaryPhone'];
-		$this->contactPerson = $data['contactPerson'];
-		$this->addr_county = $data['address']['county'];
-		$this->addr_city = $data['address']['locality'];
-		$this->addr_countyId = $data['address']['countyId'];
-		$this->addr_cityId = $data['address']['localityId'];
-		$this->addr_street = $data['address']['street'];
-		$this->addr_streetNo = $data['address']['streetNo'];
+		// Ids can be ints and optional keys may be absent; the address block may
+		// be missing entirely. Default + cast so every typed property initializes.
+		$this->id = (string) ($data['id'] ?? '');
+		$this->name = (string) ($data['name'] ?? '');
+		$this->bank = (string) ($data['bank'] ?? '');
+		$this->bankAccount = (string) ($data['bankAccount'] ?? '');
+		$this->email = (string) ($data['email'] ?? '');
+		$this->phone = (string) ($data['phone'] ?? '');
+		$this->altPhone = (string) ($data['secondaryPhone'] ?? '');
+		$this->contactPerson = (string) ($data['contactPerson'] ?? '');
+		$this->addr_county = (string) ($data['address']['county'] ?? '');
+		$this->addr_city = (string) ($data['address']['locality'] ?? '');
+		$this->addr_countyId = (string) ($data['address']['countyId'] ?? '');
+		$this->addr_cityId = (string) ($data['address']['localityId'] ?? '');
+		$this->addr_street = (string) ($data['address']['street'] ?? '');
+		$this->addr_streetNo = (string) ($data['address']['streetNo'] ?? '');
 		// /reports/branches returns the key as lowercase "zipcode"; older payloads use "zipCode".
-		$this->addr_zipcode = $data['address']['zipCode'] ?? $data['address']['zipcode'] ?? '';
-		$this->addr_building = $data['address']['building'];
-		$this->addr_entrance = $data['address']['entrance'];
-		$this->addr_floor = $data['address']['floor'];
-		$this->addr_apartment = $data['address']['apartment'];
+		$this->addr_zipcode = (string) ($data['address']['zipCode'] ?? $data['address']['zipcode'] ?? '');
+		$this->addr_building = (string) ($data['address']['building'] ?? '');
+		$this->addr_entrance = (string) ($data['address']['entrance'] ?? '');
+		$this->addr_floor = (string) ($data['address']['floor'] ?? '');
+		$this->addr_apartment = (string) ($data['address']['apartment'] ?? '');
 		}
 	
 	public function getId(): string

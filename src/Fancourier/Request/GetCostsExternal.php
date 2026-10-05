@@ -9,19 +9,19 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     protected string $gateway = 'reports/awb/external-tariff';
 	protected string $method = 'GET';
 
-    private $senderCity;		// sender.locality
-    private $senderCounty;	// sender.county
-    private $country;
-    private $envelopes = 0;
-    private $parcels = 0;
-    private $weight;
-    private $length = 0;
-    private $width = 0;
-    private $height = 0;
+    private ?string $senderCity = null;		// sender.locality
+    private ?string $senderCounty = null;	// sender.county
+    private ?string $country = null;
+    private int $envelopes = 0;
+    private int $parcels = 0;
+    private int|float|null $weight = null;
+    private int|float $length = 0;
+    private int|float $width = 0;
+    private int|float $height = 0;
 	
-    private $service = 'Export';
-	private $deliveryMode = 'rutier';		// "rutier" sau "aerian" (metodele disponibile se pot afla prin GetCountries)
-	private $documentType = 'document';		// "document" sau "non document"
+    private string $service = 'Export';
+	private string $deliveryMode = 'rutier';		// "rutier" sau "aerian" (metodele disponibile se pot afla prin GetCountries)
+	private string $documentType = 'document';		// "document" sau "non document"
 
     public function __construct()
     {
@@ -29,6 +29,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
         $this->response = new GetCostsExternalResponse();
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -73,18 +74,18 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDeliveryMode()
+    public function getDeliveryMode(): string
     {
         return $this->deliveryMode;
     }
 
     /**
-     * @param mixed $deliveryMode
-     * @return GetCostsExternal
+     * @param string $deliveryMode
+     * @return static
      */
-    public function setDeliveryMode($deliveryMode)
+    public function setDeliveryMode(string $deliveryMode): static
     {
 	    $deliveryMode = strtolower($deliveryMode);
 		if ( ($deliveryMode == 'rutier') || ($deliveryMode == 'aerian') )
@@ -95,18 +96,18 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDocumentType()
+    public function getDocumentType(): string
     {
         return $this->documentType;
     }
 
     /**
-     * @param mixed $documentType
-     * @return GetCostsExternal
+     * @param string $documentType
+     * @return static
      */
-    public function setDocumentType($documentType)
+    public function setDocumentType(string $documentType): static
     {
 	    $documentType = strtolower($documentType);
 		if ( ($documentType == 'document') || ($documentType == 'non document') )
@@ -118,54 +119,54 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
 
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getSenderCity()
+    public function getSenderCity(): ?string
     {
         return $this->senderCity;
     }
 
     /**
-     * @param mixed $city
-     * @return GetCostsExternal
+     * @param string $city
+     * @return static
      */
-    public function setSenderCity($city)
+    public function setSenderCity(string $city): static
     {
         $this->senderCity = $city;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getSenderCounty()
+    public function getSenderCounty(): ?string
     {
         return $this->senderCounty;
     }
 
     /**
-     * @param mixed $county
-     * @return GetCostsExternal
+     * @param string $county
+     * @return static
      */
-    public function setSenderCounty($county)
+    public function setSenderCounty(string $county): static
     {
         $this->senderCounty = $county;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getCountry()
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
     /**
-     * @param mixed $country
-     * @return GetCostsExternal
+     * @param string $country
+     * @return static
      */
-    public function setCountry($country)
+    public function setCountry(string $country): static
     {
         $this->country = $country;
         return $this;
@@ -176,16 +177,16 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     /**
      * @return int
      */
-    public function getEnvelopes()
+    public function getEnvelopes(): int
     {
         return $this->envelopes;
     }
 
     /**
      * @param int $envelopes
-     * @return GetCostsExternal
+     * @return static
      */
-    public function setEnvelopes($envelopes)
+    public function setEnvelopes(int $envelopes): static
     {
         $this->envelopes = $envelopes;
         return $this;
@@ -194,88 +195,88 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     /**
      * @return int
      */
-    public function getParcels()
+    public function getParcels(): int
     {
         return $this->parcels;
     }
 
     /**
      * @param int $parcels
-     * @return GetCostsExternal
+     * @return static
      */
-    public function setParcels($parcels)
+    public function setParcels(int $parcels): static
     {
         $this->parcels = $parcels;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return int|float|null
      */
-    public function getWeight()
+    public function getWeight(): int|float|null
     {
         return $this->weight;
     }
 
     /**
-     * @param mixed $weight
-     * @return GetCostsExternal
+     * @param int|float $weight
+     * @return static
      */
-    public function setWeight($weight)
+    public function setWeight(int|float $weight): static
     {
         $this->weight = $weight;
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|float
      */
-    public function getLength()
+    public function getLength(): int|float
     {
         return $this->length;
     }
 
     /**
-     * @param int $length
-     * @return GetCostsExternal
+     * @param int|float $length
+     * @return static
      */
-    public function setLength($length)
+    public function setLength(int|float $length): static
     {
         $this->length = $length;
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|float
      */
-    public function getWidth()
+    public function getWidth(): int|float
     {
         return $this->width;
     }
 
     /**
-     * @param int $width
-     * @return GetCostsExternal
+     * @param int|float $width
+     * @return static
      */
-    public function setWidth($width)
+    public function setWidth(int|float $width): static
     {
         $this->width = $width;
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|float
      */
-    public function getHeight()
+    public function getHeight(): int|float
     {
         return $this->height;
     }
 
     /**
-     * @param int $height
-     * @return GetCostsExternal
+     * @param int|float $height
+     * @return static
      */
-    public function setHeight($height)
+    public function setHeight(int|float $height): static
     {
         $this->height = $height;
         return $this;
@@ -284,16 +285,16 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     /**
      * @return string
      */
-    public function getService()
+    public function getService(): string
     {
         return $this->service;
     }
 
     /**
      * @param string $service
-     * @return GetCostsExternal
+     * @return static
      */
-    public function setService($service)
+    public function setService(string $service): static
     {
         $this->service = $service;
         return $this;

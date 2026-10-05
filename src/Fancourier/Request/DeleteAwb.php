@@ -9,7 +9,7 @@ class DeleteAwb extends AbstractRequest implements RequestInterface
     protected string $gateway = 'awb';
 	protected string $method = 'DELETE';
 
-    private $awb;
+    private ?string $awb = null;
 
     public function __construct()
     {
@@ -17,6 +17,7 @@ class DeleteAwb extends AbstractRequest implements RequestInterface
         $this->response = new DeleteAwbResponse();
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -29,18 +30,18 @@ class DeleteAwb extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getAwb()
+    public function getAwb(): ?string
     {
         return $this->awb;
     }
 
     /**
-     * @param mixed $awb
-     * @return DeleteAwb
+     * @param string $awb
+     * @return static
      */
-    public function setAwb($awb)
+    public function setAwb(string $awb): static
     {
         $this->awb = $awb;
         return $this;

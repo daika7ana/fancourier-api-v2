@@ -4,14 +4,14 @@ namespace Fancourier\Objects;
 
 class CityExternal
 {
-	protected $id;
-	protected $name;
-	protected $county;
-	protected $country;
-	
-	public function __construct($id, $name, $county, $country)
+	protected string $id;
+	protected string $name;
+	protected string $county;
+	protected string $country;
+
+	public function __construct(int|string $id, string $name, string $county, string $country)
 		{
-		$this->id = $id;
+		$this->id = (string) $id;
 		$this->name = $name;
 		$this->county = $county;
 		$this->country = $country;

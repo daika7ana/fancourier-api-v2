@@ -6,7 +6,8 @@ use Fancourier\Objects\AwbEvent;
 
 class GetAwbEvents extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<int|string, AwbEvent>|null */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -40,12 +41,18 @@ class GetAwbEvents extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, AwbEvent>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];
 		}
 	
-	public function getEvent($eventId) //: AwbEvent|false
+	/**
+	 * @param int|string $eventId
+	 */
+	public function getEvent(int|string $eventId): AwbEvent|false
 		{
 		$return = false;
 		if (isset($this->result[ $eventId ]))

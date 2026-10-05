@@ -6,7 +6,8 @@ use Fancourier\Objects\CourierOrderEvent;
 
 class GetCourierOrderEvents extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<int|string, CourierOrderEvent>|null */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -40,13 +41,19 @@ class GetCourierOrderEvents extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, CourierOrderEvent>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];
 		}
 	
 		
-	public function getEvent($courierEventId) //: CourierOrderEvent|false
+	/**
+	 * @param int|string $courierEventId
+	 */
+	public function getEvent(int|string $courierEventId): CourierOrderEvent|false
 		{
 		return $this->result[ $courierEventId ] ?? false;
 		}

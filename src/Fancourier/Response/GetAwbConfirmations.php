@@ -4,7 +4,8 @@ namespace Fancourier\Response;
 
 class GetAwbConfirmations extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var string|null Raw ZIP payload when the API returns a binary body. */
+	protected ?string $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -48,7 +49,7 @@ class GetAwbConfirmations extends Generic implements ResponseInterface
 		return strlen(strval($this->result));
 		}
 	
-	public function saveToFile(string $filename)//: int|false
+	public function saveToFile(string $filename): int|false
 		{
 		return file_put_contents($filename, $this->result);
 		}

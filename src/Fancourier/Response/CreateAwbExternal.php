@@ -6,17 +6,15 @@ use \Fancourier\Objects\AwbExtern;
 
 class CreateAwbExternal extends Generic implements ResponseInterface
 {
-	protected $result;
-	protected $awbList;
+	/** @var array<int, array<string, mixed>>|null */
+	protected ?array $result = null;
+	/** @var array<int, AwbExtern> */
+	protected array $awbList = [];
 	
     #[\Override]
     public function setData(mixed $datastr): static
     {
-		try {
-			$response_json = json_decode($datastr, true);
-			}
-		catch (\TypeError $e)
-			{ }
+		$response_json = json_decode($datastr, true);
 		
 		if (json_last_error() === JSON_ERROR_NONE && is_array($response_json))
 			{
@@ -62,10 +60,10 @@ Array
         return $this;
     }
 	
-	/*
-	* @param array[AwbIntern] $awbList
-	*/
-	public function setAwbList(array $awbList)
+	/**
+	 * @param array<int, AwbExtern> $awbList
+	 */
+	public function setAwbList(array $awbList): bool
 		{
 		// check list
 		foreach ($awbList as $awb)
@@ -80,6 +78,9 @@ Array
 		return true;
 		}
 	
+	/**
+	 * @return array<int, AwbExtern>
+	 */
 	public function getAll(): array
 		{
 		//print_r($this->result);

@@ -9,20 +9,21 @@ class GetCosts extends AbstractRequest implements RequestInterface
     protected string $gateway = 'reports/awb/internal-tariff';
 	protected string $method = 'GET';
 
-    private $paymentType = self::TYPE_RECIPIENT;	// info['payment']
-    private $city;
-    private $county;
-    private $senderCity;
-    private $senderCounty;
-    private $envelopes = 0;
-    private $parcels = 0;
-    private $weight;
-    private $length = 0;
-    private $width = 0;
-    private $height = 0;
-    private $declaredValue;
-    protected $options = [];	// optional					// info.options
-    private $service = 'Standard';
+    private string $paymentType = self::TYPE_RECIPIENT;	// info['payment']
+    private ?string $city = null;
+    private ?string $county = null;
+    private ?string $senderCity = null;
+    private ?string $senderCounty = null;
+    private int $envelopes = 0;
+    private int $parcels = 0;
+    private int|float|null $weight = null;
+    private int|float $length = 0;
+    private int|float $width = 0;
+    private int|float $height = 0;
+    private int|float|null $declaredValue = null;
+    /** @var array<string> */
+    protected array $options = [];	// optional					// info.options
+    private string $service = 'Standard';
 
     public function __construct()
     {
@@ -30,6 +31,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
         $this->response = new GetCostsResponse();
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -95,16 +97,16 @@ class GetCosts extends AbstractRequest implements RequestInterface
     /**
      * @return string
      */
-    public function getPaymentType()
+    public function getPaymentType(): string
     {
         return $this->paymentType;
     }
 
     /**
      * @param string $paymentType
-     * @return GetCosts
+     * @return static
      */
-    public function setPaymentType($paymentType)
+    public function setPaymentType(string $paymentType): static
     {
         if ($paymentType != self::TYPE_RECIPIENT && $paymentType != self::TYPE_SENDER) {
             throw new \InvalidArgumentException("Invalid paymentType value");
@@ -115,72 +117,72 @@ class GetCosts extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getCity()
+    public function getCity(): ?string
     {
         return $this->city;
     }
 
     /**
-     * @param mixed $city
-     * @return GetCosts
+     * @param string $city
+     * @return static
      */
-    public function setCity($city)
+    public function setCity(string $city): static
     {
         $this->city = $city;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getCounty()
+    public function getCounty(): ?string
     {
         return $this->county;
     }
 
     /**
-     * @param mixed $county
-     * @return GetCosts
+     * @param string $county
+     * @return static
      */
-    public function setCounty($county)
+    public function setCounty(string $county): static
     {
         $this->county = $county;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getSenderCity()
+    public function getSenderCity(): ?string
     {
         return $this->senderCity;
     }
 
     /**
-     * @param mixed $city
-     * @return GetCosts
+     * @param string $city
+     * @return static
      */
-    public function setSenderCity($city)
+    public function setSenderCity(string $city): static
     {
         $this->senderCity = $city;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getSenderCounty()
+    public function getSenderCounty(): ?string
     {
         return $this->senderCounty;
     }
 
     /**
-     * @param mixed $county
-     * @return GetCosts
+     * @param string $county
+     * @return static
      */
-    public function setSenderCounty($county)
+    public function setSenderCounty(string $county): static
     {
         $this->senderCounty = $county;
         return $this;
@@ -189,16 +191,16 @@ class GetCosts extends AbstractRequest implements RequestInterface
     /**
      * @return int
      */
-    public function getEnvelopes()
+    public function getEnvelopes(): int
     {
         return $this->envelopes;
     }
 
     /**
      * @param int $envelopes
-     * @return GetCosts
+     * @return static
      */
-    public function setEnvelopes($envelopes)
+    public function setEnvelopes(int $envelopes): static
     {
         $this->envelopes = $envelopes;
         return $this;
@@ -207,115 +209,115 @@ class GetCosts extends AbstractRequest implements RequestInterface
     /**
      * @return int
      */
-    public function getParcels()
+    public function getParcels(): int
     {
         return $this->parcels;
     }
 
     /**
      * @param int $parcels
-     * @return GetCosts
+     * @return static
      */
-    public function setParcels($parcels)
+    public function setParcels(int $parcels): static
     {
         $this->parcels = $parcels;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return int|float|null
      */
-    public function getWeight()
+    public function getWeight(): int|float|null
     {
         return $this->weight;
     }
 
     /**
-     * @param mixed $weight
-     * @return GetCosts
+     * @param int|float $weight
+     * @return static
      */
-    public function setWeight($weight)
+    public function setWeight(int|float $weight): static
     {
         $this->weight = $weight;
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|float
      */
-    public function getLength()
+    public function getLength(): int|float
     {
         return $this->length;
     }
 
     /**
-     * @param int $length
-     * @return GetCosts
+     * @param int|float $length
+     * @return static
      */
-    public function setLength($length)
+    public function setLength(int|float $length): static
     {
         $this->length = $length;
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|float
      */
-    public function getWidth()
+    public function getWidth(): int|float
     {
         return $this->width;
     }
 
     /**
-     * @param int $width
-     * @return GetCosts
+     * @param int|float $width
+     * @return static
      */
-    public function setWidth($width)
+    public function setWidth(int|float $width): static
     {
         $this->width = $width;
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|float
      */
-    public function getHeight()
+    public function getHeight(): int|float
     {
         return $this->height;
     }
 
     /**
-     * @param int $height
-     * @return GetCosts
+     * @param int|float $height
+     * @return static
      */
-    public function setHeight($height)
+    public function setHeight(int|float $height): static
     {
         $this->height = $height;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return int|float|null
      */
-    public function getDeclaredValue()
+    public function getDeclaredValue(): int|float|null
     {
         return $this->declaredValue;
     }
 
     /**
-     * @param mixed $declaredValue
-     * @return GetCosts
+     * @param int|float $declaredValue
+     * @return static
      */
-    public function setDeclaredValue($declaredValue)
+    public function setDeclaredValue(int|float $declaredValue): static
     {
         $this->declaredValue = $declaredValue;
         return $this;
     }
 
     /**
-     * @return array
+     * @return array<string>
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -323,9 +325,9 @@ class GetCosts extends AbstractRequest implements RequestInterface
     /**
 	 * Replace all options with string containing options
      * @param string $options
-     * @return GetCosts
+     * @return static
      */
-    public function setOptions($options)
+    public function setOptions(string $options): static
     {
         $this->options = str_split($options);
         return $this;
@@ -334,9 +336,9 @@ class GetCosts extends AbstractRequest implements RequestInterface
     /**
 	 * Add a single option letter
      * @param string $option
-     * @return GetCosts
+     * @return static
      */
-    public function addOption($option)
+    public function addOption(string $option): static
     {
 		if (strlen ($option) == 1)
 			{
@@ -347,9 +349,9 @@ class GetCosts extends AbstractRequest implements RequestInterface
 
     /**
 	 * Clear all set options
-     * @return GetCosts
+     * @return static
      */
-    public function resetOptions()
+    public function resetOptions(): static
     {
         $this->options = [];
         return $this;
@@ -358,16 +360,16 @@ class GetCosts extends AbstractRequest implements RequestInterface
     /**
      * @return string
      */
-    public function getService()
+    public function getService(): string
     {
         return $this->service;
     }
 
     /**
      * @param string $service
-     * @return GetCosts
+     * @return static
      */
-    public function setService($service)
+    public function setService(string $service): static
     {
         $this->service = $service;
         return $this;

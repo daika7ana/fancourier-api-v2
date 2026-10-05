@@ -24,7 +24,7 @@ class CreateAwbExternalTest extends TestCase
         $this->assertTrue($response->isOk());
         $this->assertCount(1, $response->getAll());
         $this->assertInstanceOf(AwbExtern::class, $response->getAll()[0]);
-        $this->assertSame(2347300120340, $response->getAll()[0]->getAwb());
+        $this->assertSame('2347300120340', $response->getAll()[0]->getAwb());
         $this->assertFalse($response->getAll()[0]->hasErrors());
     }
 
@@ -66,7 +66,7 @@ class CreateAwbExternalTest extends TestCase
 
         $this->assertTrue($response->isOk());
         $this->assertCount(1, $response->getAll());
-        $this->assertSame(2347300120340, $response->getAll()[0]->getAwb());
+        $this->assertSame('2347300120340', $response->getAll()[0]->getAwb());
         $this->assertFalse($response->getAll()[0]->hasErrors());
     }
 }

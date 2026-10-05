@@ -6,8 +6,10 @@ use \Fancourier\Objects\AwbIntern;
 
 class CreateAwb extends Generic implements ResponseInterface
 {
-	protected $result;
-	protected $awbList;
+	/** @var array<int, array<string, mixed>>|null */
+	protected ?array $result = null;
+	/** @var array<int, AwbIntern> */
+	protected array $awbList = [];
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -93,10 +95,10 @@ class CreateAwb extends Generic implements ResponseInterface
         return $this;
     }
 	
-	/*
-	* @param array[AwbIntern] $awbList
-	*/
-	public function setAwbList(array $awbList)
+	/**
+	 * @param array<int, AwbIntern> $awbList
+	 */
+	public function setAwbList(array $awbList): bool
 		{
 		// check list
 		foreach ($awbList as $awb)
@@ -111,6 +113,9 @@ class CreateAwb extends Generic implements ResponseInterface
 		return true;
 		}
 	
+	/**
+	 * @return array<int, AwbIntern>
+	 */
 	public function getAll(): array
 		{
 		if (empty($this->result))

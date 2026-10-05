@@ -6,7 +6,8 @@ use Fancourier\Objects\CountyExternal;
 
 class GetCountiesExternal extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<int|string, CountyExternal>|null */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -40,6 +41,9 @@ class GetCountiesExternal extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, CountyExternal>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];

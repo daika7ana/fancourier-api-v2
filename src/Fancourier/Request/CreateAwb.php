@@ -16,9 +16,10 @@ class CreateAwb extends AbstractRequest implements RequestInterface
 	protected string $gateway = 'intern-awb';
 	protected string $method = 'POST';
 
-	protected $platformId;
+	protected int|string|null $platformId = null;
 
-	protected $awbList = [];
+	/** @var array<AwbIntern> */
+	protected array $awbList = [];
 
     /** @var CreateAwbResponse */
     protected Generic $response;
@@ -30,6 +31,7 @@ class CreateAwb extends AbstractRequest implements RequestInterface
     }
 
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -59,7 +61,7 @@ class CreateAwb extends AbstractRequest implements RequestInterface
 	/**
 	* Add a new AWB object to the request
 	*/
-	public function addAwb(AwbIntern $awb)
+	public function addAwb(AwbIntern $awb): static
 	{
 		$this->awbList[] = $awb;
 		return $this;
@@ -69,7 +71,7 @@ class CreateAwb extends AbstractRequest implements RequestInterface
 	/**
 	* Clear the list of AWB's assigned to this request
 	*/
-	public function resetAwbs()
+	public function resetAwbs(): static
 	{
 		$this->awbList = [];
 		return $this;
@@ -79,7 +81,7 @@ class CreateAwb extends AbstractRequest implements RequestInterface
 	/**
 	* Use this only if you have a platformId number from Fan Courier
 	*/
-	public function setPlatformId($platformId)
+	public function setPlatformId(int|string $platformId): static
 	{
 		$this->platformId = $platformId;
 		return $this;

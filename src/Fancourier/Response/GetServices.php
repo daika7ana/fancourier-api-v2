@@ -6,7 +6,8 @@ use Fancourier\Objects\Service;
 
 class GetServices extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<int|string, Service>|null */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -40,18 +41,27 @@ class GetServices extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, Service>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];
 		}
 	
 	
-	public function hasService($name): bool
+	/**
+	 * @param string $name
+	 */
+	public function hasService(string $name): bool
 		{
 		return isset($this->result[ $name ]);
 		}
 		
-	public function getService($name) //: Service|false
+	/**
+	 * @param string $name
+	 */
+	public function getService(string $name): Service|false
 		{
 		return $this->result[ $name ] ?? false;
 		}

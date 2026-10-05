@@ -4,37 +4,54 @@ namespace Fancourier\Objects;
 
 class CourierOrder
 {
-	protected $id;
-	protected $number;
-	protected $status;
-	protected $date;
-	protected $hour;
-	protected $packages;
-	protected $weight;
-	protected $dimensions;
-	protected $pickupDate;
-	protected $pickupHours;
-	protected $observation;
-	protected $type;
-	protected $awbs;
-	protected $sender;
+	protected string $id = '';
+	protected string $number = '';
+	/** @var array<string, mixed> */
+	protected array $status = [];
+	protected string $date = '';
+	protected string $hour = '';
+	/** @var array<string, mixed> */
+	protected array $packages = [];
+	protected float $weight = 0.0;
+	/** @var array<string, mixed> */
+	protected array $dimensions = [];
+	protected string $pickupDate = '';
+	/** @var array<string, mixed> */
+	protected array $pickupHours = [];
+	protected string $observation = '';
+	protected string $type = '';
+	/** @var array<int, mixed> */
+	protected array $awbs = [];
+	/** @var array<string, mixed> */
+	protected array $sender = [];
 
-	public function __construct($data)
+	/**
+	 * @param array<string, mixed> $data
+	 */
+	public function __construct(array $data)
 		{
-		$this->id = $data['info']['id'] ?? '';
-		$this->number = $data['info']['number'] ?? '';
-		$this->status = $data['info']['status'] ?? [];
-		$this->date = $data['info']['date'] ?? '';
-		$this->hour = $data['info']['hour'] ?? '';
-		$this->packages = $data['info']['packages'] ?? [];
-		$this->weight = $data['info']['weight'] ?? '';
-		$this->dimensions = $data['info']['dimensions'] ?? [];
-		$this->pickupDate = $data['info']['pickupDate'] ?? '';
-		$this->pickupHours = $data['info']['pickupHours'] ?? [];
-		$this->observation = $data['info']['observation'] ?? '';
-		$this->type = $data['info']['type'] ?? '';
-		$this->awbs = $data['info']['awbs'] ?? [];
-		$this->sender = $data['sender'] ?? [];
+		$this->id = (string) ($data['info']['id'] ?? '');
+		$this->number = (string) ($data['info']['number'] ?? '');
+		// status is normally an assoc array but can arrive as a scalar message.
+		$status = $data['info']['status'] ?? null;
+		$this->status = is_array($status) ? $status : [];
+		$this->date = (string) ($data['info']['date'] ?? '');
+		$this->hour = (string) ($data['info']['hour'] ?? '');
+		$packages = $data['info']['packages'] ?? null;
+		$this->packages = is_array($packages) ? $packages : [];
+		$weight = $data['info']['weight'] ?? null;
+		$this->weight = is_numeric($weight) ? (float) $weight : 0.0;
+		$dimensions = $data['info']['dimensions'] ?? null;
+		$this->dimensions = is_array($dimensions) ? $dimensions : [];
+		$this->pickupDate = (string) ($data['info']['pickupDate'] ?? '');
+		$pickupHours = $data['info']['pickupHours'] ?? null;
+		$this->pickupHours = is_array($pickupHours) ? $pickupHours : [];
+		$this->observation = (string) ($data['info']['observation'] ?? '');
+		$this->type = (string) ($data['info']['type'] ?? '');
+		$awbs = $data['info']['awbs'] ?? null;
+		$this->awbs = is_array($awbs) ? $awbs : [];
+		$sender = $data['sender'] ?? null;
+		$this->sender = is_array($sender) ? $sender : [];
 		}
 
 	public function getId(): string
@@ -47,6 +64,7 @@ class CourierOrder
 		return $this->number;
 		}
 
+	/** @return array<string, mixed> */
 	public function getStatus(): array
 		{
 		return $this->status;
@@ -77,9 +95,10 @@ class CourierOrder
 		return (float)$this->weight ?? 0;
 		}
 
+	/** @return array<string, mixed> */
 	public function getDimensions(): array
 		{
-		return $this->dimensions ?? [];
+		return $this->dimensions;
 		}
 
 	public function getHeight(): float
@@ -99,33 +118,36 @@ class CourierOrder
 
 	public function getPickupDate(): string
 		{
-		return $this->pickupDate ?? '';
+		return $this->pickupDate;
 		}
 
+	/** @return array<string, mixed> */
 	public function getPickupHours(): array
 		{
-		return $this->pickupHours ?? [];
+		return $this->pickupHours;
 		}
 
 	public function getNotes(): string
 		{
-		return $this->observation ?? '';
+		return $this->observation;
 		}
 
 	public function getType(): string
 		{
-		return $this->type ?? '';
+		return $this->type;
 		}
 
+	/** @return array<int, mixed> */
 	public function getAwbs(): array
 		{
-		return $this->awbs ?? [];
+		return $this->awbs;
 		}
 
 
+	/** @return array<string, mixed> */
 	public function getSender(): array
 		{
-		return $this->sender ?? [];
+		return $this->sender;
 		}
 
 }

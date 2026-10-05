@@ -9,7 +9,7 @@ class GetCities extends AbstractRequest implements RequestInterface
     protected string $gateway = 'reports/localities';
 	protected string $method = 'GET';
 	
-    protected $county = '';
+    protected string $county = '';
 
     public function __construct()
     {
@@ -17,6 +17,7 @@ class GetCities extends AbstractRequest implements RequestInterface
         $this->response = new GetCitiesResponse();
     }
 
+    /** @return array<string, string> */
     #[\Override]
     public function pack(): array
     {
@@ -32,16 +33,16 @@ class GetCities extends AbstractRequest implements RequestInterface
     /**
      * @return string
      */
-    public function getCounty()
+    public function getCounty(): string
     {
         return $this->county;
     }
 
     /**
      * @param string $county
-     * @return GetCities
+     * @return static
      */
-    public function setCounty($county)
+    public function setCounty(string $county): static
     {
         $this->county = $county;
         return $this;

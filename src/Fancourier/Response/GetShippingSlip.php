@@ -6,11 +6,12 @@ use Fancourier\Objects\ShippingSlip;
 
 class GetShippingSlip extends Generic implements ResponseInterface
 {
-	protected $result;
-	protected $total;		// total number of street entries
-	protected $perPage;
-	protected $currentPage;
-	protected $totalPages;	// total page count (computed)
+	/** @var array<int, ShippingSlip>|null */
+	protected ?array $result = null;
+	protected ?int $total = null;		// total number of street entries
+	protected ?int $perPage = null;
+	protected ?int $currentPage = null;
+	protected ?int $totalPages = null;	// total page count (computed)
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -28,7 +29,7 @@ class GetShippingSlip extends Generic implements ResponseInterface
 				$this->total = intval($response_json['total']);
 				$this->perPage = intval($response_json['perPage']);
 				$this->currentPage = intval($response_json['currentPage']);
-				$this->totalPages = ceil($this->total / $this->perPage);
+				$this->totalPages = (int) ceil($this->total / max(1, $this->perPage));
 				
 				foreach ($response_json['data'] as $rd)
 					{
@@ -49,12 +50,18 @@ class GetShippingSlip extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int, ShippingSlip>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];
 		}
 	
-	public function get($position) //: ShippingSlip|false
+	/**
+	 * @param int $position
+	 */
+	public function get(int $position): ShippingSlip|false
 		{
 		return $this->result[$position] ?? false;
 		}

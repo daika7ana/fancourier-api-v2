@@ -6,10 +6,11 @@ use Fancourier\Objects\CourierOrder;
 
 class GetCourierOrders extends Generic implements ResponseInterface
 {
-	protected $result;
-	protected $total;		// total number of pages
-	protected $perPage;
-	protected $currentPage;
+	/** @var array<int|string, CourierOrder>|null */
+	protected ?array $result = null;
+	protected ?int $total = null;		// total number of pages
+	protected ?int $perPage = null;
+	protected ?int $currentPage = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -48,12 +49,18 @@ class GetCourierOrders extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, CourierOrder>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];
 		}
 	
-	public function get($orderId) //: CourierOrder|false
+	/**
+	 * @param int|string $orderId
+	 */
+	public function get(int|string $orderId): CourierOrder|false
 		{
 		return $this->result[$orderId] ?? false;
 		}

@@ -7,81 +7,88 @@ use \Fancourier\Request\CreateAwb;
 class AwbIntern
 {
 	// response fields only
-	protected $awb;
-	protected $details;
-	protected $errors;
-	protected $hasErrors = false;
+	protected ?string $awb = null;
+	/** @var array<string, mixed>|null */
+	protected ?array $details = null;
+	/** @var array<int, mixed>|null */
+	protected ?array $errors = null;
+	protected bool $hasErrors = false;
 	
-    protected $service = 'Standard';			// info.service
-    protected $bank = '';	// optional						// info.bank
-    protected $iban = '';	// optional						// info.bankAccount
-    protected $envelopes = 0;	// optional if parcels set	// info.packages.envelope
-    protected $parcels = 0;	// optional if envelopes set	// info.packages.parcel
-    protected $weight = 0;									// info.weight
-	protected $CoD = '';	// cash on delivery, optional			// info.cod
-	protected $currency = 'RON';								// info.currency (apare doar in borderou in documentatie, nu stiu daca afecteaza crearea de awb)
-    protected $declaredValue = 0;								// info.declaredValue
-    protected $paymentType = CreateAwb::TYPE_RECIPIENT;			// info.payment
-    protected $refund = '';	// refund payment			// info.refund
-    protected $returnPayment = CreateAwb::TYPE_SENDER; //refund	// info.returnPayment
-    protected $notes = '';		// observation					// info.observation
-    protected $contents = '';									// info.content
+    protected string $service = 'Standard';			// info.service
+    protected string $bank = '';	// optional						// info.bank
+    protected string $iban = '';	// optional						// info.bankAccount
+    protected int $envelopes = 0;	// optional if parcels set	// info.packages.envelope
+    protected int $parcels = 0;	// optional if envelopes set	// info.packages.parcel
+    // weight/dimensions/declaredValue are stored exactly as supplied: the default is
+    // int 0 (pack() must emit 0, not 0.0) while a float supplied by the caller stays float.
+    protected int|float $weight = 0;									// info.weight
+    // CoD stays '' until set, then may be an int, a float or a string.
+	protected float|int|string $CoD = '';	// cash on delivery, optional			// info.cod
+	protected string $currency = 'RON';								// info.currency (apare doar in borderou in documentatie, nu stiu daca afecteaza crearea de awb)
+    protected int|float $declaredValue = 0;								// info.declaredValue
+    protected string $paymentType = CreateAwb::TYPE_RECIPIENT;			// info.payment
+    protected string $refund = '';	// refund payment			// info.refund
+    protected string $returnPayment = CreateAwb::TYPE_SENDER; //refund	// info.returnPayment
+    protected string $notes = '';		// observation					// info.observation
+    protected string $contents = '';									// info.content
 	
-    protected $height = 0; // cm							// info.dimensions.length
-    protected $length = 0; // cm							// info.dimensions.height
-    protected $width = 0; // cm								// info.dimensions.width
+    protected int|float $height = 0; // cm							// info.dimensions.length
+    protected int|float $length = 0; // cm							// info.dimensions.height
+    protected int|float $width = 0; // cm								// info.dimensions.width
 	
-	protected $costCenter = '';	// optional					// info.costCenter
-    protected $options = [];	// optional					// info.options
-	protected $uitCode = '';	// optional					// info uitCode
+	protected string $costCenter = '';	// optional					// info.costCenter
+    /** @var array<int, string> */
+    protected array $options = [];	// optional					// info.options
+	protected string $uitCode = '';	// optional					// info uitCode
 	
-    protected $name = '';										// info.recipient.name
-    protected $contactPerson = '';								// info.recipient.contactPerson
-    protected $phone = '';										// info.recipient.phone
-    protected $altPhone = '';									// info.recipient.secondaryPhone
-    protected $email = '';									// info.recipient.email
+    protected string $name = '';										// info.recipient.name
+    protected string $contactPerson = '';								// info.recipient.contactPerson
+    protected string $phone = '';										// info.recipient.phone
+    protected string $altPhone = '';									// info.recipient.secondaryPhone
+    protected string $email = '';									// info.recipient.email
 	
-    protected $county = ''; 									// info.recipient.address.county
-    protected $city = ''; // locality							// info.recipient.address.locality
-    protected $street = '';										// info.recipient.address.street
-    protected $number = '';									// info.recipient.address.streetNo
+    protected string $county = ''; 									// info.recipient.address.county
+    protected string $city = ''; // locality							// info.recipient.address.locality
+    protected string $street = '';										// info.recipient.address.street
+    protected string $number = '';									// info.recipient.address.streetNo
 	
-    protected $pickupLocationId = '';	// ONLY FOR PUDO		// info.recipient.address.pickupLocationId
-    protected $dropOffLocationId = ''; // ONLY FOR PUDO		// info.sender.address.dropOffLocationId
+    protected string $pickupLocationId = '';	// ONLY FOR PUDO		// info.recipient.address.pickupLocationId
+    protected string $dropOffLocationId = ''; // ONLY FOR PUDO		// info.sender.address.dropOffLocationId
 
-    protected $postalCode = '';								// info.recipient.address.zipcode
+    protected string $postalCode = '';								// info.recipient.address.zipcode
 	
-    protected $building = '';								// info.recipient.address.building
-    protected $entrance = '';								// info.recipient.address.entrance
-    protected $floor = '';									// info.recipient.address.floor
-    protected $apartment = '';								// info.recipient.address.apartment
+    protected string $building = '';								// info.recipient.address.building
+    protected string $entrance = '';								// info.recipient.address.entrance
+    protected string $floor = '';									// info.recipient.address.floor
+    protected string $apartment = '';								// info.recipient.address.apartment
 
-    protected $senderName = '';
-    protected $senderContactPerson = '';
-    protected $senderPhone = '';
-    protected $senderAltPhone = '';
-    protected $senderEmail = '';
+    protected string $senderName = '';
+    protected string $senderContactPerson = '';
+    protected string $senderPhone = '';
+    protected string $senderAltPhone = '';
+    protected string $senderEmail = '';
 
-    protected $senderCounty = ''; // county							// info.sender.address.county
-    protected $senderCity = ''; // locality							// info.sender.address.locality
-    protected $senderStreet = '';										// info.sender.address.street
-    protected $senderNumber = '';									// info.sender.address.streetNo
-	protected $senderPostalCode = '';								// info.sender.address.zipcode
-    protected $senderBuilding = '';								// info.sender.address.building
-    protected $senderEntrance = '';								// info.sender.address.entrance
-    protected $senderFloor = '';									// info.sender.address.floor
-    protected $senderApartment = '';								// info.sender.address.apartment
+    protected string $senderCounty = ''; // county							// info.sender.address.county
+    protected string $senderCity = ''; // locality							// info.sender.address.locality
+    protected string $senderStreet = '';										// info.sender.address.street
+    protected string $senderNumber = '';									// info.sender.address.streetNo
+	protected string $senderPostalCode = '';								// info.sender.address.zipcode
+    protected string $senderBuilding = '';								// info.sender.address.building
+    protected string $senderEntrance = '';								// info.sender.address.entrance
+    protected string $senderFloor = '';									// info.sender.address.floor
+    protected string $senderApartment = '';								// info.sender.address.apartment
 	
 	// non-UE parcels
-	protected $NUE_isValueUnderThreshold = null;				// info.isValueUnderThreshold
-	protected $NUE_countryCode = '';							// info.countryCode
-	protected $NUE_vatId = '';									// info.vatId
-	protected $NUE_company = '';								// info.company
+	protected ?bool $NUE_isValueUnderThreshold = null;				// info.isValueUnderThreshold
+	protected string $NUE_countryCode = '';							// info.countryCode
+	protected string $NUE_vatId = '';									// info.vatId
+	protected string $NUE_company = '';								// info.company
 	
 	public function __construct()
 		{
 		}
 	
+	/** @return array<string, mixed> */
 	public function pack(): array
 		{
 		
@@ -178,262 +185,162 @@ class AwbIntern
 		}
 
 
-    /**
-     * @return string
-     */
-    public function getService()
+    public function getService(): string
     {
         return $this->service;
     }
 
-    /**
-     * @param string $service
-     * @return AwbIntern
-     */
-    public function setService($service)
+    public function setService(string $service): static
     {
         $this->service = $service;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBank()
+    public function getBank(): string
     {
         return $this->bank;
     }
 
-    /**
-     * @param string $bank
-     * @return AwbIntern
-     */
-    public function setBank($bank)
+    public function setBank(string $bank): static
     {
         $this->bank = $bank;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getIban()
+    public function getIban(): string
     {
         return $this->iban;
     }
 
-    /**
-     * @param string $iban
-     * @return AwbIntern
-     */
-    public function setIban($iban)
+    public function setIban(string $iban): static
     {
         $this->iban = $iban;
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getEnvelopes()
+    public function getEnvelopes(): int
     {
         return $this->envelopes;
     }
 
-    /**
-     * @param int $envelopes
-     * @return AwbIntern
-     */
-    public function setEnvelopes($envelopes)
+    public function setEnvelopes(int|string $envelopes): static
     {
-        $this->envelopes = $envelopes;
+        $this->envelopes = (int) $envelopes;
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getParcels()
+    public function getParcels(): int
     {
         return $this->parcels;
     }
 
-    /**
-     * @param int $parcels
-     * @return AwbIntern
-     */
-    public function setParcels($parcels)
+    public function setParcels(int|string $parcels): static
     {
-        $this->parcels = $parcels;
+        $this->parcels = (int) $parcels;
         return $this;
     }
 
-    /**
-     * @return float (kg)
-     */
-    public function getWeight()
+    public function getWeight(): int|float
     {
         return $this->weight;
     }
 
-    /**
-     * @param float $weight (in kg)
-     * @return AwbIntern
-     */
-    public function setWeight($weight)
+    public function setWeight(int|float|string $weight): static
     {
-        $this->weight = $weight;
+        $this->weight = is_numeric($weight) ? $weight + 0 : 0;
         return $this;
     }
 	
-    /**
-     * @return mixed
-     */
-    public function getReimbursement()
+    public function getReimbursement(): float|int|string
     {
         return $this->CoD;
     }
 
-    /**
-     * @param mixed $cashondelivery
-     * @return AwbIntern
-     */
-    public function setReimbursement($cashondelivery)
+    public function setReimbursement(float|int|string $cashondelivery): static
     {
         $this->CoD = $cashondelivery;
         return $this;
     }
 	
-    /**
-     * @return mixed
-     */
-    public function getCurrency()
+    public function getCurrency(): string
     {
         return $this->currency;
     }
 
-    /**
-     * @param mixed $currency
-     * @return AwbIntern
-     */
-    public function setCurrency($currency)
+    public function setCurrency(string $currency): static
     {
         $this->currency = $currency;
         return $this;
     }
 	
-    /**
-     * @return mixed
-     */
-    public function getDeclaredValue()
+    public function getDeclaredValue(): int|float
     {
         return $this->declaredValue;
     }
 
-    /**
-     * @param mixed $declaredValue
-     * @return AwbIntern
-     */
-    public function setDeclaredValue($declaredValue)
+    public function setDeclaredValue(int|float|string $declaredValue): static
     {
-        $this->declaredValue = $declaredValue;
+        $this->declaredValue = is_numeric($declaredValue) ? $declaredValue + 0 : 0;
         return $this;
     }
 	
-    /**
-     * @return string
-     */
-    public function getPaymentType()
+    public function getPaymentType(): string
     {
         return $this->paymentType;
     }
 
-    /**
-     * @param string $paymentType
-     * @return AwbIntern
-     */
-    public function setPaymentType($paymentType)
+    public function setPaymentType(string $paymentType): static
     {
         $this->paymentType = $paymentType;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRefund()
+    public function getRefund(): string
     {
         return $this->refund;
     }
 
-    /**
-     * @param mixed $refund
-     * @return AwbIntern
-     */
-    public function setRefund($refund)
+    public function setRefund(string $refund): static
     {
         $this->refund = $refund;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getReturnPayment()
+    public function getReturnPayment(): string
     {
         return $this->returnPayment;
     }
 
-    /**
-     * @param string $reimbursementPaymentType
-     * @return AwbIntern
-     */
-    public function setReturnPayment($reimbursementPaymentType)
+    public function setReturnPayment(string $reimbursementPaymentType): static
     {
         $this->returnPayment = $reimbursementPaymentType;
         return $this;
     }
 
-     /**
-     * @return mixed
-     */
-    public function getNotes()
-    {
-        return $this->notes;
-    }
+     public function getNotes(): string
+     {
+         return $this->notes;
+     }
 
-    /**
-     * @param mixed $notes
-     * @return AwbIntern
-     */
-    public function setNotes($notes)
+    public function setNotes(string $notes): static
     {
         $this->notes = $notes;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getContents()
+    public function getContents(): string
     {
         return $this->contents;
     }
 
-    /**
-     * @param mixed $contents
-     * @return AwbIntern
-     */
-    public function setContents($contents)
+    public function setContents(string $contents): static
     {
         $this->contents = $contents;
         return $this;
     }
 	
-    /**
-     * @return mixed
-     */
-    public function getSizes()
+    /** @return array{length: int|float, height: int|float, width: int|float} */
+    public function getSizes(): array
     {
         return [
 			'length' => $this->length,
@@ -443,16 +350,22 @@ class AwbIntern
     }
 
     /**
-     * @param float $length_cm
-     * @return AwbIntern
+     * @param int|float|string $length_cm
+     * @param int|float|string $height_cm
+     * @param int|float|string $width_cm
      */
-    public function setSizes($length_cm, $height_cm, $width_cm)
+    public function setSizes(int|float|string $length_cm, int|float|string $height_cm, int|float|string $width_cm): static
     {
-		if ( ($length_cm > 0) && ($height_cm > 0) && ($width_cm > 0) )
+		// keep int-vs-float exactly as supplied; numeric strings normalise
+		$length = is_numeric($length_cm) ? $length_cm + 0 : 0;
+		$height = is_numeric($height_cm) ? $height_cm + 0 : 0;
+		$width = is_numeric($width_cm) ? $width_cm + 0 : 0;
+
+		if ( ($length > 0) && ($height > 0) && ($width > 0) )
 			{
-			$this->length = $length_cm;
-			$this->height = $height_cm;
-			$this->width = $width_cm;
+			$this->length = $length;
+			$this->height = $height;
+			$this->width = $width;
 			
 			return $this;
 			}
@@ -460,83 +373,53 @@ class AwbIntern
 		throw new \Exception("You can't set sizes to 0 or lower");
     }
 
-    /**
-     * @return int
-     */
-    public function getHeight()
+    public function getHeight(): int|float
     {
         return $this->height;
     }
 
-    /**
-     * @param int $height
-     * @return AwbIntern
-     */
-    public function setHeight($height)
+    public function setHeight(int|float|string $height): static
     {
-        $this->height = $height;
+        $this->height = is_numeric($height) ? $height + 0 : 0;
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getLength()
+    public function getLength(): int|float
     {
         return $this->length;
     }
 
-    /**
-     * @param int $length
-     * @return AwbIntern
-     */
-    public function setLength($length)
+    public function setLength(int|float|string $length): static
     {
-        $this->length = $length;
+        $this->length = is_numeric($length) ? $length + 0 : 0;
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getWidth()
+    public function getWidth(): int|float
     {
         return $this->width;
     }
 
-    /**
-     * @param int $width
-     * @return AwbIntern
-     */
-    public function setWidth($width)
+    public function setWidth(int|float|string $width): static
     {
-        $this->width = $width;
+        $this->width = is_numeric($width) ? $width + 0 : 0;
         return $this;
     }
 
 
-    /**
-     * @return mixed
-     */
-    public function getCostCenter()
+    public function getCostCenter(): string
     {
         return $this->costCenter;
     }
 
-    /**
-     * @param mixed $costCenter
-     * @return AwbIntern
-     */
-    public function setCostCenter($costCenter)
+    public function setCostCenter(string $costCenter): static
     {
         $this->costCenter = $costCenter;
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getOptions()
+    /** @return array<int, string> */
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -546,7 +429,7 @@ class AwbIntern
      * @param string $options
      * @return $this
      */
-    public function setOptions($options)
+    public function setOptions(string $options): static
     {
         $this->options = str_split($options);
         return $this;
@@ -557,7 +440,7 @@ class AwbIntern
      * @param string $option
      * @return $this
      */
-    public function addOption($option)
+    public function addOption(string $option): static
     {
 		if (strlen ($option) == 1)
 			{
@@ -570,315 +453,196 @@ class AwbIntern
 	 * Clear all set options
      * @return $this
      */
-    public function resetOptions()
+    public function resetOptions(): static
     {
         $this->options = [];
         return $this;
     }
 
-	/**
-     * @return string
-     */
-    public function getUITCode()
-    {
-        return $this->uitCode;
-    }
+	public function getUITCode(): string
+	{
+	    return $this->uitCode;
+	}
 
-    /**
-     * @param mixed $uitCode
-     * @return AwbIntern
-     */
-    public function setUITCode($uitCode)
+    public function setUITCode(string $uitCode): static
     {
         $this->uitCode = $uitCode;
         return $this;
     }
 
-	/**
-     * @return mixed
-     */
-    public function getRecipientName()
-    {
-        return $this->name;
-    }
+	public function getRecipientName(): string
+	{
+	    return $this->name;
+	}
 
-    /**
-     * @param mixed $recipient
-     * @return AwbIntern
-     */
-    public function setRecipientName($recipient)
+    public function setRecipientName(string $recipient): static
     {
         $this->name = $recipient;
         return $this;
     }
 
-   /**
-     * @return mixed
-     */
-    public function getContactPerson()
-    {
-        return $this->contactPerson;
-    }
+   public function getContactPerson(): string
+   {
+       return $this->contactPerson;
+   }
 
-    /**
-     * @param mixed $contactPerson
-     * @return AwbIntern
-     */
-    public function setContactPerson($contactPerson)
+    public function setContactPerson(string $contactPerson): static
     {
         $this->contactPerson = $contactPerson;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPhone()
+    public function getPhone(): string
     {
         return $this->phone;
     }
 
-    /**
-     * @param mixed $phone
-     * @return AwbIntern
-     */
-    public function setPhone($phone)
+    public function setPhone(string $phone): static
     {
         $this->phone = $phone;
         return $this;
     }
 
 
-    /**
-     * @return mixed
-     */
-    public function getAltPhone()
+    public function getAltPhone(): string
     {
         return $this->altPhone;
     }
 
-    /**
-     * @param mixed $phone
-     * @return AwbIntern
-     */
-    public function setAltPhone($phone)
+    public function setAltPhone(string $phone): static
     {
         $this->altPhone = $phone;
         return $this;
     }
 
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     * @return AwbIntern
-     */
-    public function setEmail($email)
+    public function setEmail(string $email): static
     {
         $this->email = $email;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCounty()
+    public function getCounty(): string
     {
         return $this->county;
     }
 
-    /**
-     * @param mixed $county
-     * @return AwbIntern
-     */
-    public function setCounty($county)
+    public function setCounty(string $county): static
     {
         $this->county = $county;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCity()
+    public function getCity(): string
     {
         return $this->city;
     }
 
-    /**
-     * @param mixed $city
-     * @return AwbIntern
-     */
-    public function setCity($city)
+    public function setCity(string $city): static
     {
         $this->city = $city;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getStreet()
+    public function getStreet(): string
     {
         return $this->street;
     }
 
-    /**
-     * @param mixed $street
-     * @return AwbIntern
-     */
-    public function setStreet($street)
+    public function setStreet(string $street): static
     {
         $this->street = $street;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getNumber()
+    public function getNumber(): string
     {
         return $this->number;
     }
 
-    /**
-     * @param string $number
-     * @return AwbIntern
-     */
-    public function setNumber($number)
+    public function setNumber(string $number): static
     {
         $this->number = $number;
         return $this;
     }
 
-   /**
-     * @return string
-     */
-    public function getPickupLocation()
-    {
-        return $this->pickupLocationId;
-    }
+   public function getPickupLocation(): string
+   {
+       return $this->pickupLocationId;
+   }
 
-    /**
-     * @param string $pudoId
-     * @return AwbIntern
-     */
-    public function setPickupLocation($pudoId)
+    public function setPickupLocation(string $pudoId): static
     {
         $this->pickupLocationId = $pudoId;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPostalCode()
+    public function getPostalCode(): string
     {
         return $this->postalCode;
     }
 
-    /**
-     * @param string $postalCode
-     * @return AwbIntern
-     */
-    public function setPostalCode($postalCode)
+    public function setPostalCode(string $postalCode): static
     {
         $this->postalCode = $postalCode;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBuilding()
+    public function getBuilding(): string
     {
         return $this->building;
     }
 
-    /**
-     * @param string $building
-     * @return AwbIntern
-     */
-    public function setBuilding($building)
+    public function setBuilding(string $building): static
     {
         $this->building = $building;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntrance()
+    public function getEntrance(): string
     {
         return $this->entrance;
     }
 
-    /**
-     * @param string $entrance
-     * @return AwbIntern
-     */
-    public function setEntrance($entrance)
+    public function setEntrance(string $entrance): static
     {
         $this->entrance = $entrance;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFloor()
+    public function getFloor(): string
     {
         return $this->floor;
     }
 
-    /**
-     * @param string $floor
-     * @return AwbIntern
-     */
-    public function setFloor($floor)
+    public function setFloor(string $floor): static
     {
         $this->floor = $floor;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getApartment()
+    public function getApartment(): string
     {
         return $this->apartment;
     }
 
-    /**
-     * @param string $apartment
-     * @return AwbIntern
-     */
-    public function setApartment($apartment)
+    public function setApartment(string $apartment): static
     {
         $this->apartment = $apartment;
         return $this;
     }
 
-   /**
-     * @return string
-     */
-    public function getDropOffLocation()
-    {
-        return $this->dropOffLocationId;
-    }
+   public function getDropOffLocation(): string
+   {
+       return $this->dropOffLocationId;
+   }
 
-    /**
-     * @param string $pudoId
-     * @return AwbIntern
-     */
-    public function setDropOffLocation($pudoId)
+    public function setDropOffLocation(string $pudoId): static
     {
         $this->dropOffLocationId = $pudoId;
         return $this;
@@ -890,265 +654,164 @@ class AwbIntern
 	*******/
 
 
-	/**
-     * @return mixed
-     */
-    public function getSenderName()
-    {
-        return $this->senderName;
-    }
+	public function getSenderName(): string
+	{
+	    return $this->senderName;
+	}
 
-    /**
-     * @param mixed $sender
-     * @return AwbIntern
-     */
-    public function setSenderName($sender)
+    public function setSenderName(string $sender): static
     {
         $this->senderName = $sender;
         return $this;
     }
 
-   /**
-     * @return mixed
-     */
-    public function getSenderContactPerson()
-    {
-        return $this->senderContactPerson;
-    }
+   public function getSenderContactPerson(): string
+   {
+       return $this->senderContactPerson;
+   }
 
-    /**
-     * @param mixed $contactPerson
-     * @return AwbIntern
-     */
-    public function setSenderContactPerson($contactPerson)
+    public function setSenderContactPerson(string $contactPerson): static
     {
         $this->senderContactPerson = $contactPerson;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSenderPhone()
+    public function getSenderPhone(): string
     {
         return $this->senderPhone;
     }
 
-    /**
-     * @param mixed $phone
-     * @return AwbIntern
-     */
-    public function setSenderPhone($phone)
+    public function setSenderPhone(string $phone): static
     {
         $this->senderPhone = $phone;
         return $this;
     }
 
 
-    /**
-     * @return mixed
-     */
-    public function getSenderAltPhone()
+    public function getSenderAltPhone(): string
     {
         return $this->senderAltPhone;
     }
 
-    /**
-     * @param mixed $phone
-     * @return AwbIntern
-     */
-    public function setSenderAltPhone($phone)
+    public function setSenderAltPhone(string $phone): static
     {
         $this->senderAltPhone = $phone;
         return $this;
     }
 
 
-    /**
-     * @return string
-     */
-    public function getSenderEmail()
+    public function getSenderEmail(): string
     {
         return $this->senderEmail;
     }
 
-    /**
-     * @param string $email
-     * @return AwbIntern
-     */
-    public function setSenderEmail($email)
+    public function setSenderEmail(string $email): static
     {
         $this->senderEmail = $email;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSenderCounty()
+    public function getSenderCounty(): string
     {
         return $this->senderCounty;
     }
 
-    /**
-     * @param mixed $county
-     * @return AwbIntern
-     */
-    public function setSenderCounty($county)
+    public function setSenderCounty(string $county): static
     {
         $this->senderCounty = $county;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSenderCity()
+    public function getSenderCity(): string
     {
         return $this->senderCity;
     }
 
-    /**
-     * @param mixed $city
-     * @return AwbIntern
-     */
-    public function setSenderCity($city)
+    public function setSenderCity(string $city): static
     {
         $this->senderCity = $city;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSenderStreet()
+    public function getSenderStreet(): string
     {
         return $this->senderStreet;
     }
 
-    /**
-     * @param mixed $street
-     * @return AwbIntern
-     */
-    public function setSenderStreet($street)
+    public function setSenderStreet(string $street): static
     {
         $this->senderStreet = $street;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSenderNumber()
+    public function getSenderNumber(): string
     {
         return $this->senderNumber;
     }
 
-    /**
-     * @param string $number
-     * @return AwbIntern
-     */
-    public function setSenderNumber($number)
+    public function setSenderNumber(string $number): static
     {
         $this->senderNumber = $number;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSenderPostalCode()
+    public function getSenderPostalCode(): string
     {
         return $this->senderPostalCode;
     }
 
-    /**
-     * @param string $postalCode
-     * @return AwbIntern
-     */
-    public function setSenderPostalCode($postalCode)
+    public function setSenderPostalCode(string $postalCode): static
     {
         $this->senderPostalCode = $postalCode;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSenderBuilding()
+    public function getSenderBuilding(): string
     {
         return $this->senderBuilding;
     }
 
-    /**
-     * @param string $building
-     * @return AwbIntern
-     */
-    public function setSenderBuilding($building)
+    public function setSenderBuilding(string $building): static
     {
         $this->senderBuilding = $building;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSenderEntrance()
+    public function getSenderEntrance(): string
     {
         return $this->senderEntrance;
     }
 
-    /**
-     * @param string $entrance
-     * @return AwbIntern
-     */
-    public function setSenderEntrance($entrance)
+    public function setSenderEntrance(string $entrance): static
     {
         $this->senderEntrance = $entrance;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSenderFloor()
+    public function getSenderFloor(): string
     {
         return $this->senderFloor;
     }
 
-    /**
-     * @param string $floor
-     * @return AwbIntern
-     */
-    public function setSenderFloor($floor)
+    public function setSenderFloor(string $floor): static
     {
         $this->senderFloor = $floor;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSenderApartment()
+    public function getSenderApartment(): string
     {
         return $this->senderApartment;
     }
 
-    /**
-     * @param string $apartment
-     * @return AwbIntern
-     */
-    public function setSenderApartment($apartment)
+    public function setSenderApartment(string $apartment): static
     {
         $this->senderApartment = $apartment;
         return $this;
     }
 
 
-    /**
-     * @return bool
-     */
-    public function getIsValueUnderThreshold()
+    public function getIsValueUnderThreshold(): bool
     {
         if (!is_bool($this->NUE_isValueUnderThreshold))
         {
@@ -1157,65 +820,40 @@ class AwbIntern
         return $this->NUE_isValueUnderThreshold;
     }
 
-    /**
-     * @param bool $isValueUnderThreshold
-     * @return AwbIntern
-     */
-    public function setIsValueUnderThreshold($isValueUnderThreshold)
+    public function setIsValueUnderThreshold(bool $isValueUnderThreshold): static
     {
         $this->NUE_isValueUnderThreshold = $isValueUnderThreshold;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCountryCode()
+    public function getCountryCode(): string
     {
         return $this->NUE_countryCode;
     }
 
-    /**
-     * @param string $countryCode - 2 letter country code
-     * @return AwbIntern
-     */
-    public function setCountryCode($countryCode)
+    public function setCountryCode(string $countryCode): static
     {
         $this->NUE_countryCode = $countryCode;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getVatId()
+    public function getVatId(): string
     {
         return $this->NUE_vatId;
     }
 
-    /**
-     * @param string $vatId
-     * @return AwbIntern
-     */
-    public function setVatId($vatId)
+    public function setVatId(string $vatId): static
     {
         $this->NUE_vatId = $vatId;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCompany()
+    public function getCompany(): string
     {
         return $this->NUE_company;
     }
 
-    /**
-     * @param string $company
-     * @return AwbIntern
-     */
-    public function setCompany($company)
+    public function setCompany(string $company): static
     {
         $this->NUE_company = $company;
         return $this;
@@ -1225,7 +863,10 @@ class AwbIntern
 // ************** FUNCTII PT REZULTATE ********
 // ********************************************
 
-	public function setResult(array $data)
+	/**
+	 * @param array<string, mixed> $data
+	 */
+	public function setResult(array $data): void
 		{
 		$this->hasErrors = false;
 		$this->errors = [];
@@ -1237,7 +878,7 @@ class AwbIntern
 			$this->errors = $data['errors'] ?? [];
 			}
 		
-		$this->awb = $data['awbNumber'];
+		$this->awb = (string) $data['awbNumber'];
 		$this->details = [
 				"tariff"		=> $data['tariff'] ?? '',
 				"vat"			=> $data['vat'] ?? '',
@@ -1253,34 +894,24 @@ class AwbIntern
 		}
 	
 	
-    /**
-     * @return bool
-     */
-    public function hasErrors()
+    public function hasErrors(): bool
     {
         return $this->hasErrors;
     }
 
-    /**
-     * @return array
-     */
-    public function getErrors()
+    /** @return array<int, mixed> */
+    public function getErrors(): array
     {
         return $this->errors ?? [];
     }
 
-    /**
-     * @return string
-     */
-    public function getAwb()
+    public function getAwb(): ?string
     {
         return $this->awb;
     }
 
-    /**
-     * @return array
-     */
-    public function getDetails()
+    /** @return array<string, mixed>|null */
+    public function getDetails(): ?array
     {
         return $this->details;
     }

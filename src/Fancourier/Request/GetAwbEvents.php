@@ -9,7 +9,7 @@ class GetAwbEvents extends AbstractRequest implements RequestInterface
     protected string $gateway = 'reports/awb-events';
 	protected string $method = 'GET';
 
-    protected $language = '';
+    protected string $language = '';
 
     public function __construct()
     {
@@ -17,6 +17,7 @@ class GetAwbEvents extends AbstractRequest implements RequestInterface
         $this->response = new GetAwbEventsResponse();
     }
 
+    /** @return array<string, string> */
     #[\Override]
     public function pack(): array
     {
@@ -32,16 +33,16 @@ class GetAwbEvents extends AbstractRequest implements RequestInterface
     /**
      * @return string
      */
-    public function getLanguage()
+    public function getLanguage(): string
     {
         return $this->language;
     }
 
     /**
      * @param string $language
-     * @return GetAwbEvents
+     * @return static
      */
-    public function setLanguage($language)
+    public function setLanguage(string $language): static
     {
 		$language = trim(strtolower($language));
 		if (in_array($language, ['ro', 'en']))

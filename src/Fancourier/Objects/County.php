@@ -4,12 +4,12 @@ namespace Fancourier\Objects;
 
 class County
 {
-	protected $id;
-	protected $name;
-	
-	public function __construct($id, $name)
+	protected string $id;
+	protected string $name;
+
+	public function __construct(int|string $id, string $name)
 		{
-		$this->id = $id;
+		$this->id = (string) $id;
 		$this->name = $name;
 		}
 	

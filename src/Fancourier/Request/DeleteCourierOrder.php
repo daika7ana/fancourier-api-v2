@@ -9,7 +9,7 @@ class DeleteCourierOrder extends AbstractRequest implements RequestInterface
     protected string $gateway = 'order';
 	protected string $method = 'DELETE';
 
-    private $orderId;
+    private ?string $orderId = null;
 
     public function __construct()
     {
@@ -17,6 +17,7 @@ class DeleteCourierOrder extends AbstractRequest implements RequestInterface
         $this->response = new DeleteCourierOrderResponse();
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -29,18 +30,18 @@ class DeleteCourierOrder extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getOrder()
+    public function getOrder(): ?string
     {
         return $this->orderId;
     }
 
     /**
-     * @param mixed $orderId
-     * @return DeleteCourierOrder
+     * @param string $orderId
+     * @return static
      */
-    public function setOrder($orderId)
+    public function setOrder(string $orderId): static
     {
         $this->orderId = $orderId;
         return $this;

@@ -9,7 +9,7 @@ class GetServiceOptions extends AbstractRequest implements RequestInterface
     protected string $gateway = 'reports/service-options';
 	protected string $method = 'GET';
 
-    private $service = 'Standard';
+    private string $service = 'Standard';
 
     public function __construct()
     {
@@ -17,6 +17,7 @@ class GetServiceOptions extends AbstractRequest implements RequestInterface
         $this->response = new GetServiceOptionsResponse();
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -32,16 +33,16 @@ class GetServiceOptions extends AbstractRequest implements RequestInterface
     /**
      * @return string
      */
-    public function getService()
+    public function getService(): string
     {
         return $this->service;
     }
 
     /**
      * @param string $service
-     * @return GetServiceOptions
+     * @return static
      */
-    public function setService($service)
+    public function setService(string $service): static
     {
         $this->service = $service;
         return $this;

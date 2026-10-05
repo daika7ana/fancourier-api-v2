@@ -4,46 +4,56 @@ namespace Fancourier\Objects;
 
 class AwbTracker
 {
-	protected $awbNumber;
-	protected $message;
-	protected $content;
+	protected string $awbNumber = '';
+	protected string $message = '';
+	protected string $content = '';
 
-	protected $date;
-	protected $paymentDate;
+	protected string $date = '';
+	protected string $paymentDate = '';
 
-	protected $returnAwbNumber;
-	protected $redirectionAwbNumber;
-	protected $reimbursementAwbNumber;
-	protected $oPODAwbNumber;
+	protected string $returnAwbNumber = '';
+	protected string $redirectionAwbNumber = '';
+	protected string $reimbursementAwbNumber = '';
+	protected string $oPODAwbNumber = '';
 
-	protected $confirmation;
-	protected $OTD;	// on time delivery - process total duration from pickup to delivery
-	protected $events;
+	/** @var array<string, mixed> */
+	protected array $confirmation = [];
+	protected string $OTD = '';	// on time delivery - process total duration from pickup to delivery
+	/** @var array<int, array<string, mixed>> */
+	protected array $events = [];
 
-	public function __construct($data)
+	/**
+	 * @param array<string, mixed> $data
+	 */
+	public function __construct(array $data)
 		{
-		$this->awbNumber = $data['awbNumber'];
-		$this->message = $data['message'] ?? '';
-		$this->content = $data['content'] ?? '';
+		// awbNumber has no default in live payloads, but the typed property must
+		// always be initialized (a `??` in the getter cannot protect it).
+		$this->awbNumber = (string) ($data['awbNumber'] ?? '');
+		$this->message = (string) ($data['message'] ?? '');
+		$this->content = (string) ($data['content'] ?? '');
 
 		if (!isset($data['message']))
 			{
-			$this->date = $data['date'] ?? '';
-			$this->paymentDate = $data['paymentDate'] ?? ''; 
-			$this->returnAwbNumber = $data['returnAwbNumber'] ?? '';
-			$this->redirectionAwbNumber = $data['redirectionAwbNumber'] ?? '';
-			$this->reimbursementAwbNumber = $data['reimbursementAwbNumber'] ?? ''; 
-			$this->oPODAwbNumber = $data['oPODAwbNumber'] ?? ''; 
+			$this->date = (string) ($data['date'] ?? '');
+			$this->paymentDate = (string) ($data['paymentDate'] ?? ''); 
+			$this->returnAwbNumber = (string) ($data['returnAwbNumber'] ?? '');
+			$this->redirectionAwbNumber = (string) ($data['redirectionAwbNumber'] ?? '');
+			$this->reimbursementAwbNumber = (string) ($data['reimbursementAwbNumber'] ?? ''); 
+			$this->oPODAwbNumber = (string) ($data['oPODAwbNumber'] ?? ''); 
 			}
 
-		$this->confirmation = $data['confirmation'] ?? [];
-		$this->OTD = $data['OTD'] ?? '';
-		$this->events = $data['events'] ?? [];
+		$confirmation = $data['confirmation'] ?? null;
+		$this->confirmation = is_array($confirmation) ? $confirmation : [];
+		// OTD (on-time-delivery duration) may arrive as an int number of seconds.
+		$this->OTD = (string) ($data['OTD'] ?? '');
+		$events = $data['events'] ?? null;
+		$this->events = is_array($events) ? $events : [];
 		}
 
 	public function getAwbNumber(): string
 		{
-		return $this->awbNumber ?? '';
+		return $this->awbNumber;
 		}
 
 	public function getReturnAwbNumber(): string
@@ -73,12 +83,12 @@ class AwbTracker
 
 	public function getMessage(): string
 		{
-		return $this->message ?? '';
+		return $this->message;
 		}
 
 	public function getContent(): string
 		{
-		return $this->content ?? '';
+		return $this->content;
 		}
 
 	public function hasConfirmation(): bool
@@ -90,9 +100,10 @@ class AwbTracker
 		return false;
 		}
 
+	/** @return array<string, mixed> */
 	public function getConfirmation(): array
 		{
-		return $this->confirmation ?? [];
+		return $this->confirmation;
 		}
 
 	public function getOTD(): string
@@ -100,11 +111,13 @@ class AwbTracker
 		return $this->OTD;
 		}
 
+	/** @return array<int, array<string, mixed>> */
 	public function getEvents(): Array
 		{
-		return $this->events ?? [];
+		return $this->events;
 		}
 
+	/** @return array<string, mixed> */
 	public function getStatus(): array
 		{
 		if (count($this->events) > 0)
@@ -115,7 +128,7 @@ class AwbTracker
 
 		return [
 				'id'	=>	null,
-				'name'	=>	$this->message ?? '',
+				'name'	=>	$this->message,
 				'location' =>	'',
 				'date'	=> date("Y-m-d H:i:s")
 				];

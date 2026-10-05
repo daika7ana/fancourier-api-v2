@@ -24,7 +24,7 @@ class CreateAwbTest extends TestCase
         $this->assertTrue($response->isOk());
         $this->assertCount(1, $response->getAll());
         $this->assertInstanceOf(AwbIntern::class, $response->getAll()[0]);
-        $this->assertSame(2347300120337, $response->getAll()[0]->getAwb());
+        $this->assertSame('2347300120337', $response->getAll()[0]->getAwb());
         $this->assertFalse($response->getAll()[0]->hasErrors());
         $this->assertSame('B', $response->getAll()[0]->getDetails()['letter']);
     }

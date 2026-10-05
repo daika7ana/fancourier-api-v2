@@ -6,7 +6,8 @@ use Fancourier\Objects\Country;
 
 class GetCountries extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<int|string, Country>|null */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -40,13 +41,19 @@ class GetCountries extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, Country>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];
 		}
 	
 		
-	public function getCountry($name) //: Country|false
+	/**
+	 * @param string $name
+	 */
+	public function getCountry(string $name): Country|false
 		{
 		return $this->result[ $name ] ?? false;
 		}

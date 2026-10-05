@@ -6,7 +6,8 @@ use Fancourier\Objects\AwbTracker;
 
 class TrackAwb extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<int|string, AwbTracker>|null */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -40,13 +41,19 @@ class TrackAwb extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, AwbTracker>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];
 		}
 	
 		
-	public function getAwb($awbNo) //: AwbTracker|false
+	/**
+	 * @param int|string $awbNo
+	 */
+	public function getAwb(int|string $awbNo): AwbTracker|false
 		{
 		return $this->result[ $awbNo ] ?? false;
 		}

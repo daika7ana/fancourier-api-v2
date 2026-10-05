@@ -9,9 +9,9 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
     protected string $gateway = 'reports/orders';
 	protected string $method = 'GET';
 
-    private $date = '';
-    private $page = 0;
-    private $perPage = 10;
+    private string $date = '';
+    private int $page = 0;
+    private int $perPage = 10;
 
     public function __construct()
     {
@@ -21,6 +21,7 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
 		$this->date = date("d-m-Y");
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -45,19 +46,19 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
 
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDate()
+    public function getDate(): string
     {
         return $this->date;
     }
 
     /**
-     * @param mixed $date Date as string in the dd-mm-YYYY format
+     * @param string $date Date as string in the dd-mm-YYYY format
 	 * 					  Accepts YYYY-mm-dd format as well and will be converted internally to the dd-mm-YYYY format
-     * @return GetCourierOrders
+     * @return static
      */
-    public function setDate($date)
+    public function setDate(string $date): static
     {
 		$parts = explode("-", $date);
 		if (strlen($parts[0]) == 4)
@@ -73,7 +74,7 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
     /**
      * @return int
      */
-    public function getPage()
+    public function getPage(): int
     {
         return $this->page;
     }
@@ -82,7 +83,7 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
      * @param int $page
      * @return $this
      */
-    public function setPage($page)
+    public function setPage(int $page): static
     {
         $this->page = $page;
         return $this;
@@ -91,7 +92,7 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
     /**
      * @return int
      */
-    public function getPerPage()
+    public function getPerPage(): int
     {
         return $this->perPage;
     }
@@ -100,7 +101,7 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
      * @param int $perPage
      * @return $this
      */
-    public function setPerPage($perPage)
+    public function setPerPage(int $perPage): static
     {
 		if ($perPage > 100)
 			{	// FAN Courier API limits this to maximum 100 even if the documentation specifies 1000

@@ -5,7 +5,8 @@ namespace Fancourier\Response;
 
 class CreateCourierOrder extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<int, mixed>|null Decoded payload, assigned for parity; no typed getter reads it. */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static

@@ -9,9 +9,9 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
     protected string $gateway = 'reports/awb';
 	protected string $method = 'GET';
 
-    private $date = '';
-    private $page = 0;
-    private $perPage = 100;
+    private string $date = '';
+    private int $page = 0;
+    private int $perPage = 100;
 
     public function __construct()
     {
@@ -21,6 +21,7 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
 		$this->date = date("Y-m-d");
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -44,18 +45,18 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDate()
+    public function getDate(): string
     {
         return $this->date;
     }
 
     /**
-     * @param mixed $usedate
-     * @return GetBankTransfers
+     * @param string $usedate
+     * @return static
      */
-    public function setDate($usedate)
+    public function setDate(string $usedate): static
     {
         $this->date = $usedate;
         return $this;
@@ -64,16 +65,16 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
     /**
      * @return int
      */
-    public function getPage()
+    public function getPage(): int
     {
         return $this->page;
     }
 
     /**
      * @param int $page
-     * @return GetBankTransfers
+     * @return static
      */
-    public function setPage($page)
+    public function setPage(int $page): static
     {
         $this->page = $page;
         return $this;
@@ -82,16 +83,16 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
     /**
      * @return int
      */
-    public function getPerPage()
+    public function getPerPage(): int
     {
         return $this->perPage;
     }
 
     /**
      * @param int $perPage
-     * @return GetBankTransfers
+     * @return static
      */
-    public function setPerPage($perPage)
+    public function setPerPage(int $perPage): static
     {
 		if ($perPage > 100)
 			{	// FAN Courier API limits this to maximum 100 even if the documentation specifies 1000

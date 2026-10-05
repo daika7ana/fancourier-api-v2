@@ -14,8 +14,9 @@ class TrackCourierOrder extends AbstractRequest implements RequestInterface
 	protected string $gateway = 'reports/orders/tracking';
 	protected string $method = 'GET';
 	
-	protected $orderList = [];
-	protected $language = '';
+	/** @var array<string> */
+	protected array $orderList = [];
+	protected string $language = '';
 
     public function __construct()
     {
@@ -23,6 +24,7 @@ class TrackCourierOrder extends AbstractRequest implements RequestInterface
         $this->response = new TrackCourierOrderResponse();
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -46,18 +48,18 @@ class TrackCourierOrder extends AbstractRequest implements RequestInterface
 	
     }
 	
-	public function addOrder(string $order)
+	public function addOrder(string $order): static
 	{
 		$this->orderList[] = $order;
 		return $this;
 	}
 	
-	public function setOrder(string $order)
+	public function setOrder(string $order): static
 	{
 		return $this->addOrder($order);
 	}
 	
-	public function resetOrders()
+	public function resetOrders(): static
 	{
 		$this->orderList = [];
 		return $this;
@@ -66,16 +68,16 @@ class TrackCourierOrder extends AbstractRequest implements RequestInterface
     /**
      * @return string
      */
-	public function getLanguage()
+	public function getLanguage(): string
 	{
 		return $this->language ?? '';
 	}
 	
     /**
      * @param string $language
-     * @return TrackAwb
+     * @return static
      */
-    public function setLanguage($language)
+    public function setLanguage(string $language): static
     {
 		$language = trim(strtolower($language));
 		if (in_array($language, ['ro', 'en']))

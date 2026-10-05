@@ -6,7 +6,8 @@ use Fancourier\Objects\City;
 
 class GetCities extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<int|string, City>|null */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -40,12 +41,18 @@ class GetCities extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, City>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];
 		}
 	
-	public function getCity($cityname) //: City|false
+	/**
+	 * @param string $cityname
+	 */
+	public function getCity(string $cityname): City|false
 		{
 		$return = false;
 		foreach ($this->result as $cid=>$cv)

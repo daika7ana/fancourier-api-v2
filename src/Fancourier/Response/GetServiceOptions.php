@@ -6,7 +6,8 @@ use Fancourier\Objects\ServiceOption;
 
 class GetServiceOptions extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<int|string, ServiceOption>|null */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -40,17 +41,26 @@ class GetServiceOptions extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, ServiceOption>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];
 		}
 	
-	public function hasOption($code): bool
+	/**
+	 * @param string $code
+	 */
+	public function hasOption(string $code): bool
 		{
 		return isset($this->result[ $code ]);
 		}
 		
-	public function getOption($code) //: ServiceOption|false
+	/**
+	 * @param string $code
+	 */
+	public function getOption(string $code): ServiceOption|false
 		{
 		return $this->result[ $code ] ?? false;
 		}

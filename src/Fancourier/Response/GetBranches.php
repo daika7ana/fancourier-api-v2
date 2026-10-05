@@ -6,7 +6,8 @@ use Fancourier\Objects\Branch;
 
 class GetBranches extends Generic implements ResponseInterface
 {
-	protected $result;
+	/** @var array<int|string, Branch>|null */
+	protected ?array $result = null;
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -41,12 +42,18 @@ class GetBranches extends Generic implements ResponseInterface
         return $this;
     }
 	
+	/**
+	 * @return array<int|string, Branch>
+	 */
 	public function getAll(): array
 		{
 		return $this->result ?? [];
 		}
 	
-	public function get($id): ?Branch
+	/**
+	 * @param int|string $id
+	 */
+	public function get(int|string $id): ?Branch
 		{
 		return $this->result[$id] ?? null;
 		}

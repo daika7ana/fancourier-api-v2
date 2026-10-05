@@ -4,41 +4,46 @@ namespace Fancourier\Objects;
 
 class BankTransfer
 {
-	protected $awbNumber;
-	protected $awbDate;
-	protected $returnAwbNumber;
-	protected $reimbursementAwbNumber;
-	protected $amountCollected;
-	protected $content;
-	protected $transferDate;
-	protected $transactionType;
-	protected $transactionDate;
+	protected string $awbNumber = '';
+	protected string $awbDate = '';
+	protected string $returnAwbNumber = '';
+	protected string $reimbursementAwbNumber = '';
+	protected float $amountCollected = 0.0;
+	protected string $content = '';
+	protected string $transferDate = '';
+	protected string $transactionType = '';
+	protected string $transactionDate = '';
 
-	protected $recipientName;
-	protected $recipientContactPerson;
-	protected $recipientCity;
+	protected string $recipientName = '';
+	protected string $recipientContactPerson = '';
+	protected string $recipientCity = '';
 
-	protected $senderName;
-	protected $senderContactPerson;
+	protected string $senderName = '';
+	protected string $senderContactPerson = '';
 
-	public function __construct($data)
+	/**
+	 * @param array<string, mixed> $data
+	 */
+	public function __construct(array $data)
 		{
-		$this->awbNumber				= $data['info']['awbNumber'] ?? '';
- 		$this->awbDate					= $data['info']['awbDate'] ?? '';
- 		$this->returnAwbNumber			= $data['info']['returnAwbNumber'] ?? '';
- 		$this->reimbursementAwbNumber	= $data['info']['reimbursementAwbNumber'] ?? '';
- 		$this->amountCollected			= $data['info']['amountCollected'] ?? 0;
- 		$this->content					= $data['info']['content'] ?? '';
- 		$this->transferDate				= $data['info']['transferDate'] ?? '';
- 		$this->transactionType			= $data['info']['transactionType'] ?? '';
- 		$this->transactionDate			= $data['info']['transactionDate'] ?? '';
+		$this->awbNumber				= (string) ($data['info']['awbNumber'] ?? '');
+ 		$this->awbDate					= (string) ($data['info']['awbDate'] ?? '');
+ 		$this->returnAwbNumber			= (string) ($data['info']['returnAwbNumber'] ?? '');
+ 		$this->reimbursementAwbNumber	= (string) ($data['info']['reimbursementAwbNumber'] ?? '');
+ 		// amountCollected arrives as a numeric string or a float.
+ 		$amountCollected = $data['info']['amountCollected'] ?? null;
+ 		$this->amountCollected			= is_numeric($amountCollected) ? (float) $amountCollected : 0.0;
+ 		$this->content					= (string) ($data['info']['content'] ?? '');
+ 		$this->transferDate				= (string) ($data['info']['transferDate'] ?? '');
+ 		$this->transactionType			= (string) ($data['info']['transactionType'] ?? '');
+ 		$this->transactionDate			= (string) ($data['info']['transactionDate'] ?? '');
 
-		$this->recipientName			= $data['recipient']['name'] ?? '';
-		$this->recipientContactPerson	= $data['recipient']['contactPerson'] ?? '';
-		$this->recipientCity			= $data['recipient']['address']['locality'] ?? '';
+		$this->recipientName			= (string) ($data['recipient']['name'] ?? '');
+		$this->recipientContactPerson	= (string) ($data['recipient']['contactPerson'] ?? '');
+		$this->recipientCity			= (string) ($data['recipient']['address']['locality'] ?? '');
 
-		$this->senderName				= $data['sender']['name'] ?? '';
-		$this->senderContactPerson		= $data['sender']['contactPerson'] ?? '';
+		$this->senderName				= (string) ($data['sender']['name'] ?? '');
+		$this->senderContactPerson		= (string) ($data['sender']['contactPerson'] ?? '');
 		}
 
 	public function getAwbNumber(): string

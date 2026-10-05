@@ -9,12 +9,13 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     protected string $gateway = 'awb/label';
 	protected string $method = 'GET';
 
-    private $awbs = [];
-    private $pdf = true;
-    private $zpl = false;
-	private $dpi = -1;	// dots per inch. only applies for ZPL
-    private $lang = 'ro';
-    private $size = '';
+    /** @var array<string> */
+    private array $awbs = [];
+    private bool $pdf = true;
+    private bool $zpl = false;
+	private int $dpi = -1;	// dots per inch. only applies for ZPL
+    private string $lang = 'ro';
+    private string $size = '';
 
     public function __construct()
     {
@@ -22,6 +23,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
         $this->response = new PrintAwbResponse();
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -56,27 +58,27 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @return mixed
+     * @return array<string>
      */
-    public function getAwb()
+    public function getAwb(): array
     {
         return $this->awbs;
     }
 
     /**
      * @param string $awb
-     * @return PrintAwb
+     * @return static
      */
-    public function setAwb($awb)
+    public function setAwb(string $awb): static
     {
         return $this->addAwb($awb);
     }
 
     /**
      * @param string $awb
-     * @return PrintAwb
+     * @return static
      */
-    public function addAwb($awb)
+    public function addAwb(string $awb): static
     {
         $this->awbs[] = $awb;
         return $this;
@@ -86,7 +88,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
      * Returns true if PDF and ZPL are not set (the returned AWB will be in HTML format)
      * @return bool
      */
-    public function getHtml()
+    public function getHtml(): bool
     {
         return (!$this->pdf && !$this->zpl);
     }
@@ -94,9 +96,9 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     /**
      * Explicit method to set HTML mode (deactivates PDF / ZPL formats)
      * @param bool $active
-     * @return PrintAwb
+     * @return static
      */
-    public function setHtml($active = true)
+    public function setHtml(bool $active = true): static
     {
         // HTML mode means neither PDF nor ZPL is active; turning it off falls back to the default PDF format.
         // ponytail: setHtml(false) always selects PDF; restore the previous format only if a caller needs ZPL back.
@@ -109,16 +111,16 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     /**
      * @return bool
      */
-    public function getPdf()
+    public function getPdf(): bool
     {
         return $this->pdf;
     }
 
     /**
      * @param bool $active
-     * @return PrintAwb
+     * @return static
      */
-    public function setPdf($active = true)
+    public function setPdf(bool $active = true): static
     {
         $this->pdf = $active;
         if ($this->zpl) { $this->zpl = false; }	// disable ZPL in case it's active
@@ -128,16 +130,16 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     /**
      * @return bool
      */
-    public function getZpl()
+    public function getZpl(): bool
     {
         return $this->zpl;
     }
 
     /**
      * @param bool $active
-     * @return PrintAwb
+     * @return static
      */
-    public function setZpl($active = false)
+    public function setZpl(bool $active = false): static
     {
         $this->zpl = $active;
         if ($this->pdf) { $this->pdf = false; }	// disable PDF in case it's active
@@ -147,7 +149,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     /**
      * @return int
      */
-    public function getDpi()
+    public function getDpi(): int
     {
         return $this->dpi;
     }
@@ -155,9 +157,9 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     /**
 	 / Set the DPI (dots per inch) for the returned label (only applies to ZPL)
      * @param int $dpi
-     * @return PrintAwb
+     * @return static
      */
-    public function setDpi($dpi = -1)
+    public function setDpi(int $dpi = -1): static
     {
         $this->dpi = $dpi;
         return $this;
@@ -166,16 +168,16 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     /**
      * @return string
      */
-    public function getLang()
+    public function getLang(): string
     {
         return $this->lang;
     }
 
     /**
      * @param string $lang
-     * @return PrintAwb
+     * @return static
      */
-    public function setLang($lang)
+    public function setLang(string $lang): static
     {
         $lang = strtolower($lang);
         if (!in_array($lang, ['ro', 'en'])) {
@@ -189,16 +191,16 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     /**
      * @return string
      */
-    public function getSize()
+    public function getSize(): string
     {
         return $this->size;
     }
 
     /**
      * @param string $pageSize - Can be <empty>, 'A4', 'A5' and 'A6' (only for ePOD)
-     * @return PrintAwb
+     * @return static
      */
-    public function setSize($pageSize = '')
+    public function setSize(string $pageSize = ''): static
     {
         $pageSize = strtoupper($pageSize);
         if (!in_array($pageSize, ['A4', 'A5', 'A6'])) {

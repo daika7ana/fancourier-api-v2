@@ -4,43 +4,57 @@ namespace Fancourier\Objects;
 
 class Pudo
 {
-	protected $id;
-	protected $name;
-	protected $routingLocation;
-	protected $description;
-	protected $latitude;
-	protected $longitude;
+	protected string $id = '';
+	protected string $name = '';
+	protected string $routingLocation = '';
+	protected string $description = '';
+	// latitude/longitude arrive as JSON floats but the getters are typed string.
+	protected string $latitude = '';
+	protected string $longitude = '';
 
-	protected $address;
+	/** @var array<string, mixed> */
+	protected array $address = [];
 
-	protected $schedule;
-	protected $drawer;
+	/** @var array<string, mixed> */
+	protected array $schedule = [];
+	/** @var array<string, mixed> */
+	protected array $drawer = [];
 
-	protected $phones;
-	protected $email;
-	protected $highDemand;
-	protected $paymentMethods;
+	/** @var array<int, mixed> */
+	protected array $phones = [];
+	protected string $email = '';
+	protected bool $highDemand = false;
+	/** @var array<int, mixed> */
+	protected array $paymentMethods = [];
 
-	public function __construct($data)
+	/**
+	 * @param array<string, mixed> $data
+	 */
+	public function __construct(array $data)
 		{
-		$this->id				= $data['id'] ?? '';
-		$this->name				= $data['name'] ?? '';
-		$this->routingLocation	= $data['routingLocation'] ?? '';
-		$this->description		= $data['description'] ?? '';
+		$this->id				= (string) ($data['id'] ?? '');
+		$this->name				= (string) ($data['name'] ?? '');
+		$this->routingLocation	= (string) ($data['routingLocation'] ?? '');
+		$this->description		= (string) ($data['description'] ?? '');
 
-		$this->address			= $data['address'] ?? [];
+		$address = $data['address'] ?? null;
+		$this->address			= is_array($address) ? $address : [];
 
-		$this->latitude			= $data['latitude'] ?? '';
-		$this->longitude		= $data['longitude'] ?? '';
+		$this->latitude			= (string) ($data['latitude'] ?? '');
+		$this->longitude		= (string) ($data['longitude'] ?? '');
 
-		$this->schedule			= $data['schedule'] ?? [];
-		$this->drawer			= $data['drawer'] ?? [];
+		$schedule = $data['schedule'] ?? null;
+		$this->schedule			= is_array($schedule) ? $schedule : [];
+		$drawer = $data['drawer'] ?? null;
+		$this->drawer			= is_array($drawer) ? $drawer : [];
 
-		$this->phones			= $data['phones'] ?? [];
+		$phones = $data['phones'] ?? null;
+		$this->phones			= is_array($phones) ? $phones : [];
 
-		$this->email			= $data['email'] ?? '';
-		$this->highDemand		= $data['highDemand'] ?? false;
-		$this->paymentMethods	= $data['paymentMethods'] ?? [];
+		$this->email			= (string) ($data['email'] ?? '');
+		$this->highDemand		= (bool) ($data['highDemand'] ?? false);
+		$paymentMethods = $data['paymentMethods'] ?? null;
+		$this->paymentMethods	= is_array($paymentMethods) ? $paymentMethods : [];
 		}
 
 	public function getId(): string
@@ -50,66 +64,72 @@ class Pudo
 
 	public function getName(): string
 		{
-		return $this->name ?? '';
+		return $this->name;
 		}
 
 	public function getRoutingLocation(): string
 		{
-		return $this->routingLocation ?? '';
+		return $this->routingLocation;
 		}
 
 	public function getDescription(): string
 		{
-		return $this->description ?? '';
+		return $this->description;
 		}
 
 	public function getLatitude(): string
 		{
-		return $this->latitude ?? '';
+		return $this->latitude;
 		}
 
 	public function getLongitude(): string
 		{
-		return $this->longitude ?? '';
+		return $this->longitude;
 		}
 
+	/** @return array<string, mixed> */
 	public function getAddress(): array
 		{
-		return $this->address ?? [];
+		return $this->address;
 		}
 
+	/** @return array<string, mixed> */
 	public function getSchedule(): array
 		{
-		return $this->schedule ?? [];
+		return $this->schedule;
 		}
 
+	/** @return array<string, mixed> */
 	public function getDrawer(): array
 		{
-		return $this->drawer ?? [];
+		return $this->drawer;
 		}
 
+	/** @return array<int, mixed> */
 	public function getPhones(): array
 		{
-		return $this->phones ?? [];
+		return $this->phones;
 		}
 
 	public function getEmail(): string
 		{
-		return $this->email ?? '';
+		return $this->email;
 		}
 
 	public function getHighDemand(): bool
 		{
-		return $this->highDemand ?? false;
+		return $this->highDemand;
 		}
 
+	/** @return array<int, mixed> */
 	public function getPaymentMethods(): array
 		{
-		return $this->paymentMethods ?? [];
+		return $this->paymentMethods;
 		}
 
 
 	/* return array with data similar to fan courier api response */
+	/** @return array<string, mixed> */
 	public function getArray(): array
 		{
 		$arr = [

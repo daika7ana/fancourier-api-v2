@@ -9,8 +9,8 @@ class GetBranches extends AbstractRequest implements RequestInterface
     protected string $gateway = 'reports/branches';
 	protected string $method = 'GET';
 
-    private $county = '';
-    private $city = '';
+    private string $county = '';
+    private string $city = '';
 
     public function __construct()
     {
@@ -18,6 +18,7 @@ class GetBranches extends AbstractRequest implements RequestInterface
         $this->response = new GetBranchesResponse();
     }
 
+    /** @return array<string, string> */
     #[\Override]
     public function pack(): array
     {
@@ -36,36 +37,36 @@ class GetBranches extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getCity()
+    public function getCity(): string
     {
         return $this->city;
     }
 
     /**
-     * @param mixed $city
-     * @return GetBranches
+     * @param string $city
+     * @return static
      */
-    public function setCity($city)
+    public function setCity(string $city): static
     {
         $this->city = $city;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getCounty()
+    public function getCounty(): string
     {
         return $this->county;
     }
 
     /**
-     * @param mixed $county
-     * @return GetBranches
+     * @param string $county
+     * @return static
      */
-    public function setCounty($county)
+    public function setCounty(string $county): static
     {
         $this->county = $county;
         return $this;

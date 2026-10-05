@@ -4,13 +4,13 @@ namespace Fancourier\Objects;
 
 class Service
 {
-	protected $id;
-	protected $name;
-	protected $description;
-	
-	public function __construct($id, $name, $description)
+	protected string $id;
+	protected string $name;
+	protected string $description;
+
+	public function __construct(int|string $id, string $name, string $description)
 		{
-		$this->id = $id;
+		$this->id = (string) $id;
 		$this->name = $name;
 		$this->description = $description;
 		}

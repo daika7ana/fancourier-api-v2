@@ -4,69 +4,85 @@ namespace Fancourier\Objects;
 
 class ShippingSlip
 {
-	protected $awbNumber;
+	protected string $awbNumber = '';
 
-	protected $service;
-	protected $serviceId;
+	protected string $service = '';
+	protected string $serviceId = '';
 
-	protected $weight;
-	protected $height;
-	protected $width;
-	protected $length;
+	protected string $weight = '';
+	protected float $height = 0.0;
+	protected float $width = 0.0;
+	protected float $length = 0.0;
 
-	protected $payment;
-	protected $returnPayment;
-	protected $cod;
-	protected $declaredValue;
+	protected string $payment = '';
+	protected string $returnPayment = '';
+	protected float $cod = 0.0;
+	protected float $declaredValue = 0.0;
 
-	protected $notes;
-	protected $contents;
+	protected string $notes = '';
+	protected string $contents = '';
 
-    protected $envelopes;
-    protected $parcels;
+    protected int $envelopes = 0;
+    protected int $parcels = 0;
 
-    protected $dateTime;
-    protected $cost;
-    protected $costCenter;
-    protected $refund;
-    protected $currency;
+    protected string $dateTime = '';
+    protected float $cost = 0.0;
+    protected string $costCenter = '';
+    protected string $refund = '';
+    protected string $currency = '';
 
-	protected $recipient;
-	protected $sender;
+	/** @var array<string, mixed> */
+	protected array $recipient = [];
+	/** @var array<string, mixed> */
+	protected array $sender = [];
 
-	public function __construct($data)
+	/**
+	 * @param array<string, mixed> $data
+	 */
+	public function __construct(array $data)
 		{
-		$this->awbNumber	= $data['info']['awbNumber'] ?? '';
+		$this->awbNumber	= (string) ($data['info']['awbNumber'] ?? '');
 
-		$this->service		= $data['info']['service'] ?? '';
-		$this->serviceId	= $data['info']['serviceId'] ?? '';
+		$this->service		= (string) ($data['info']['service'] ?? '');
+		$this->serviceId	= (string) ($data['info']['serviceId'] ?? '');
 
-		$this->weight		= $data['info']['weight'] ?? 0;
-		$this->height		= $data['info']['dimensions']['height'] ?? 0;
-		$this->width		= $data['info']['dimensions']['width'] ?? 0;
-		$this->length		= $data['info']['dimensions']['length'] ?? 0;
+		// weight is exposed as a string by the getter; keep the numeric default "0".
+		$this->weight		= (string) ($data['info']['weight'] ?? 0);
+		$this->height		= self::toFloat($data['info']['dimensions']['height'] ?? null);
+		$this->width		= self::toFloat($data['info']['dimensions']['width'] ?? null);
+		$this->length		= self::toFloat($data['info']['dimensions']['length'] ?? null);
 
-		$this->payment		= $data['info']['payment'] ?? '';
-		$this->returnPayment	= $data['info']['returnPayment'] ?? '';
-		$this->cod			= $data['info']['cod'] ?? 0;
-		$this->declaredValue	= $data['info']['declaredValue'] ?? 0;
-		$this->notes		= $data['info']['observations'] ?? '';
-		$this->contents		= $data['info']['content'] ?? '';
+		$this->payment		= (string) ($data['info']['payment'] ?? '');
+		$this->returnPayment	= (string) ($data['info']['returnPayment'] ?? '');
+		$this->cod			= self::toFloat($data['info']['cod'] ?? null);
+		$this->declaredValue	= self::toFloat($data['info']['declaredValue'] ?? null);
+		$this->notes		= (string) ($data['info']['observations'] ?? '');
+		$this->contents		= (string) ($data['info']['content'] ?? '');
 
-		$this->envelopes	= $data['info']['packages']['envelope'] ?? 0;
-		$this->parcels		= $data['info']['packages']['parcel'] ?? 0;
+		$this->envelopes	= (int) ($data['info']['packages']['envelope'] ?? 0);
+		$this->parcels		= (int) ($data['info']['packages']['parcel'] ?? 0);
 
-		$this->dateTime		= $data['info']['date'] ?? '';
+		$this->dateTime		= (string) ($data['info']['date'] ?? '');
 
-		$this->cost			= $data['info']['cost'] ?? 0;
-		$this->costCenter	= $data['info']['costCenter'] ?? '';
+		$this->cost			= self::toFloat($data['info']['cost'] ?? null);
+		$this->costCenter	= (string) ($data['info']['costCenter'] ?? '');
 
-		$this->refund		= $data['info']['refund'] ?? '';
+		$this->refund		= (string) ($data['info']['refund'] ?? '');
 
-		$this->currency		= $data['info']['currency'] ?? '';
+		$this->currency		= (string) ($data['info']['currency'] ?? '');
 
- 		$this->recipient	= $data['recipient'] ?? [];
- 		$this->sender		= $data['sender'] ?? [];
+		$recipient = $data['recipient'] ?? null;
+ 		$this->recipient	= is_array($recipient) ? $recipient : [];
+		$sender = $data['sender'] ?? null;
+ 		$this->sender		= is_array($sender) ? $sender : [];
+		}
+
+	/**
+	 * Normalize a JSON scalar that must become a float.
+	 */
+	private static function toFloat(mixed $value): float
+		{
+		return is_numeric($value) ? (float) $value : 0.0;
 		}
 
 	public function getAwbNumber(): string
@@ -169,11 +185,13 @@ class ShippingSlip
 		return $this->currency;
 		}
 
+	/** @return array<string, mixed> */
 	public function getRecipient(): array
 		{
 		return $this->recipient;
 		}
 
+	/** @return array<string, mixed> */
 	public function getSender(): array
 		{
 		return $this->sender;

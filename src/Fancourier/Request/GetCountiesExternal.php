@@ -9,7 +9,7 @@ class GetCountiesExternal extends AbstractRequest implements RequestInterface
     protected string $gateway = 'reports/external-counties';
 	protected string $method = 'GET';
 	
-    protected $country = '';
+    protected string $country = '';
 
     public function __construct()
     {
@@ -17,6 +17,7 @@ class GetCountiesExternal extends AbstractRequest implements RequestInterface
         $this->response = new GetCountiesExternalResponse();
     }
 
+    /** @return array<string, string> */
     #[\Override]
     public function pack(): array
     {
@@ -32,16 +33,16 @@ class GetCountiesExternal extends AbstractRequest implements RequestInterface
     /**
      * @return string
      */
-    public function getCountry()
+    public function getCountry(): string
     {
         return $this->country;
     }
 
     /**
      * @param string $country
-     * @return GetCities
+     * @return static
      */
-    public function setCountry($country)
+    public function setCountry(string $country): static
     {
         $this->country = $country;
         return $this;

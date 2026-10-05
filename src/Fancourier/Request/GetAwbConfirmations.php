@@ -14,7 +14,8 @@ class GetAwbConfirmations extends AbstractRequest implements RequestInterface
 	protected string $gateway = 'reports/get-awb-confirmations';
 	protected string $method = 'GET';
 	
-	protected $awbList = [];
+	/** @var array<string> */
+	protected array $awbList = [];
 
     public function __construct()
     {
@@ -22,6 +23,7 @@ class GetAwbConfirmations extends AbstractRequest implements RequestInterface
         $this->response = new GetAwbConfirmationsResponse();
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -40,19 +42,19 @@ class GetAwbConfirmations extends AbstractRequest implements RequestInterface
 	
     }
 	
-	public function addAwb(string $awb)
+	public function addAwb(string $awb): static
 	{
 		$this->awbList[] = $awb;
 		return $this;
 	}
 	
-	public function setAwb(string $awb)
+	public function setAwb(string $awb): static
 	{
 		return $this->addAwb($awb);
 	}
 	
 	
-	public function resetAwbs()
+	public function resetAwbs(): static
 	{
 		$this->awbList = [];
 		return $this;

@@ -9,10 +9,10 @@ class GetStreets extends AbstractRequest implements RequestInterface
     protected string $gateway = 'reports/streets';
 	protected string $method = 'GET';
 
-    private $county = '';
-    private $city = '';
-    private $page = 0;
-    private $perPage = 1000;
+    private string $county = '';
+    private string $city = '';
+    private int $page = 0;
+    private int $perPage = 1000;
 
     public function __construct()
     {
@@ -20,6 +20,7 @@ class GetStreets extends AbstractRequest implements RequestInterface
         $this->response = new GetStreetsResponse();
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
@@ -49,36 +50,36 @@ class GetStreets extends AbstractRequest implements RequestInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getCity()
+    public function getCity(): string
     {
         return $this->city;
     }
 
     /**
-     * @param mixed $city
+     * @param string $city
      * @return $this
      */
-    public function setCity($city)
+    public function setCity(string $city): static
     {
         $this->city = $city;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getCounty()
+    public function getCounty(): string
     {
         return $this->county;
     }
 
     /**
-     * @param mixed $county
+     * @param string $county
      * @return $this
      */
-    public function setCounty($county)
+    public function setCounty(string $county): static
     {
         $this->county = $county;
         return $this;
@@ -88,7 +89,7 @@ class GetStreets extends AbstractRequest implements RequestInterface
     /**
      * @return int
      */
-    public function getPage()
+    public function getPage(): int
     {
         return $this->page;
     }
@@ -97,7 +98,7 @@ class GetStreets extends AbstractRequest implements RequestInterface
      * @param int $page
      * @return $this
      */
-    public function setPage($page)
+    public function setPage(int $page): static
     {
         $this->page = $page;
         return $this;
@@ -106,7 +107,7 @@ class GetStreets extends AbstractRequest implements RequestInterface
     /**
      * @return int
      */
-    public function getPerPage()
+    public function getPerPage(): int
     {
         return $this->perPage;
     }
@@ -115,7 +116,7 @@ class GetStreets extends AbstractRequest implements RequestInterface
      * @param int $perPage
      * @return $this
      */
-    public function setPerPage($perPage)
+    public function setPerPage(int $perPage): static
     {
 		if ($perPage > 1000)
 			{
