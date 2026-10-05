@@ -6,18 +6,19 @@ use Fancourier\Response\GetCitiesExternal as GetCitiesExternalResponse;
 
 class GetCitiesExternal extends AbstractRequest implements RequestInterface
 {
+    use PaginationTrait;
+
     protected string $gateway = 'reports/external-localities';
 	protected string $method = 'GET';
 
     private string $country = '';
     private string $county = '';
-    private int $page = 0;
-    private int $perPage = 100;
 
     public function __construct()
     {
         parent::__construct();
         $this->response = new GetCitiesExternalResponse();
+        $this->perPage = 100;
     }
 
     /** @return array<string, mixed> */
@@ -35,18 +36,7 @@ class GetCitiesExternal extends AbstractRequest implements RequestInterface
 			$arr['county'] = $this->county;
 			}
 		
-		if ($this->page > 0)
-			{
-			$arr['page'] = $this->page;
-			}
-		
-		if ($this->perPage > 0)
-			{
-			$arr['perPage'] = $this->perPage;
-			}
-		
-		
-		return $arr;
+		return $this->withPagination($arr);
     }
 
     /**
@@ -82,47 +72,6 @@ class GetCitiesExternal extends AbstractRequest implements RequestInterface
     public function setCounty(string $county): static
     {
         $this->county = $county;
-        return $this;
-    }
-
-
-    /**
-     * @return int
-     */
-    public function getPage(): int
-    {
-        return $this->page;
-    }
-
-    /**
-     * @param int $page
-     * @return $this
-     */
-    public function setPage(int $page): static
-    {
-        $this->page = $page;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPerPage(): int
-    {
-        return $this->perPage;
-    }
-
-    /**
-     * @param int $perPage
-     * @return $this
-     */
-    public function setPerPage(int $perPage): static
-    {
-		if ($perPage > 100)
-			{	// FAN Courier API limits this to maximum 100 even if the documentation specifies 1000
-			$perPage = 100;
-			}
-        $this->perPage = $perPage;
         return $this;
     }
 

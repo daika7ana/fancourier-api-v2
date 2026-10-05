@@ -6,12 +6,12 @@ use Fancourier\Response\GetCourierOrders as GetCourierOrdersResponse;
 
 class GetCourierOrders extends AbstractRequest implements RequestInterface
 {
+    use PaginationTrait;
+
     protected string $gateway = 'reports/orders';
 	protected string $method = 'GET';
 
     private string $date = '';
-    private int $page = 0;
-    private int $perPage = 10;
 
     public function __construct()
     {
@@ -19,6 +19,7 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
         $this->response = new GetCourierOrdersResponse();
 		
 		$this->date = date("d-m-Y");
+        $this->perPage = 10;
     }
 
     /** @return array<string, mixed> */
@@ -30,18 +31,7 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
 				'date' => $this->date,
 				];
 		
-		if ($this->page > 0)
-			{
-			$arr['page'] = $this->page;
-			}
-		
-		if ($this->perPage > 0)
-			{
-			$arr['perPage'] = $this->perPage;
-			}
-		
-		
-		return $arr;
+		return $this->withPagination($arr);
     }
 
 
@@ -67,47 +57,6 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
 			$date = $parts[2].'-'.$parts[1].'-'.$parts[0];
 			}
         $this->date = $date;
-        return $this;
-    }
-
-
-    /**
-     * @return int
-     */
-    public function getPage(): int
-    {
-        return $this->page;
-    }
-
-    /**
-     * @param int $page
-     * @return $this
-     */
-    public function setPage(int $page): static
-    {
-        $this->page = $page;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPerPage(): int
-    {
-        return $this->perPage;
-    }
-
-    /**
-     * @param int $perPage
-     * @return $this
-     */
-    public function setPerPage(int $perPage): static
-    {
-		if ($perPage > 100)
-			{	// FAN Courier API limits this to maximum 100 even if the documentation specifies 1000
-			$perPage = 100;
-			}
-        $this->perPage = $perPage;
         return $this;
     }
 

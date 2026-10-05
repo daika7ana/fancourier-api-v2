@@ -11,12 +11,11 @@ use Fancourier\Response\TrackAwb as TrackAwbResponse;
  */
 class TrackAwb extends AbstractRequest implements RequestInterface
 {
+	use AwbStringListTrait;
+	use LanguageTrait;
+
 	protected string $gateway = 'reports/awb/tracking';
 	protected string $method = 'GET';
-	
-	/** @var array<string> */
-	protected array $awbList = [];
-	protected string $language = '';
 
     public function __construct()
     {
@@ -46,46 +45,6 @@ class TrackAwb extends AbstractRequest implements RequestInterface
 		
 		return $arr;
 	
-    }
-	
-	public function addAwb(string $awb): static
-	{
-		$this->awbList[] = $awb;
-		return $this;
-	}
-	
-	public function setAwb(string $awb): static
-	{
-		return $this->addAwb($awb);
-	}
-	
-	
-	public function resetAwbs(): static
-	{
-		$this->awbList = [];
-		return $this;
-	}
-
-    /**
-     * @return string
-     */
-	public function getLanguage(): string
-	{
-		return $this->language;
-	}
-	
-    /**
-     * @param string $language
-     * @return static
-     */
-    public function setLanguage(string $language): static
-    {
-		$language = trim(strtolower($language));
-		if (in_array($language, ['ro', 'en']))
-			{
-			$this->language = $language;
-			}
-        return $this;
     }
 
 

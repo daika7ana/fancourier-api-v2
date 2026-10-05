@@ -4,14 +4,10 @@ namespace Fancourier\Response;
 
 use Fancourier\Objects\Street;
 
-class GetStreets extends Generic implements ResponseInterface
+class GetStreets extends PaginatedResponse
 {
 	/** @var array<int|string, Street>|null */
 	protected ?array $result = null;
-	protected ?int $total = null;		// total number of street entries
-	protected ?int $perPage = null;
-	protected ?int $currentPage = null;
-	protected ?int $totalPages = null;	// total page count (computed)
 	
     #[\Override]
     public function setData(mixed $datastr): static
@@ -57,25 +53,5 @@ class GetStreets extends Generic implements ResponseInterface
 	public function getAll(): array
 		{
 		return $this->result ?? [];
-		}
-	
-	public function getTotal(): int
-		{
-		return $this->total ?? 0;
-		}
-		
-	public function getPerPage(): int
-		{
-		return $this->perPage ?? 0;
-		}
-		
-	public function getCurrentPage(): int
-		{
-		return $this->currentPage ?? 0;
-		}
-		
-	public function getTotalPages(): int
-		{
-		return $this->totalPages ?? 0;
 		}
 }

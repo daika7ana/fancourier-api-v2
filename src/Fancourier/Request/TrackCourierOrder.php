@@ -11,12 +11,13 @@ use Fancourier\Response\TrackCourierOrder as TrackCourierOrderResponse;
  */
 class TrackCourierOrder extends AbstractRequest implements RequestInterface
 {
+	use LanguageTrait;
+
 	protected string $gateway = 'reports/orders/tracking';
 	protected string $method = 'GET';
 	
 	/** @var array<string> */
 	protected array $orderList = [];
-	protected string $language = '';
 
     public function __construct()
     {
@@ -64,28 +65,6 @@ class TrackCourierOrder extends AbstractRequest implements RequestInterface
 		$this->orderList = [];
 		return $this;
 	}
-
-    /**
-     * @return string
-     */
-	public function getLanguage(): string
-	{
-		return $this->language;
-	}
-	
-    /**
-     * @param string $language
-     * @return static
-     */
-    public function setLanguage(string $language): static
-    {
-		$language = trim(strtolower($language));
-		if (in_array($language, ['ro', 'en']))
-			{
-			$this->language = $language;
-			}
-        return $this;
-    }
 
 
 }

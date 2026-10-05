@@ -6,18 +6,25 @@ use Fancourier\Response\GetStreets as GetStreetsResponse;
 
 class GetStreets extends AbstractRequest implements RequestInterface
 {
+    use PaginationTrait;
+
     protected string $gateway = 'reports/streets';
 	protected string $method = 'GET';
 
     private string $county = '';
     private string $city = '';
-    private int $page = 0;
-    private int $perPage = 1000;
 
     public function __construct()
     {
         parent::__construct();
         $this->response = new GetStreetsResponse();
+        $this->perPage = 1000;
+    }
+
+    // Overrides PaginationTrait::maxPerPage(); #[\Override] cannot see trait methods.
+    protected function maxPerPage(): int
+    {
+        return 1000;
     }
 
     /** @return array<string, mixed> */
@@ -35,18 +42,7 @@ class GetStreets extends AbstractRequest implements RequestInterface
 			$arr['locality'] = $this->city;
 			}
 		
-		if ($this->page > 0)
-			{
-			$arr['page'] = $this->page;
-			}
-		
-		if ($this->perPage > 0)
-			{
-			$arr['perPage'] = $this->perPage;
-			}
-		
-		
-		return $arr;
+		return $this->withPagination($arr);
     }
 
     /**
@@ -82,47 +78,6 @@ class GetStreets extends AbstractRequest implements RequestInterface
     public function setCounty(string $county): static
     {
         $this->county = $county;
-        return $this;
-    }
-
-
-    /**
-     * @return int
-     */
-    public function getPage(): int
-    {
-        return $this->page;
-    }
-
-    /**
-     * @param int $page
-     * @return $this
-     */
-    public function setPage(int $page): static
-    {
-        $this->page = $page;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPerPage(): int
-    {
-        return $this->perPage;
-    }
-
-    /**
-     * @param int $perPage
-     * @return $this
-     */
-    public function setPerPage(int $perPage): static
-    {
-		if ($perPage > 1000)
-			{
-			$perPage = 1000;
-			}
-        $this->perPage = $perPage;
         return $this;
     }
 

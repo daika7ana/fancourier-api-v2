@@ -11,10 +11,10 @@ use Fancourier\Response\GetCourierOrderEvents as GetCourierOrderEventsResponse;
  */
 class GetCourierOrderEvents extends AbstractRequest implements RequestInterface
 {
+	use LanguageTrait;
+
 	protected string $gateway = 'reports/order-events';
 	protected string $method = 'GET';
-	
-	protected string $language = '';
 
     public function __construct()
     {
@@ -36,28 +36,5 @@ class GetCourierOrderEvents extends AbstractRequest implements RequestInterface
 		return $arr;
 	
     }
-	
-    /**
-     * @return string
-     */
-	public function getLanguage(): string
-	{
-		return $this->language;
-	}
-	
-    /**
-     * @param string $language
-     * @return static
-     */
-    public function setLanguage(string $language): static
-    {
-		$language = trim(strtolower($language));
-		if (in_array($language, ['ro', 'en']))
-			{
-			$this->language = $language;
-			}
-        return $this;
-    }
-
 
 }

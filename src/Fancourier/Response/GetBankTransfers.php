@@ -4,14 +4,10 @@ namespace Fancourier\Response;
 
 use Fancourier\Objects\BankTransfer;
 
-class GetBankTransfers extends Generic implements ResponseInterface
+class GetBankTransfers extends PaginatedResponse
 {
 	/** @var array<int, BankTransfer>|null */
 	protected ?array $result = null;
-	protected ?int $total = null;		// total number of street entries
-	protected ?int $perPage = null;
-	protected ?int $currentPage = null;
-	protected ?int $totalPages = null;	// total page count (computed)
 
     #[\Override]
     public function setData(mixed $datastr): static
@@ -64,26 +60,6 @@ class GetBankTransfers extends Generic implements ResponseInterface
 	public function get(int $position = 0): BankTransfer|false
 		{
 		return $this->result[$position] ?? false;
-		}
-
-	public function getTotal(): int
-		{
-		return $this->total ?? 0;
-		}
-
-	public function getPerPage(): int
-		{
-		return $this->perPage ?? 0;
-		}
-
-	public function getCurrentPage(): int
-		{
-		return $this->currentPage ?? 0;
-		}
-
-	public function getTotalPages(): int
-		{
-		return $this->totalPages ?? 0;
 		}
 
 /*	public function getCity($cityname): City|false

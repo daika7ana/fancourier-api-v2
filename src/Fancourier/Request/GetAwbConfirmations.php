@@ -11,11 +11,10 @@ use Fancourier\Response\GetAwbConfirmations as GetAwbConfirmationsResponse;
  */
 class GetAwbConfirmations extends AbstractRequest implements RequestInterface
 {
+	use AwbStringListTrait;
+
 	protected string $gateway = 'reports/get-awb-confirmations';
 	protected string $method = 'GET';
-	
-	/** @var array<string> */
-	protected array $awbList = [];
 
     public function __construct()
     {
@@ -41,23 +40,5 @@ class GetAwbConfirmations extends AbstractRequest implements RequestInterface
 		return $arr;
 	
     }
-	
-	public function addAwb(string $awb): static
-	{
-		$this->awbList[] = $awb;
-		return $this;
-	}
-	
-	public function setAwb(string $awb): static
-	{
-		return $this->addAwb($awb);
-	}
-	
-	
-	public function resetAwbs(): static
-	{
-		$this->awbList = [];
-		return $this;
-	}
 
 }
