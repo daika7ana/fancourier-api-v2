@@ -27,15 +27,15 @@ All requests have the method `getData()` that returns the unprocessed response o
 ## Installation
 ### Requirements
 
-* PHP >= 7.0
+* PHP >= 8.3
+* ext-curl, ext-json, ext-fileinfo
 
-**NOTE** At the moment it's designed to work with PHP 7.0 and newer.  
-However, the plan is to add type and return type declarations for all functions that will push the requirements to PHP 8.1 at the minimum  
+**NOTE** This is the internal 2.0 fork of `shusaura85/fancourier-api`, requiring PHP 8.3 or newer. See `MIGRATION.md` for upgrading from 1.x.
 
 ### Composer
 Require the package via composer
 ```bash
-composer require shusaura85/fancourier-api
+composer require daika7ana/fancourier-api
 ```
 
 ### Manual

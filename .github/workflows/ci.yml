@@ -29,8 +29,7 @@ jobs:
 
       - run: vendor/bin/phpunit --exclude-group integration
 
-      # Phase 2: enable once phpstan.neon lands (see UPGRADE_PLAN.md §6.2).
-      # - run: vendor/bin/phpstan analyse --no-progress
+      - run: vendor/bin/phpstan analyse --no-progress
 
       # Phase 5: enable once pint has been applied (Phases 0-4 are red by construction).
       # - if: matrix.php == '8.3'
