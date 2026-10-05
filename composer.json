@@ -1,6 +1,6 @@
 {
     "name": "daika7ana/fancourier-api",
-    "description": "Internal fork: Library for FanCourier API v2.0",
+    "description": "Fork of the FanCourier API v2.0 client library",
     "type": "library",
     "authors": [
         {

@@ -1,11 +1,11 @@
 # FAN Courier API v2 — Fork & Refactor Upgrade Plan
 
 Status: **DRAFT / not started**
-Target: forked internal library, major overhaul.
+Target: forked public library, major overhaul.
 Baseline commit: `204ec7b` (Merge PR #36), branch `main`.
 
 This document is the authoritative plan for forking and modernising the
-`fancourier-api-v2` package for internal use. It covers the confirmed scope,
+`fancourier-api-v2` package for public use. It covers the confirmed scope,
 the current-state assessment, a phased execution plan with exit criteria, the
 concrete configuration artifacts, and the full inventory of defects, dead code,
 typos, and duplication discovered during reconnaissance.
@@ -138,7 +138,7 @@ Execution flow:
 7. **Modernised public API (breaking, 2.0.0)** — full PHP 8.3 types and `strict_types`, clean
    identifiers, backed enums; every break captured in `MIGRATION.md` and codemoddable via Rector.
 8. `pint` (`per` preset) applied in one isolated, reviewable commit.
-9. Internal Composer distribution with a lockfile for reproducible installs.
+9. Composer distribution with a lockfile for reproducible installs.
 
 Non-goals (this pass):
 
@@ -162,26 +162,26 @@ Tasks:
 
 1. Commit the untracked `pint.json` and `AGENTS.md` (decide whether `AGENTS.md` stays repo-local).
 2. Create the fork destination and push; keep `origin` pointed at upstream for cherry-picks and
-   add a second remote for the internal fork.
+   add a second remote for the fork.
 3. Rename the Composer package to `<your-org>/fancourier-api` (namespace unchanged).
 4. Add a GitHub Actions CI workflow that runs on the **untouched** code (§6.3). Expect it to be
    red on the integration suite; configure CI to run unit-only from the start (none yet → pass).
 5. Decide the fate of `.travis.yml` (delete in Phase 0 or Phase 2).
 6. Add a `.gitignore` review: ensure `build/`, `examples/examples_token.txt`, `vendor/` are ignored.
-7. **Remove `composer.lock` from `.gitignore`** (it currently ignores it) so the internal fork can
+7. **Remove `composer.lock` from `.gitignore`** (it currently ignores it) so the fork can
    commit a lockfile.
 8. Add `laravel/pint` as a **dev dependency**, and ensure the CI workflow does **not** run
    `pint --test` until Phase 5 (otherwise Phases 0–4 are red by construction).
-9. **Enumerate internal consumers** (promoted from §12.10): list the internal repos/services
+9. **Enumerate downstream consumers** (promoted from §12.10): list the downstream repos/services
    depending on `shusaura85/fancourier-api`; grep each for usage (facade-only vs direct
    `Client`/`Request`/`Object`/subclass use); pick ONE canary service. This is both a Phase 0
    deliverable and exit criterion — the Phase 3b break list is frozen only after this enumeration.
 10. Freeze `main`; do all work on a `refactor` branch (or per-phase branches) with PRs.
 
-**Deliverables:** internal remote, tracked formatter config, CI workflow, `composer.lock` policy,
-`laravel/pint` dev dependency, internal-consumer inventory + named canary service, `refactor` branch.
+**Deliverables:** fork remote, tracked formatter config, CI workflow, `composer.lock` policy,
+`laravel/pint` dev dependency, downstream-consumer inventory + named canary service, `refactor` branch.
 
-**Exit criteria:** CI workflow triggers and is green (unit-only) on unchanged source; internal
+**Exit criteria:** CI workflow triggers and is green (unit-only) on unchanged source; downstream
 consumer inventory complete with a named canary service (the Phase 3b break list is frozen only
 after this point).
 
@@ -237,7 +237,7 @@ Tasks:
 
 1. `composer.json`: set `"php": "^8.3"`, add `ext-fileinfo`, bump dev deps to `phpunit ^12`
    (preferred at the 8.3+ floor), `phpstan ^2`, and add `laravel/pint ^1`. Reconsider
-   `"minimum-stability": "dev"` + `"prefer-stable": true` — for an internal fork a committed
+   `"minimum-stability": "dev"` + `"prefer-stable": true` — for a fork a committed
    `composer.lock` is now committable (Phase 0) and preferable for reproducibility.
 2. Run PHPStan at the **highest level green on current code (likely 5)**, commit `phpstan.neon`,
    and commit **no baseline**. Ratchet the level upward in Phase 3b as types land. Do not attempt
@@ -398,10 +398,10 @@ Tasks:
 
 ---
 
-### Phase 7 — Internal release (2.0.0)
+### Phase 7 — Release (2.0.0)
 
 Tasks: tag **`2.0.0`**, finalize `CHANGELOG.md` and `MIGRATION.md`, publish the Rector set and the
-package to the internal Composer repository (path/VCS), document the install command, the PHP 8.3
+package to the Composer repository (path/VCS), document the install command, the PHP 8.3
 requirement, and the migration command.
 
 **Exit criteria:** a consuming service migrates using only `MIGRATION.md` + the Rector command and
@@ -432,7 +432,7 @@ with the CI table above green and PHPStan showing no new errors at the last-gree
 ```json
 {
     "name": "<your-org>/fancourier-api",
-    "description": "Internal fork: Library for FanCourier API v2.0",
+    "description": "Fork of the FanCourier API v2.0 client library",
     "type": "library",
     "license": "MIT",
     "require": {
@@ -456,7 +456,7 @@ with the CI table above green and PHPStan showing no new errors at the last-gree
 ```
 
 Notes: retain MIT + original attribution (see §10); drop `minimum-stability: dev` /
-`prefer-stable` and commit a `composer.lock` for reproducible internal installs. Decide whether
+`prefer-stable` and commit a `composer.lock` for reproducible installs. Decide whether
 `src/autoload.php` remains (it is not a Composer concern either way).
 
 ### 6.2 `phpstan.neon` (target shape)
@@ -676,12 +676,12 @@ Structural duplication:
 
 ## 10. Fork, licensing, attribution
 
-- The project is MIT (`LICENSE`); retain the original copyright notice and add the internal
+- The project is MIT (`LICENSE`); retain the original copyright notice and add the fork
   copyright. MIT permits forking and relicensing terms only with attribution preserved.
 - Keep the namespace `Fancourier\` (`README.md:379` mentions the package as open source under MIT).
-- Composer package name should change to the internal vendor to avoid collision with the upstream
+- Composer package name should change to a distinct vendor to avoid collision with the upstream
   `shusaura85/fancourier-api` when both are installed in one project.
-- Keep `origin` as upstream for selective cherry-picks; add the internal remote as `internal`.
+- Keep `origin` as upstream for selective cherry-picks; add the fork remote as `fork`.
 - Consider whether to rename the repository itself (currently `fancourier-api-v2`) in the fork.
 
 ---
@@ -692,10 +692,10 @@ Structural duplication:
 |---|---|---|
 | Live-only tests give no refactor safety net | High — silent regressions | Phase 1 hermetic suite is a hard prerequisite for Phases 3–5 |
 | `pint` non-cosmetic rules (`protected_to_private`, `ordered_class_elements`) | Medium — visibility/order changes | Apply in Phase 5 as an isolated commit; manually review the diff against §1 |
-| `minimum-stability: dev` + no lockfile | Medium — non-reproducible CI | Commit a `composer.lock` for the internal fork |
+| `minimum-stability: dev` + no lockfile | Medium — non-reproducible CI | Commit a `composer.lock` for the fork |
 | Repo-wide `strict_types` surfaces many latent TypeErrors at once | Medium — large red CI | Declare it repo-wide in Phase 3b (via Rector) only after Phase 3 fixes and green PHPStan; the consumer-facing break is the declared parameter/return types, not `strict_types` itself |
 | Breaking the public API breaks consumers | High | Single `2.0.0` + `MIGRATION.md` + Rector codemod; each consumer verifies with its own test suite before upgrading |
-| Consumers not enumerated; the 2.0 break list is unvalidated | High — blind breaks | Phase 0 internal-consumer enumeration + a named canary service; freeze the 3b break list only after that, and prove the canary compiles + tests against the Rector output |
+| Consumers not enumerated; the 2.0 break list is unvalidated | High — blind breaks | Phase 0 downstream-consumer enumeration + a named canary service; freeze the 3b break list only after that, and prove the canary compiles + tests against the Rector output |
 | An AI applying a prose migration guide mis-maps symbols | Medium | Keep mappings deterministic and codemod-backed; `MIGRATION.md` uses structured tables, not free prose |
 | PHP 8.1 already EOL / 8.3 will age | Low | 8.3 chosen; revisit before 8.3 EOL (Dec 2026) |
 | The one genuine 8.1 API (`CURLStringFile`) | Low | Valid on 8.3; no guard needed |
@@ -706,7 +706,7 @@ Structural duplication:
 
 ## 12. Open questions / decisions needed
 
-1. **Internal Composer vendor name** — `<your-org>/fancourier-api`? (needed in Phase 0.)
+1. **Composer vendor name** — `<your-org>/fancourier-api`? (needed in Phase 0.)
 2. **CI host** — GitHub Actions assumed; confirm if the fork lives on Gitea and translate §6.3.
 3. **`AGENTS.md`** — keep in the repo or move to local-only config?
 4. **Retire `src/autoload.php`?** — only if non-Composer/manual usage is dropped; otherwise keep and
@@ -718,8 +718,8 @@ Structural duplication:
    per-directory. The consumer-facing break is the declared parameter/return types, not
    `strict_types` itself.
 8. **PHPUnit ^11 vs ^12** for the 8.3-only dev floor.
-9. **Commit `composer.lock`** for the internal fork? (recommended: yes.)
-10. **Internal consumers** — **MOVED to Phase 0** (no longer open). Phase 0 enumerates the
+9. **Commit `composer.lock`** for the fork? (recommended: yes.)
+10. **Downstream consumers** — **MOVED to Phase 0** (no longer open). Phase 0 enumerates the
     repos/services that depend on this package, classifies usage, and names a canary; the Phase 3b
     break list is frozen only after that.
 11. **Rector set scope** — rename/signature changes only, or also codemod the enum conversions and

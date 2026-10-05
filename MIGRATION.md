@@ -8,7 +8,7 @@ is generated it becomes the source of truth, and this file must be kept in sync 
 Audience: human developers **and** AI coding agents migrating consuming code.
 
 > **Provisional — do not freeze.** The symbol/break list in this document is **provisional** and must
-> not be frozen until `UPGRADE_PLAN.md` **Phase 0** enumerates internal consumers (classifying each
+> not be frozen until `UPGRADE_PLAN.md` **Phase 0** enumerates downstream consumers (classifying each
 > as facade-only versus direct `Client` / `Request` / `Object` / subclass usage) and selects a
 > **canary service**. If consumers are facade-only, large parts of the `Client` / `Request` / `Object`
 > mapping tables below are irrelevant to them — re-scope before executing §3.
@@ -49,7 +49,7 @@ Audience: human developers **and** AI coding agents migrating consuming code.
 | Namespace | `Fancourier\` | `Fancourier\` (unchanged) |
 
 The symbol and break lists in §3/§4 remain provisional until `UPGRADE_PLAN.md` Phase 0 enumerates
-internal consumers and picks a canary service (see the note at the top of this document).
+downstream consumers and picks a canary service (see the note at the top of this document).
 
 ---
 
@@ -60,7 +60,7 @@ not hand-editing.
 
 ```bash
 composer require --dev rector/rector
-# copy the vendor-provided rector.php from the v2.0.0 tag / internal repo
+# copy the vendor-provided rector.php from the v2.0.0 tag / fork repo
 vendor/bin/rector process src tests --dry-run   # review
 vendor/bin/rector process src tests             # apply
 ```

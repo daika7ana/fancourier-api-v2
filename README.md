@@ -30,7 +30,7 @@ All requests have the method `getData()` that returns the unprocessed response o
 * PHP >= 8.3
 * ext-curl, ext-json, ext-fileinfo
 
-**NOTE** This is the internal 2.0 fork of `shusaura85/fancourier-api`, requiring PHP 8.3 or newer. See `MIGRATION.md` for upgrading from 1.x.
+**NOTE** This is a 2.0 fork of `shusaura85/fancourier-api`, requiring PHP 8.3 or newer. See `MIGRATION.md` for upgrading from 1.x.
 
 ### Composer
 Require the package via composer
