@@ -9,7 +9,7 @@ $request
     ->setDate('24-11-2023')
     //->setDate('2023-11-24')
     ->setPerPage(10);
-	
+
 /*
 Functions in GetCourierOrders REQUEST (only the set* functions are shown, the get* functions simply return the set values)
 ->setDate($date)	// Fan API expects only "dd-mm-YYYY" format in this request, but you can also set "YYYY-mm-dd" and will be converted internally to the expected format
@@ -44,29 +44,29 @@ else
 		echo "Results per page: ".$response->getPerPage()."<br />";
 		echo '<pre>'. print_r($response->getAll(), 1) . '</pre>';
 		echo "<hr />";
-		
+
 		// if not the last page, request the next page
 		if ($response->getCurrentPage() < $response->getTotalPages())
 			{
 			$request
 				->setPage( $response->getCurrentPage()+1 );
-			
+
 			$response = $fan->getCourierOrders($request);
 			}
 		else
 			{
 			break;
 			}
-		
+
 		}
-	
+
 	echo "Total: ".$response->getTotal()."<br />";
 	echo "Page: ".$response->getCurrentPage()."<br />";
 	echo "Results per page: ".$response->getPerPage()."<br />";
 	echo "Total pages: ".$response->getTotalPages()."<br />";
 	echo '<pre>'. print_r($response->getAll(), 1) . '</pre>';
 	echo "<hr />";
-	
+
 	}
 
 /*

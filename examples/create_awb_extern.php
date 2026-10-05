@@ -27,7 +27,7 @@ $awb
 	->setSizes(10,5,1) // in cm // or use setLength(), setHeight(), setWidth()
 	->setNotes('testing notes')
 	->setContents('SKU-1, SKU-2')
-	
+
 	->setSenderName("John Ivy")
 	->setSenderPhone('0723000000')
 	->setSenderCounty('Arad')
@@ -71,7 +71,7 @@ Functions in CreateAwbExternal RESPONSE (only get* functions are available)
 if ($response->isOk()) {
 	var_dump($response->getData());
 //	file_put_contents('awb_extern.txt', json_encode($response->getData()) );
-	
+
 	$al = $response->getAll();
 	echo "Count: ".count($al)."<br />";
 	foreach ($al as $awbr)
@@ -87,7 +87,7 @@ if ($response->isOk()) {
 			echo '<hr />';
 			}
 		}
-	
+
 } else {
 	var_dump($response->getErrorMessage());
 }

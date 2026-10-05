@@ -36,10 +36,6 @@ use Fancourier\Request\GetBranches;
 
 class Fancourier
 {
-    const int TEST_CLIENT_ID = 7032158;
-    const string TEST_USERNAME = 'clienttest';
-    const string TEST_PASSWORD = 'testing';
-
     const string API_URL			= 'https://api.fancourier.ro/';
 
     /** @var Auth */
@@ -354,15 +350,5 @@ class Fancourier
     public function getTokenMessage()
     {
         return $this->auth->getTokenMessage();
-    }
-
-    public static function testInstance($token = '')
-    {
-        return new self(
-            self::TEST_CLIENT_ID,
-            self::TEST_USERNAME,
-            self::TEST_PASSWORD,
-            $token
-        );
     }
 }

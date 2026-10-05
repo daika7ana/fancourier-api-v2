@@ -11,10 +11,19 @@ if ( is_file('./examples_token.txt') && (filemtime('./examples_token.txt') < tim
 // load the token if we have it, if not, we use an empty string to signify we don't have one
 $token = is_file('./examples_token.txt') ? file_get_contents('./examples_token.txt') : '';
 
-// create a test instance (username clienttest)
-$fan = Fancourier\Fancourier::testInstance($token);
-// to create a normal instance use this:
-// $fan = new Fancourier\Fancourier($clientId, $username, $password, $token);
+// read the account credentials from the environment; never hardcode them
+$clientId = getenv('FANCOURIER_TEST_CLIENT_ID');
+$username = getenv('FANCOURIER_TEST_USERNAME');
+$password = getenv('FANCOURIER_TEST_PASSWORD');
+
+if ($clientId === false || $username === false || $password === false)
+	{
+	fwrite(STDERR, "Set FANCOURIER_TEST_CLIENT_ID, FANCOURIER_TEST_USERNAME and FANCOURIER_TEST_PASSWORD environment variables.\n");
+	exit(1);
+	}
+
+// create a normal instance using the credentials from the environment
+$fan = new Fancourier\Fancourier($clientId, $username, $password, $token);
 
 // disable curl's certificate validation (do it only if needed, in the examples it's activated by default in case the examples are run from local machine)
 $fan->setVerify(false, false);

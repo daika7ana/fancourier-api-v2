@@ -10,7 +10,7 @@ $request
 Functions in GetCountiesExternal REQUEST (only the set* functions are shown, the get* functions simply return the set values)
 ->setCountry($country) 
 */
-	
+
 $response = $fan->getCountiesExternal($request);
 
 /*

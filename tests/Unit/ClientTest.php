@@ -48,10 +48,10 @@ final class ClientTest extends TestCase
     {
         $client = new Client();
 
-        $result = $client->post_json('file://'.$this->tempFile(''), ['a' => 1]);
+        $result = $client->postJson('file://'.$this->tempFile(''), ['a' => 1]);
 
         $this->assertFalse($result);
-        $this->assertSame(self::EMPTY_RESPONSE_ERROR, $client->get_error());
+        $this->assertSame(self::EMPTY_RESPONSE_ERROR, $client->getError());
     }
 
     #[Test]
@@ -62,7 +62,7 @@ final class ClientTest extends TestCase
         $result = $client->post('file://'.$this->tempFile(''), ['a' => 1]);
 
         $this->assertFalse($result);
-        $this->assertSame(self::EMPTY_RESPONSE_ERROR, $client->get_error());
+        $this->assertSame(self::EMPTY_RESPONSE_ERROR, $client->getError());
     }
 
     #[Test]
@@ -70,10 +70,10 @@ final class ClientTest extends TestCase
     {
         $client = new Client();
 
-        $result = $client->post_ma('file://'.$this->tempFile(''), ['a' => 1]);
+        $result = $client->postMultiArray('file://'.$this->tempFile(''), ['a' => 1]);
 
         $this->assertFalse($result);
-        $this->assertSame(self::EMPTY_RESPONSE_ERROR, $client->get_error());
+        $this->assertSame(self::EMPTY_RESPONSE_ERROR, $client->getError());
     }
 
     #[Test]
@@ -81,10 +81,10 @@ final class ClientTest extends TestCase
     {
         $client = new Client();
 
-        $result = $client->post_json('file://'.$this->tempFile('{"ok":true}'), ['a' => 1]);
+        $result = $client->postJson('file://'.$this->tempFile('{"ok":true}'), ['a' => 1]);
 
         $this->assertSame('{"ok":true}', $result);
-        $this->assertSame('', $client->get_error());
+        $this->assertSame('', $client->getError());
     }
 
     #[Test]
@@ -92,10 +92,10 @@ final class ClientTest extends TestCase
     {
         $client = new Client();
 
-        $result = $client->post_json('nosuchproto://example', ['a' => 1]);
+        $result = $client->postJson('nosuchproto://example', ['a' => 1]);
 
         $this->assertFalse($result);
-        $this->assertNotSame('', $client->get_error());
-        $this->assertNotSame(self::EMPTY_RESPONSE_ERROR, $client->get_error());
+        $this->assertNotSame('', $client->getError());
+        $this->assertNotSame(self::EMPTY_RESPONSE_ERROR, $client->getError());
     }
 }

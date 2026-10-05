@@ -6,7 +6,7 @@ require __DIR__.'/_init.php';
 $request = new Fancourier\Request\GetCities();
 $request
     ->setCounty('Ilfov');
-	
+
 /*
 Functions in GetCities REQUEST (only the set* functions are shown, the get* functions simply return the set values)
 ->setCounty($county)

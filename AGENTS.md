@@ -21,10 +21,11 @@ pint                      # formatter (see note below)
 ## Tests hit the live API
 
 `tests/FancourierTest.php` are **integration tests against `https://api.fancourier.ro/`**,
-using the hardcoded test account in `Fancourier::testInstance()` (constants in
-`src/Fancourier/Fancourier.php`). They create/delete **real** AWBs and need network
-access plus a valid test account. Do not treat a green run as meaningful unit
-coverage, and avoid running the create/delete tests repeatedly.
+driven entirely by environment variables (no hardcoded credentials): the account comes
+from `FANCOURIER_TEST_CLIENT_ID`, `FANCOURIER_TEST_USERNAME` and
+`FANCOURIER_TEST_PASSWORD`. They create/delete **real** AWBs and need network access plus
+a valid test account. Do not treat a green run as meaningful unit coverage, and avoid
+running the create/delete tests repeatedly.
 
 - `phpunit.xml.dist` bootstraps `vendor/autoload.php`; writing coverage to `build/` (gitignored).
 - Tests use `/** @test */` annotations, so `--filter <method_name>` works (no `test` prefix).
@@ -51,7 +52,7 @@ Execution flow: `Fancourier` facade method → `send()` → request object →
 Non-obvious details:
 
 - `$method` accepts non-standard values: `GET`, `POST`, `PUT`, `DELETE`, and
-  `POSTPUT` / `POSTDELETE`, which route through `Client::post_ma()` — it hand-builds
+  `POSTPUT` / `POSTDELETE`, which route through `Client::postMultiArray()` — it hand-builds
   the query string because cURL mishandles nested arrays in `CURLOPT_POSTFIELDS`.
 - `Client` (not the request) owns cURL, SSL verification, timeouts, and headers.
   `AbstractRequest` caches verify/timeout overrides in `$clientOverrides`.

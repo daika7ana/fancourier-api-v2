@@ -7,25 +7,25 @@ class AwbTracker
 	protected $awbNumber;
 	protected $message;
 	protected $content;
-	
+
 	protected $date;
 	protected $paymentDate;
-	
+
 	protected $returnAwbNumber;
 	protected $redirectionAwbNumber;
 	protected $reimbursementAwbNumber;
 	protected $oPODAwbNumber;
-	
+
 	protected $confirmation;
 	protected $OTD;	// on time delivery - process total duration from pickup to delivery
 	protected $events;
-	
+
 	public function __construct($data)
 		{
 		$this->awbNumber = $data['awbNumber'];
 		$this->message = $data['message'] ?? '';
 		$this->content = $data['content'] ?? '';
-		
+
 		if (!isset($data['message']))
 			{
 			$this->date = $data['date'] ?? '';
@@ -35,52 +35,52 @@ class AwbTracker
 			$this->reimbursementAwbNumber = $data['reimbursementAwbNumber'] ?? ''; 
 			$this->oPODAwbNumber = $data['oPODAwbNumber'] ?? ''; 
 			}
-		
+
 		$this->confirmation = $data['confirmation'] ?? [];
 		$this->OTD = $data['OTD'] ?? '';
 		$this->events = $data['events'] ?? [];
 		}
-	
+
 	public function getAwbNumber(): string
 		{
 		return $this->awbNumber ?? '';
 		}
-	
+
 	public function getReturnAwbNumber(): string
 		{
 		return $this->returnAwbNumber ?? '';
 		}
-	
+
 	public function getRedirectionAwbNumber(): string
 		{
 		return $this->redirectionAwbNumber ?? '';
 		}
-	
+
 	public function getReimbursementAwbNumber(): string
 		{
 		return $this->reimbursementAwbNumber ?? '';
 		}
-	
+
 	public function getOPODAwbNumber(): string
 		{
 		return $this->oPODAwbNumber ?? '';
 		}
-	
+
 	public function getPaymentDate(): string
 		{
 		return $this->paymentDate ?? '';
 		}
-	
+
 	public function getMessage(): string
 		{
 		return $this->message ?? '';
 		}
-	
+
 	public function getContent(): string
 		{
 		return $this->content ?? '';
 		}
-	
+
 	public function hasConfirmation(): bool
 		{
 		if ( isset($this->confirmation['name']) && ($this->confirmation['name'] != '') )
@@ -94,7 +94,7 @@ class AwbTracker
 		{
 		return $this->confirmation ?? [];
 		}
-	
+
 	public function getOTD(): string
 		{
 		return $this->OTD;
@@ -112,7 +112,7 @@ class AwbTracker
 			$last = array_key_last($this->events);
 			return $this->events[$last];
 			}
-		
+
 		return [
 				'id'	=>	null,
 				'name'	=>	$this->message ?? '',

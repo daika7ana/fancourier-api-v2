@@ -10,7 +10,7 @@ $request
 Functions in GetCourierOrderEvents REQUEST (only the set* functions are shown, the get* functions simply return the set values)
 ->setLanguage($lang)	the language for the returned event strings. "ro" or "en"
 */
-	
+
 $response = $fan->getCourierOrderEvents($request);
 
 /*

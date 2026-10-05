@@ -53,17 +53,14 @@ Inside them you will also find comments with complete function list for each `re
 ### Authentication
 Create a new instance of `Fancourier.php` supplying the `client_id`, `username`, `password` and `token`.
 ```php
-$clientId = 'your_client_id';
-$username = 'your_username';
-$password = 'your_password';
+$clientId = getenv('FANCOURIER_TEST_CLIENT_ID');
+$username = getenv('FANCOURIER_TEST_USERNAME');
+$password = getenv('FANCOURIER_TEST_PASSWORD');
 $token = 'load from cache or leave as empty string';
 
 $fan = new Fancourier\Fancourier($clientId, $username, $password, $token);
 ```
-Or you can use the test instance static method:
-```php
-$fan = Fancourier\Fancourier::testInstance($token);
-```
+The three credentials are read from the `FANCOURIER_TEST_CLIENT_ID`, `FANCOURIER_TEST_USERNAME` and `FANCOURIER_TEST_PASSWORD` environment variables.
 
 The generated token has a life time of 24 hours and must be refreshed after this period. You can get the generated token using the function:
 ```

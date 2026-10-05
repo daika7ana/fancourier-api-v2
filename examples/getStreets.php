@@ -8,7 +8,7 @@ $request
     ->setCity('Braila')
     ->setCounty('Braila')
     ->setPerPage(1000);
-	
+
 /*
 Functions in GetStreets REQUEST (only the set* functions are shown, the get* functions simply return the set values)
 ->setCounty($county)
@@ -17,7 +17,7 @@ Functions in GetStreets REQUEST (only the set* functions are shown, the get* fun
 ->setPerPage($perPage)
 */
 
-	
+
 $response = $fan->getStreets($request);
 
 /*
@@ -45,16 +45,16 @@ else
 		echo "Total pages: ".$response->getTotalPages()."<br />";
 		echo '<pre>'. print_r($response->getAll(), 1) . '</pre>';
 		echo "<hr />";
-		
+
 		$request
 			->setPage( $response->getCurrentPage()+1 );
-		
+
 		// if not the last page, request the next page
 		if ($response->getCurrentPage() < $response->getTotalPages())
 			{
 			$request
 				->setPage( $response->getCurrentPage()+1 );
-			
+
 			$response = $fan->getStreets($request);
 			}
 		else
@@ -62,7 +62,7 @@ else
 			break;
 			}
 		}
-	
+
 	}
 
 

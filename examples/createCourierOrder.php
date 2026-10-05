@@ -6,13 +6,13 @@ require __DIR__.'/_init.php';
 $request = new Fancourier\Request\CreateCourierOrder();
 $request
 	->setOrderType('Standard')		// Standard sau "Express Loco ..."
-	
+
 	->setParcels(1)
 	->setEnvelopes(1)
 	->setWeight(1)	// in kg
 	->setSizes(10,5,1) // in cm // or use setLength(), setHeight(), setWidth()
 	->setNotes('testing notes')
-	
+
 	->setPickupDate(date("Y-m-d", time()+86400))
 	->setPickupHours("09:00", "16:30")
 /*

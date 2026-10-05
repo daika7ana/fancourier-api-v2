@@ -44,13 +44,13 @@ else
 		echo "Total pages: ".$response->getTotalPages()."<br />";
 		echo '<pre>'. print_r($response->getAll(), 1) . '</pre>';
 		echo "<hr />";
-		
+
 		// if not the last page, request the next page
 		if ($response->getCurrentPage() < $response->getTotalPages())
 			{
 			$request
 				->setPage( $response->getCurrentPage()+1 );
-			
+
 			$response = $fan->getShippingSlip($request);
 			}
 		else

@@ -14,11 +14,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Live integration tests. These hit https://api.fancourier.ro/, create and
- * delete real AWBs on the shared test account, and require network access.
+ * delete real AWBs on a shared test account, and require network access.
  * They are excluded by default (see phpunit.xml.dist) and only run when
  * FANCOURIER_LIVE_TOKEN is set, e.g.:
  *
- *   FANCOURIER_LIVE_TOKEN=... vendor/bin/phpunit --group integration
+ *   FANCOURIER_TEST_CLIENT_ID=... FANCOURIER_TEST_USERNAME=... \
+ *   FANCOURIER_TEST_PASSWORD=... FANCOURIER_LIVE_TOKEN=... \
+ *   vendor/bin/phpunit --group integration
  */
 #[Group('integration')]
 class FancourierTest extends TestCase
@@ -31,7 +33,11 @@ class FancourierTest extends TestCase
             $this->markTestSkipped('Set FANCOURIER_LIVE_TOKEN to run live integration tests.');
         }
 
-        $this->fan = Fancourier::testInstance();
+        $this->fan = new Fancourier(
+            (string) getenv('FANCOURIER_TEST_CLIENT_ID'),
+            (string) getenv('FANCOURIER_TEST_USERNAME'),
+            (string) getenv('FANCOURIER_TEST_PASSWORD'),
+        );
     }
 
     #[Test]

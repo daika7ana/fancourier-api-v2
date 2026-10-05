@@ -18,7 +18,7 @@ class CourierOrder
 	protected $type;
 	protected $awbs;
 	protected $sender;
-	
+
 	public function __construct($data)
 		{
 		$this->id = $data['info']['id'] ?? '';
@@ -36,98 +36,98 @@ class CourierOrder
 		$this->awbs = $data['info']['awbs'] ?? [];
 		$this->sender = $data['sender'] ?? [];
 		}
-	
+
 	public function getId(): string
 		{
 		return $this->id;
 		}
-	
+
 	public function getNumber(): string
 		{
 		return $this->number;
 		}
-	
+
 	public function getStatus(): array
 		{
 		return $this->status;
 		}
-	
+
 	public function getDate(): string
 		{
 		return $this->date;
 		}
-	
+
 	public function getHour(): string
 		{
 		return $this->hour;
 		}
-	
+
 	public function getEnvelopes(): int
 		{
 		return (int)$this->packages['envelope'] ?? 0;
 		}
-	
+
 	public function getParcels(): int
 		{
 		return (int)$this->packages['parcel'] ?? 0;
 		}
-	
+
 	public function getWeight(): float
 		{
 		return (float)$this->weight ?? 0;
 		}
-	
+
 	public function getDimensions(): array
 		{
 		return $this->dimensions ?? [];
 		}
-	
+
 	public function getHeight(): float
 		{
 		return (float)($this->dimensions['height'] ?? 0.0);
 		}
-	
+
 	public function getLength(): float
 		{
 		return (float)($this->dimensions['length'] ?? 0.0);
 		}
-	
+
 	public function getWidth(): float
 		{
 		return (float)($this->dimensions['width'] ?? 0.0);
 		}
-	
+
 	public function getPickupDate(): string
 		{
 		return $this->pickupDate ?? '';
 		}
-	
+
 	public function getPickupHours(): array
 		{
 		return $this->pickupHours ?? [];
 		}
-	
+
 	public function getNotes(): string
 		{
 		return $this->observation ?? '';
 		}
-	
+
 	public function getType(): string
 		{
 		return $this->type ?? '';
 		}
-	
+
 	public function getAwbs(): array
 		{
 		return $this->awbs ?? [];
 		}
-	
-	
+
+
 	public function getSender(): array
 		{
 		return $this->sender ?? [];
 		}
-	
+
 }
 
 /*

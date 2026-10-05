@@ -7,7 +7,7 @@ $request = new Fancourier\Request\GetAwbConfirmations();
 $request
 	->addAwb('7000011994717')
 	->addAwb('7000012005411');
-	
+
 // please note that test awb's will always return error as they are not delivered by fan courier so you will need to test it will actual awb numbers
 
 

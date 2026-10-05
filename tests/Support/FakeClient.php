@@ -55,12 +55,12 @@ final class FakeClient extends Client
         return $this;
     }
 
-    public function get_error(): string
+    public function getError(): string
     {
         return $this->error;
     }
 
-    public function headers_add($name, $value)
+    public function addHeader($name, $value)
     {
         if (strtolower((string) $name) === 'authorization') {
             $this->lastAuthorization = (string) $value;
@@ -69,7 +69,7 @@ final class FakeClient extends Client
         return $this;
     }
 
-    public function set_put_request($enabled = false)
+    public function setPutRequest($enabled = false)
     {
         $this->isPut = (bool) $enabled;
         if ($enabled) {
@@ -79,7 +79,7 @@ final class FakeClient extends Client
         return $this;
     }
 
-    public function set_delete_request($enabled = false)
+    public function setDeleteRequest($enabled = false)
     {
         $this->isDelete = (bool) $enabled;
         if ($enabled) {
@@ -103,14 +103,14 @@ final class FakeClient extends Client
         return $this->reply();
     }
 
-    public function post_json(string $url, array $data)
+    public function postJson(string $url, array $data)
     {
         $this->record('post_json', $url, $data);
 
         return $this->reply();
     }
 
-    public function post_ma(string $url, array $data)
+    public function postMultiArray(string $url, array $data)
     {
         $this->record('post_ma', $url, $data);
 

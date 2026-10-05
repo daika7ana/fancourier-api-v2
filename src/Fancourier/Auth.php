@@ -33,8 +33,6 @@ class Auth {
 		}
 
 	public function getClientId()		{	return $this->clientId;	}
-	public function getClientUsername()	{	return $this->username;	}
-	public function getClientPassword()	{	return $this->password;	}
 
 	public function getToken($refresh = false)
 		{
@@ -93,8 +91,8 @@ class Auth {
 	protected function retrieve_token()
 		{
 		$client = new Client();
-		$client->set_verify($this->verifyHost, $this->verifyPeer);
-		$client->set_timeout($this->con_timeout, $this->timeout);
+		$client->setVerify($this->verifyHost, $this->verifyPeer);
+		$client->setTimeout($this->con_timeout, $this->timeout);
 
 		$url = Fancourier::API_URL.$this->gateway;
 

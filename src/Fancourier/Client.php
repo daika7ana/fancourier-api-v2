@@ -5,7 +5,6 @@ class Client {
 	private $curl; // \CurlHandle|false
 
 	private $error		= '';
-	private $error_no	= 0;
 
 	private $is_put		= false;
 	private $is_delete	= false;
@@ -102,7 +101,6 @@ class Client {
 			}
 
 		$this->set_error(curl_error($this->curl));
-		$this->set_error_no(curl_errno($this->curl));
 		$this->close();
 		return false;
 		}
@@ -154,7 +152,7 @@ class Client {
 		}
 	
 	// curl doesn't like multilevel arrays in CURLOPT_POSTFIELDS, so we have to manually build the data with http_build_query
-	public function post_ma(string $url, array $data)
+	public function postMultiArray(string $url, array $data)
 		{
 		$this->init();
 
@@ -185,9 +183,9 @@ class Client {
 		return $this->complete_transfer($response);
 		}
 	
-	public function post_json(string $url, array $data)//: string|false
+	public function postJson(string $url, array $data)//: string|false
 		{
-		$this->headers_add('Content-Type', 'application/json'); // add content-type to headers
+		$this->addHeader('Content-Type', 'application/json'); // add content-type to headers
 		$this->init();
 
 		curl_setopt($this->curl, CURLOPT_URL, $url);
@@ -206,7 +204,7 @@ class Client {
 			curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 			}
 		
-		$this->headers_delete('Content-Type'); // remove the custom content-type to not interfere with other requests
+		$this->deleteHeader('Content-Type'); // remove the custom content-type to not interfere with other requests
 
 		$response = curl_exec($this->curl);
 
@@ -232,7 +230,6 @@ class Client {
 		if ($curl_error !== '')
 			{
 			$this->set_error($curl_error);
-			$this->set_error_no(curl_errno($this->curl));
 			$this->close();
 			return false;
 			}
@@ -240,7 +237,6 @@ class Client {
 		if ($response === '' || $response === null || $response === false)
 			{
 			$this->set_error('FAN Courier returned an empty response');
-			$this->set_error_no(0);
 			$this->close();
 			return false;
 			}
@@ -255,26 +251,15 @@ class Client {
 		return $this;
 		}
 
-	public function get_error(): string
+	public function getError(): string
 		{
 		return $this->error;
 		}
 
-	private function set_error_no(int $errno)
-		{
-		$this->error_no = $errno;
-		return $this;
-		}
-
-	public function get_error_no(): int
-		{
-		return $this->error_no;
-		}
-	
 	/*
 	* Add a custom header to curl
 	*/
-	public function headers_add($name, $value)
+	public function addHeader($name, $value)
 		{
 		$this->headers[ $name ] = $value;
 		return $this;
@@ -283,7 +268,7 @@ class Client {
 	/*
 	* Remove a custom header from curl requests
 	*/
-	public function headers_delete($name)
+	public function deleteHeader($name)
 		{
 		if (array_key_exists($name, $this->headers))
 			{
@@ -292,19 +277,8 @@ class Client {
 		return $this;
 		}
 	
-	/*
-	* Clear all custom headers from curl
-	*/
-
-	public function headers_reset()
-		{
-		$this->headers = [];
-		return $this;
-		}
-	
-	
 	/* set put request (automatically disables delete request) */
-	public function set_put_request($enabled = false)
+	public function setPutRequest($enabled = false)
 		{
 		$this->is_put = $enabled;
 		$this->is_delete = false;
@@ -312,7 +286,7 @@ class Client {
 		}
 	
 	/* set delete request (automatically disables put request) */
-	public function set_delete_request($enabled = false)
+	public function setDeleteRequest($enabled = false)
 		{
 		$this->is_delete = $enabled;
 		$this->is_put = false;
@@ -320,7 +294,7 @@ class Client {
 		}
 
 	/* if you need to skip host/peer validation */
-	public function set_verify($host = true, $peer = true)
+	public function setVerify($host = true, $peer = true)
 		{
 		$this->verify_host = $host;
 		$this->verify_peer = $peer;
@@ -328,7 +302,7 @@ class Client {
 		}
 
 	/* if you need a custom request timeout */
-	public function set_timeout($con_timeout = 3, $timeout = 6)
+	public function setTimeout($con_timeout = 3, $timeout = 6)
 		{
 		$this->con_timeout = $con_timeout;
 		$this->timeout = $timeout;

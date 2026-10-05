@@ -166,7 +166,7 @@ abstract class AbstractRequest implements RequestInterface
     public function setVerify($verifyHost = true, $verifyPeer = true)
     {
         if ($this->clientOverrides['verify'] !== true) {
-            $this->client->set_verify($verifyHost, $verifyPeer);
+            $this->client->setVerify($verifyHost, $verifyPeer);
             $this->clientOverrides['verify'] = true;
         }
 
@@ -177,7 +177,7 @@ abstract class AbstractRequest implements RequestInterface
     public function setTimeout($conTimeout = 3, $timeout = 6)
     {
         if ($this->clientOverrides['timeout'] !== true) {
-            $this->client->set_timeout($conTimeout, $timeout);
+            $this->client->setTimeout($conTimeout, $timeout);
             $this->clientOverrides['timeout'] = true;
         }
 
@@ -208,7 +208,7 @@ abstract class AbstractRequest implements RequestInterface
 		$this->assertUsableToken($token);
 
 		// add authorization token
-		$this->client->headers_add('Authorization', 'Bearer '.$token);
+		$this->client->addHeader('Authorization', 'Bearer '.$token);
 
 		$responseString = $this->dispatch($data);
 
@@ -222,12 +222,12 @@ abstract class AbstractRequest implements RequestInterface
 		if (false === $responseString && ($tokenWasExpired || $this->auth->isTokenExpired())) {
 			$token = $this->auth->getToken(true);
 			$this->assertUsableToken($token);
-			$this->client->headers_add('Authorization', 'Bearer '.$token);
+			$this->client->addHeader('Authorization', 'Bearer '.$token);
 			$responseString = $this->dispatch($data);
 		}
 
         if (false === $responseString) {
-            $this->response->setErrorCode(-1)->setErrorMessage($this->client->get_error());
+            $this->response->setErrorCode(-1)->setErrorMessage($this->client->getError());
         } else {
             $this->response->setData($responseString);
         }
@@ -271,29 +271,29 @@ abstract class AbstractRequest implements RequestInterface
 		else
 		if ($this->method == 'POST')
 			{
-			return $this->client->post_json(Fancourier::API_URL . $this->gateway, $data);
+			return $this->client->postJson(Fancourier::API_URL . $this->gateway, $data);
 			}
 		else
 		if ($this->method == 'PUT')
 			{
 			$get_params = http_build_query($data, '', '&');
-			return $this->client->set_put_request(true)->get(Fancourier::API_URL . $this->gateway . '?' .$get_params);
+			return $this->client->setPutRequest(true)->get(Fancourier::API_URL . $this->gateway . '?' .$get_params);
 			}
 		else
 		if ($this->method == 'POSTPUT')
 			{
-			return $this->client->set_put_request(true)->post_ma(Fancourier::API_URL . $this->gateway, $data);
+			return $this->client->setPutRequest(true)->postMultiArray(Fancourier::API_URL . $this->gateway, $data);
 			}
 		else
 		if ($this->method == 'DELETE')
 			{
 			$get_params = http_build_query($data, '', '&');
-			return $this->client->set_delete_request(true)->get(Fancourier::API_URL . $this->gateway . '?' .$get_params);
+			return $this->client->setDeleteRequest(true)->get(Fancourier::API_URL . $this->gateway . '?' .$get_params);
 			}
 		else
 		if ($this->method == 'POSTDELETE')
 			{
-			return $this->client->set_delete_request(true)->post_ma(Fancourier::API_URL . $this->gateway, $data);
+			return $this->client->setDeleteRequest(true)->postMultiArray(Fancourier::API_URL . $this->gateway, $data);
 			}
 		else
 			{

@@ -157,7 +157,7 @@ final class AbstractRequestSendTest extends TestCase
         $this->assertFalse($response->isOk());
         $this->assertSame(-1, $response->getErrorCode());
         $this->assertSame('curl boom', $response->getErrorMessage());
-        $this->assertSame('curl boom', $client->get_error());
+        $this->assertSame('curl boom', $client->getError());
     }
 
     /**
@@ -211,7 +211,7 @@ final class AbstractRequestSendTest extends TestCase
             /** @var list<string> */
             public array $authHeaders = [];
 
-            public function headers_add($name, $value)
+            public function addHeader($name, $value)
             {
                 if (strtolower((string) $name) === 'authorization') {
                     $this->authHeaders[] = (string) $value;
@@ -220,14 +220,14 @@ final class AbstractRequestSendTest extends TestCase
                 return $this;
             }
 
-            public function post_json(string $url, array $data)
+            public function postJson(string $url, array $data)
             {
                 $this->calls++;
 
                 return $this->calls === 1 ? false : '{"ok":true}';
             }
 
-            public function get_error(): string
+            public function getError(): string
             {
                 return 'transient';
             }
@@ -275,19 +275,19 @@ final class AbstractRequestSendTest extends TestCase
         $client = new class extends Client {
             public int $calls = 0;
 
-            public function headers_add($name, $value)
+            public function addHeader($name, $value)
             {
                 return $this;
             }
 
-            public function post_json(string $url, array $data)
+            public function postJson(string $url, array $data)
             {
                 $this->calls++;
 
                 return false;
             }
 
-            public function get_error(): string
+            public function getError(): string
             {
                 return 'still down';
             }
@@ -332,19 +332,19 @@ final class AbstractRequestSendTest extends TestCase
         $client = new class extends Client {
             public int $calls = 0;
 
-            public function headers_add($name, $value)
+            public function addHeader($name, $value)
             {
                 return $this;
             }
 
-            public function post_json(string $url, array $data)
+            public function postJson(string $url, array $data)
             {
                 $this->calls++;
 
                 return false;
             }
 
-            public function get_error(): string
+            public function getError(): string
             {
                 return 'curl boom';
             }

@@ -8,7 +8,7 @@ class Country
 	protected $name;
 	protected $deliveryMode;
 	protected $code;
-	
+
 	public function __construct($data)
 		{
 		$this->id = $data['id'];
@@ -20,32 +20,32 @@ class Country
 			}
 		$this->code = $data['code'];
 		}
-	
+
 	public function getId(): string
 		{
 		return $this->id;
 		}
-	
+
 	public function getName(): string
 		{
 		return $this->name;
 		}
-	
+
 	public function getCode(): string
 		{
 		return $this->code;
 		}
-	
+
 	public function hasAirShipping(): bool
 		{
 		return isset($this->deliveryMode[2]);
 		}
-	
+
 	public function hasLandShipping(): bool
 		{
 		return isset($this->deliveryMode[1]);
 		}
-	
+
 	public function getShipping(): array
 		{
 		return $this->deliveryMode;

@@ -6,7 +6,7 @@ require __DIR__.'/_init.php';
 $request = new Fancourier\Request\GetServiceOptions();
 $request
     ->setService('fanbox');
-	
+
 /*
 Functions in GetServiceOptions REQUEST (only the set* functions are shown, the get* functions simply return the set values)
 ->setService($serviceName)

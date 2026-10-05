@@ -15,7 +15,7 @@ Functions in GetCitiesExternal REQUEST (only the set* functions are shown, the g
 ->setPage($page)
 ->setPerPage($perPage)
 */
-	
+
 $response = $fan->getCitiesExternal($request);
 /*
 Functions in GetCitiesExternal RESPONSE (only get* functions are available)
@@ -42,14 +42,14 @@ else
 		echo "Total pages: ".$response->getTotalPages()."<br />";
 		echo '<pre>'. print_r($response->getAll(), 1) . '</pre>';
 		echo "<hr />";
-		
-		
+
+
 		// if not the last page, request the next page
 		if ($response->getCurrentPage() < $response->getTotalPages())
 			{
 			$request
 				->setPage( $response->getCurrentPage()+1 );
-			
+
 			$response = $fan->getCitiesExternal($request);
 			}
 		else
@@ -57,7 +57,7 @@ else
 			break;
 			}
 		}
-	
+
 	}
 
 
