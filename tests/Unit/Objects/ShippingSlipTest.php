@@ -17,8 +17,8 @@ class ShippingSlipTest extends TestCase
                 'serviceId' => '4',
                 'weight' => '1',
                 'dimensions' => ['height' => 10, 'width' => 20, 'length' => 30],
-                'payment' => 14.4,
-                'returnPayment' => 3.5,
+                'payment' => 'expeditor',
+                'returnPayment' => 'destinatar',
                 'cod' => 75.29,
                 'declaredValue' => 59.88,
                 'observations' => 'POS',
@@ -47,8 +47,8 @@ class ShippingSlipTest extends TestCase
         $this->assertSame(10.0, $slip->getHeight());
         $this->assertSame(20.0, $slip->getWidth());
         $this->assertSame(30.0, $slip->getLength());
-        $this->assertSame(14.4, $slip->getPayment());
-        $this->assertSame(3.5, $slip->getReturnPayment());
+        $this->assertSame('expeditor', $slip->getPayment());
+        $this->assertSame('destinatar', $slip->getReturnPayment());
         $this->assertSame(75.29, $slip->getReimbursement());
         $this->assertSame(59.88, $slip->getDeclaredValue());
         $this->assertSame('POS', $slip->getNotes());
@@ -75,5 +75,24 @@ class ShippingSlipTest extends TestCase
         $this->assertSame(0, $slip->getParcels());
         $this->assertSame([], $slip->getRecipient());
         $this->assertSame([], $slip->getSender());
+    }
+
+    #[Test]
+    public function it_returns_payment_and_return_payment_as_strings(): void
+    {
+        // UPGRADE_PLAN §7 (Objects) — payment codes are strings, not floats.
+        $slip = new ShippingSlip($this->data());
+
+        $this->assertSame('expeditor', $slip->getPayment());
+        $this->assertSame('destinatar', $slip->getReturnPayment());
+    }
+
+    #[Test]
+    public function it_defaults_payment_and_return_payment_to_empty_strings(): void
+    {
+        $slip = new ShippingSlip([]);
+
+        $this->assertSame('', $slip->getPayment());
+        $this->assertSame('', $slip->getReturnPayment());
     }
 }

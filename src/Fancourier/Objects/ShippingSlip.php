@@ -104,12 +104,12 @@ class ShippingSlip
 		return $this->length;
 		}
 	
-	public function getPayment(): float
+	public function getPayment(): string
 		{
 		return $this->payment;
 		}
 	
-	public function getReturnPayment(): float
+	public function getReturnPayment(): string
 		{
 		return $this->returnPayment;
 		}
