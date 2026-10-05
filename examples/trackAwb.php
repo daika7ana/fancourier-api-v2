@@ -38,7 +38,7 @@ The AwbTracker object has the following functions:
 ->getReturnAwbNumber()
 ->getRedirectionAwbNumber()
 ->getReimbursementAwbNumber()
-->getOpodAwbNumber()
+->getOPODAwbNumber()
 ->getMessage()
 ->getContent()
 ->hasConfirmation()
