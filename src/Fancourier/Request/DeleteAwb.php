@@ -17,6 +17,7 @@ class DeleteAwb extends AbstractRequest implements RequestInterface
         $this->response = new DeleteAwbResponse();
     }
 
+    #[\Override]
     public function pack()
     {
         $arr = [

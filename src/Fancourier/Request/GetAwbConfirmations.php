@@ -22,6 +22,7 @@ class GetAwbConfirmations extends AbstractRequest implements RequestInterface
         $this->response = new GetAwbConfirmationsResponse();
     }
 
+    #[\Override]
     public function pack()
     {
 		$arr = [

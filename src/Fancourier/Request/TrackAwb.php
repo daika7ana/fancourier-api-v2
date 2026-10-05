@@ -23,6 +23,7 @@ class TrackAwb extends AbstractRequest implements RequestInterface
         $this->response = new TrackAwbResponse();
     }
 
+    #[\Override]
     public function pack()
     {
 		$arr = [

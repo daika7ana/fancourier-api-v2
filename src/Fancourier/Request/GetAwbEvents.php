@@ -17,6 +17,7 @@ class GetAwbEvents extends AbstractRequest implements RequestInterface
         $this->response = new GetAwbEventsResponse();
     }
 
+    #[\Override]
     public function pack()
     {
 		$arr = [];

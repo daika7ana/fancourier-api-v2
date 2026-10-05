@@ -21,6 +21,7 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
 		$this->date = date("Y-m-d");
     }
 
+    #[\Override]
     public function pack()
     {
         $arr = [

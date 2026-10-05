@@ -31,6 +31,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
         $this->response = new GetCostsResponse();
     }
 
+    #[\Override]
     public function pack()
     {
         $arr = [

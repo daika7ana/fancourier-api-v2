@@ -56,6 +56,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
         $this->response = new CreateCourierOrderResponse();
     }
 
+    #[\Override]
     public function pack()
     {
 		$arr = [

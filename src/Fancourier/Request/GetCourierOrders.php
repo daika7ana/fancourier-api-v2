@@ -21,6 +21,7 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
 		$this->date = date("d-m-Y");
     }
 
+    #[\Override]
     public function pack()
     {
         $arr = [

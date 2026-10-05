@@ -9,6 +9,7 @@ class CreateAwb extends Generic implements ResponseInterface
 	protected $result;
 	protected $awbList;
 	
+    #[\Override]
     public function setData($datastr)
     {
 		try {

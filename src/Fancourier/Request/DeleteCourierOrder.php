@@ -17,6 +17,7 @@ class DeleteCourierOrder extends AbstractRequest implements RequestInterface
         $this->response = new DeleteCourierOrderResponse();
     }
 
+    #[\Override]
     public function pack()
     {
         $arr = [

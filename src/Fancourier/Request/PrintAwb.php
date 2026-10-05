@@ -22,6 +22,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
         $this->response = new PrintAwbResponse();
     }
 
+    #[\Override]
     public function pack()
     {
         $arr = [

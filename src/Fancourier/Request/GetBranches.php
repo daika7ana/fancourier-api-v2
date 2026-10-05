@@ -18,6 +18,7 @@ class GetBranches extends AbstractRequest implements RequestInterface
         $this->response = new GetBranchesResponse();
     }
 
+    #[\Override]
     public function pack()
     {
         $arr = [];

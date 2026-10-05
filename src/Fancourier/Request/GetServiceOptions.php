@@ -17,6 +17,7 @@ class GetServiceOptions extends AbstractRequest implements RequestInterface
         $this->response = new GetServiceOptionsResponse();
     }
 
+    #[\Override]
     public function pack()
     {
         $arr = [

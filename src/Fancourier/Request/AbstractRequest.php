@@ -9,12 +9,12 @@ use Fancourier\Response\Generic;
 
 abstract class AbstractRequest implements RequestInterface
 {
-    const TYPE_RECIPIENT = 'destinatar';
-    const TYPE_SENDER = 'expeditor';
+    const string TYPE_RECIPIENT = 'destinatar';
+    const string TYPE_SENDER = 'expeditor';
 	
-	const PUDO_FANBOX = 'fanbox';
-	const PUDO_PAYPOINT = 'paypoint';
-	const PUDO_OFFICE = 'office';
+	const string PUDO_FANBOX = 'fanbox';
+	const string PUDO_PAYPOINT = 'paypoint';
+	const string PUDO_OFFICE = 'office';
 	
 	
 	protected $gateway;
@@ -40,12 +40,14 @@ abstract class AbstractRequest implements RequestInterface
         $this->response = new Generic();
     }
 
+    #[\Override]
     public function authenticate(Auth $auth)
     {
         $this->auth = $auth;
         return $this;
     }
 
+    #[\Override]
     public function setVerify($verifyHost = true, $verifyPeer = true)
     {
         if ($this->clientOverrides['verify'] !== true) {
@@ -56,6 +58,7 @@ abstract class AbstractRequest implements RequestInterface
         return $this;
     }
 
+    #[\Override]
     public function setTimeout($conTimeout = 3, $timeout = 6)
     {
         if ($this->clientOverrides['timeout'] !== true) {
@@ -69,6 +72,7 @@ abstract class AbstractRequest implements RequestInterface
     /**
      * @return Generic
      */
+    #[\Override]
     public function send()
     {
         if (empty($this->gateway)) {

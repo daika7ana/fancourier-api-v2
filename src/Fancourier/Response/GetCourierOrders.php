@@ -11,6 +11,7 @@ class GetCourierOrders extends Generic implements ResponseInterface
 	protected $perPage;
 	protected $currentPage;
 	
+    #[\Override]
     public function setData($datastr)
     {
 		$response_json = json_decode($datastr, true);

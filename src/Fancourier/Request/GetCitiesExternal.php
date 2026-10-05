@@ -20,6 +20,7 @@ class GetCitiesExternal extends AbstractRequest implements RequestInterface
         $this->response = new GetCitiesExternalResponse();
     }
 
+    #[\Override]
     public function pack()
     {
         $arr = [];

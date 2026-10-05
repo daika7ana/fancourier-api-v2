@@ -36,11 +36,11 @@ use Fancourier\Request\GetBranches;
 
 class Fancourier
 {
-    const TEST_CLIENT_ID = 7032158;
-    const TEST_USERNAME = 'clienttest';
-    const TEST_PASSWORD = 'testing';
+    const int TEST_CLIENT_ID = 7032158;
+    const string TEST_USERNAME = 'clienttest';
+    const string TEST_PASSWORD = 'testing';
 
-    const API_URL			= 'https://api.fancourier.ro/';
+    const string API_URL			= 'https://api.fancourier.ro/';
 
     /** @var Auth */
     protected $auth;

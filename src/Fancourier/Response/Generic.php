@@ -11,6 +11,7 @@ class Generic implements ResponseInterface
     /**
      * @return mixed
      */
+    #[\Override]
     public function getErrorCode()
     {
         return $this->errorCode;
@@ -20,6 +21,7 @@ class Generic implements ResponseInterface
      * @param mixed $errorCode
      * @return Generic
      */
+    #[\Override]
     public function setErrorCode($errorCode)
     {
         $this->errorCode = $errorCode;
@@ -29,6 +31,7 @@ class Generic implements ResponseInterface
     /**
      * @return mixed
      */
+    #[\Override]
     public function getErrorMessage()
     {
         return $this->errorMessage;
@@ -38,6 +41,7 @@ class Generic implements ResponseInterface
      * @param mixed $errorMessage
      * @return Generic
      */
+    #[\Override]
     public function setErrorMessage($errorMessage)
     {
         $this->errorMessage = $errorMessage;
@@ -47,6 +51,7 @@ class Generic implements ResponseInterface
     /**
      * @return mixed
      */
+    #[\Override]
     public function getData()
     {
         return $this->data;
@@ -56,6 +61,7 @@ class Generic implements ResponseInterface
      * @param mixed $data
      * @return Generic
      */
+    #[\Override]
     public function setData($data)
     {
         $this->data = $data;

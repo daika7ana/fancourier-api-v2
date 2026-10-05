@@ -8,6 +8,7 @@ class GetAwbEvents extends Generic implements ResponseInterface
 {
 	protected $result;
 	
+    #[\Override]
     public function setData($datastr)
     {
 		$response_json = json_decode($datastr, true);

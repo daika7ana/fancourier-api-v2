@@ -22,6 +22,7 @@ class GetCourierOrderEvents extends AbstractRequest implements RequestInterface
         $this->response = new GetCourierOrderEventsResponse();
     }
 
+    #[\Override]
     public function pack()
     {
 		$arr = [];

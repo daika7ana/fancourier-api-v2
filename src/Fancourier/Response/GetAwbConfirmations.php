@@ -6,6 +6,7 @@ class GetAwbConfirmations extends Generic implements ResponseInterface
 {
 	protected $result;
 	
+    #[\Override]
     public function setData($datastr)
     {
 		if (substr($datastr, 0, 2) == 'PK')

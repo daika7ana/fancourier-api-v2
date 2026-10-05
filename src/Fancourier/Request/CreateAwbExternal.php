@@ -30,6 +30,7 @@ class CreateAwbExternal extends AbstractRequest implements RequestInterface
     }
 
 
+    #[\Override]
     public function pack()
     {
 		$this->response->setAwbList($this->awbList);

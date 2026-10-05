@@ -17,6 +17,7 @@ class GetCountiesExternal extends AbstractRequest implements RequestInterface
         $this->response = new GetCountiesExternalResponse();
     }
 
+    #[\Override]
     public function pack()
     {
 		$arr = [];

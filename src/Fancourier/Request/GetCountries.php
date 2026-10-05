@@ -15,6 +15,7 @@ class GetCountries extends AbstractRequest implements RequestInterface
         $this->response = new GetCountriesResponse();
     }
 
+    #[\Override]
     public function pack()
     {
 		return [];
