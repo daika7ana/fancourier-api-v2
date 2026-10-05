@@ -150,16 +150,7 @@ class Client {
 
 		$response = curl_exec($this->curl);
 
-		if (!curl_error($this->curl) && $response)
-			{
-			$this->close();
-			return $response;
-			}
-
-		$this->set_error(curl_error($this->curl));
-		$this->set_error_no(curl_errno($this->curl));
-		$this->close();
-		return false;
+		return $this->complete_transfer($response);
 		}
 	
 	// curl doesn't like multilevel arrays in CURLOPT_POSTFIELDS, so we have to manually build the data with http_build_query
@@ -191,16 +182,7 @@ class Client {
 
 		$response = curl_exec($this->curl);
 
-		if (!curl_error($this->curl) && $response)
-			{
-			$this->close();
-			return $response;
-			}
-
-		$this->set_error(curl_error($this->curl));
-		$this->set_error_no(curl_errno($this->curl));
-		$this->close();
-		return false;
+		return $this->complete_transfer($response);
 		}
 	
 	public function post_json(string $url, array $data)//: string|false
@@ -228,21 +210,43 @@ class Client {
 
 		$response = curl_exec($this->curl);
 
-		if(empty($response)||is_null($response))
+		return $this->complete_transfer($response);
+		}
+
+	/*
+	* Resolve the result of a completed cURL transfer.
+	*
+	* A transport (cURL) error is the only failure that carries the real error
+	* message. A successful transfer with a zero-length body is treated as a
+	* failure too (defect #11): the API always answers with a JSON body, so an
+	* empty body means something went wrong, and reporting it as a success would
+	* show `isOk() === true` for a broken request.
+	*
+	* @param string|bool $response
+	* @return string|false
+	*/
+	private function complete_transfer($response)
+		{
+		$curl_error = curl_error($this->curl);
+
+		if ($curl_error !== '')
 			{
+			$this->set_error($curl_error);
+			$this->set_error_no(curl_errno($this->curl));
 			$this->close();
+			return false;
 			}
 
-		if (!curl_error($this->curl) && $response)
+		if ($response === '' || $response === null || $response === false)
 			{
+			$this->set_error('FAN Courier returned an empty response');
+			$this->set_error_no(0);
 			$this->close();
-			return $response;
+			return false;
 			}
 
-		$this->set_error(curl_error($this->curl));
-		$this->set_error_no(curl_errno($this->curl));
 		$this->close();
-		return false;
+		return $response;
 		}
 
 	private function set_error(string $error)

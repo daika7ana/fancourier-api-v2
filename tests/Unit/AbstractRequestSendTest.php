@@ -159,4 +159,205 @@ final class AbstractRequestSendTest extends TestCase
         $this->assertSame('curl boom', $response->getErrorMessage());
         $this->assertSame('curl boom', $client->get_error());
     }
+
+    /**
+     * #11 (superseding decision): an empty body is a failure, and send() must
+     * report a non-empty error message rather than claiming success.
+     */
+    #[Test]
+    public function an_empty_response_body_surfaces_as_a_non_empty_error(): void
+    {
+        $client = (new FakeClient())->setFailure('FAN Courier returned an empty response');
+        $request = $this->makeRequest('POST', [])->injectClient($client);
+        $request->authenticate($this->auth());
+
+        $response = $request->send();
+
+        $this->assertFalse($response->isOk());
+        $this->assertSame(-1, $response->getErrorCode());
+        $this->assertSame('FAN Courier returned an empty response', $response->getErrorMessage());
+    }
+
+    /**
+     * #27: a transport failure against a stale token triggers one refresh and
+     * exactly one retry; the retry's body wins.
+     */
+    #[Test]
+    public function it_refreshes_an_expired_token_and_retries_exactly_once(): void
+    {
+        $auth = new class(1, 'u', 'p') extends Auth {
+            public int $refreshCalls = 0;
+
+            public function getToken($refresh = false)
+            {
+                if ($refresh) {
+                    $this->refreshCalls++;
+
+                    return 'fresh-token';
+                }
+
+                return 'stale-token';
+            }
+
+            public function isTokenExpired() //: bool
+            {
+                return true;
+            }
+        };
+
+        $client = new class extends Client {
+            public int $calls = 0;
+
+            /** @var list<string> */
+            public array $authHeaders = [];
+
+            public function headers_add($name, $value)
+            {
+                if (strtolower((string) $name) === 'authorization') {
+                    $this->authHeaders[] = (string) $value;
+                }
+
+                return $this;
+            }
+
+            public function post_json(string $url, array $data)
+            {
+                $this->calls++;
+
+                return $this->calls === 1 ? false : '{"ok":true}';
+            }
+
+            public function get_error(): string
+            {
+                return 'transient';
+            }
+        };
+
+        $request = $this->makeRequest('POST', ['foo' => 'bar'])->injectClient($client);
+        $request->authenticate($auth);
+
+        $response = $request->send();
+
+        $this->assertSame(2, $client->calls);
+        $this->assertSame(1, $auth->refreshCalls);
+        $this->assertSame(['Bearer stale-token', 'Bearer fresh-token'], $client->authHeaders);
+        $this->assertTrue($response->isOk());
+        $this->assertSame('{"ok":true}', $response->getData());
+    }
+
+    /**
+     * #27: the retry is bounded — a second failure is surfaced, not retried
+     * again (no infinite refresh loop).
+     */
+    #[Test]
+    public function it_does_not_retry_more_than_once_when_the_retry_also_fails(): void
+    {
+        $auth = new class(1, 'u', 'p') extends Auth {
+            public int $refreshCalls = 0;
+
+            public function getToken($refresh = false)
+            {
+                if ($refresh) {
+                    $this->refreshCalls++;
+
+                    return 'fresh-token';
+                }
+
+                return 'stale-token';
+            }
+
+            public function isTokenExpired() //: bool
+            {
+                return true;
+            }
+        };
+
+        $client = new class extends Client {
+            public int $calls = 0;
+
+            public function headers_add($name, $value)
+            {
+                return $this;
+            }
+
+            public function post_json(string $url, array $data)
+            {
+                $this->calls++;
+
+                return false;
+            }
+
+            public function get_error(): string
+            {
+                return 'still down';
+            }
+        };
+
+        $request = $this->makeRequest('POST', [])->injectClient($client);
+        $request->authenticate($auth);
+
+        $response = $request->send();
+
+        $this->assertSame(2, $client->calls);
+        $this->assertSame(1, $auth->refreshCalls);
+        $this->assertFalse($response->isOk());
+        $this->assertSame('still down', $response->getErrorMessage());
+    }
+
+    /**
+     * #27: without a stale token a transport failure is surfaced as today and
+     * no token refresh is attempted.
+     */
+    #[Test]
+    public function it_does_not_retry_when_the_token_is_not_expired(): void
+    {
+        $auth = new class(1, 'u', 'p', 'fresh-token') extends Auth {
+            public int $refreshCalls = 0;
+
+            public function getToken($refresh = false)
+            {
+                if ($refresh) {
+                    $this->refreshCalls++;
+                }
+
+                return 'fresh-token';
+            }
+
+            public function isTokenExpired() //: bool
+            {
+                return false;
+            }
+        };
+
+        $client = new class extends Client {
+            public int $calls = 0;
+
+            public function headers_add($name, $value)
+            {
+                return $this;
+            }
+
+            public function post_json(string $url, array $data)
+            {
+                $this->calls++;
+
+                return false;
+            }
+
+            public function get_error(): string
+            {
+                return 'curl boom';
+            }
+        };
+
+        $request = $this->makeRequest('POST', [])->injectClient($client);
+        $request->authenticate($auth);
+
+        $response = $request->send();
+
+        $this->assertSame(1, $client->calls);
+        $this->assertSame(0, $auth->refreshCalls);
+        $this->assertFalse($response->isOk());
+        $this->assertSame('curl boom', $response->getErrorMessage());
+    }
 }

@@ -39,7 +39,7 @@ class Auth {
 	public function getToken($refresh = false)
 		{
 		$this->btoken_message = '';
-		if ($refresh || ($this->btoken == ''))
+		if ($refresh || ($this->btoken == '') || $this->isTokenExpired())
 			{
 			try {
 				$this->retrieve_token();
@@ -54,6 +54,30 @@ class Auth {
 		return $this->btoken;
 		}
 
+	/**
+	 * Whether the stored token's expiry timestamp is in the past.
+	 *
+	 * The API returns `expiresAt` as 'Y-m-d H:i:s' with an unspecified timezone,
+	 * so the comparison uses the process timezone. A missing or unparsable
+	 * expiry is treated as "not expired" (conservative: keep using the cached
+	 * token instead of forcing a refresh), see defect #27 / API_GAP_ANALYSIS §6.4.
+	 */
+	public function isTokenExpired() //: bool
+		{
+		if ($this->btoken_expires_at === '')
+			{
+			return false;
+			}
+
+		$expiresAt = strtotime($this->btoken_expires_at);
+		if ($expiresAt === false)
+			{
+			return false;
+			}
+
+		return $expiresAt <= time();
+		}
+
 	public function getTokenMessage()
 		{
 		return $this->btoken_message;
@@ -64,7 +88,9 @@ class Auth {
 		return $this->btoken_expires_at; // Date format: Y-m-d H:i:s (unknown timezone)
 	}
 
-	private function retrieve_token()
+	// Widened private -> protected so the token path is unit-testable without
+	// network (a test subclass can override the retrieval).
+	protected function retrieve_token()
 		{
 		$client = new Client();
 		$client->set_verify($this->verifyHost, $this->verifyPeer);
