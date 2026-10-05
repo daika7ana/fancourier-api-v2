@@ -17,8 +17,16 @@ final class GetStreetsTest extends TestCase
     #[Test]
     public function it_packs_the_default_page_size(): void
     {
-        // UPGRADE_PLAN §7 #1 — Phase 3: getPerPage() returns the page property; not asserted here.
         $this->assertSame(['perPage' => 1000], $this->request()->pack());
+    }
+
+    #[Test]
+    public function it_returns_the_configured_page_and_per_page(): void
+    {
+        $request = $this->request()->setPage(3)->setPerPage(25);
+
+        $this->assertSame(3, $request->getPage());
+        $this->assertSame(25, $request->getPerPage());
     }
 
     #[Test]

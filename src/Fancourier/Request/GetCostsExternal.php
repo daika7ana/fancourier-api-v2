@@ -20,7 +20,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     private $height = 0;
 	
     private $service = 'Export';
-	private $deliveryMode = 'Rutier';		// "rutier" sau "aerian" (metodele disponibile se pot afla prin GetCountries)
+	private $deliveryMode = 'rutier';		// "rutier" sau "aerian" (metodele disponibile se pot afla prin GetCountries)
 	private $documentType = 'document';		// "document" sau "non document"
 
     public function __construct()

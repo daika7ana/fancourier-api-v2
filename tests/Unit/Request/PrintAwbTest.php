@@ -17,11 +17,34 @@ final class PrintAwbTest extends TestCase
     #[Test]
     public function it_packs_pdf_mode_by_default(): void
     {
-        // UPGRADE_PLAN §7 #2/#13 — Phase 3: getSize() returns lang, setHtml(true) ignores its argument.
         $this->assertSame(
             ['clientId' => 12345, 'awbs' => [], 'language' => 'ro', 'pdf' => 1],
             $this->request()->pack()
         );
+    }
+
+    #[Test]
+    public function it_returns_the_configured_size(): void
+    {
+        $this->assertSame('A5', $this->request()->setSize('A5')->getSize());
+    }
+
+    #[Test]
+    public function it_honours_the_html_activation_argument(): void
+    {
+        $request = $this->request();
+
+        $request->setHtml(true);
+        $this->assertTrue($request->getHtml());
+        $this->assertFalse($request->getPdf());
+        $this->assertFalse($request->getZpl());
+        $this->assertArrayNotHasKey('pdf', $request->pack());
+        $this->assertArrayNotHasKey('zpl', $request->pack());
+
+        $request->setHtml(false);
+        $this->assertFalse($request->getHtml());
+        $this->assertTrue($request->getPdf());
+        $this->assertSame(1, $request->pack()['pdf']);
     }
 
     #[Test]

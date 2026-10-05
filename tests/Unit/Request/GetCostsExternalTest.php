@@ -17,11 +17,10 @@ final class GetCostsExternalTest extends TestCase
     #[Test]
     public function it_packs_a_minimal_external_tariff_request(): void
     {
-        // UPGRADE_PLAN §7 #19 — Phase 3: the default deliveryMode ('Rutier') is defective
-        // (should be lowercase 'rutier'), so its value is deliberately not asserted here.
         $packed = $this->request()->setCountry('DE')->pack();
 
         $this->assertSame(12345, $packed['clientId']);
+        $this->assertSame('rutier', $packed['info']['deliveryMode']);
         $this->assertSame('Export', $packed['info']['service']);
         $this->assertSame('document', $packed['info']['documentType']);
         $this->assertNull($packed['info']['weight']);

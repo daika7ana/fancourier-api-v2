@@ -93,7 +93,7 @@ class GetCourierOrders extends AbstractRequest implements RequestInterface
      */
     public function getPerPage()
     {
-        return $this->page;
+        return $this->perPage;
     }
 
     /**

@@ -21,7 +21,6 @@ class GetCosts extends AbstractRequest implements RequestInterface
     private $width = 0;
     private $height = 0;
     private $declaredValue;
-//    private $reimbursementPaymentType = self::TYPE_RECIPIENT;
     protected $options = [];	// optional					// info.options
     private $service = 'Standard';
 

@@ -36,7 +36,7 @@ if (!$response->isOk())
 else
 	{
 	// get remaining pages
-	while ($response->isOk() && ($response->getCurrentPage() <= $response->getTotalPages()) )
+	while ($response->isOk() && ($response->getCurrentPage() < $response->getTotalPages()) )
 		{
 		echo "Total: ".$response->getTotal()."<br />";
 		echo "Page: ".$response->getCurrentPage()."<br />";
@@ -44,9 +44,6 @@ else
 		echo "Total pages: ".$response->getTotalPages()."<br />";
 		echo '<pre>'. print_r($response->getAll(), 1) . '</pre>';
 		echo "<hr />";
-		
-		$request
-			->setPage( $response->getCurrentPage()+1 );
 		
 		// if not the last page, request the next page
 		if ($response->getCurrentPage() < $response->getTotalPages())

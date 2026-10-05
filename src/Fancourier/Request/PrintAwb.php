@@ -98,8 +98,11 @@ class PrintAwb extends AbstractRequest implements RequestInterface
      */
     public function setHtml($active = true)
     {
-        if ($this->pdf) { $this->pdf = false; }	// disable PDF in case it's active
-        if ($this->zpl) { $this->zpl = false; }	// disable ZPL in case it's active
+        // HTML mode means neither PDF nor ZPL is active; turning it off falls back to the default PDF format.
+        // ponytail: setHtml(false) always selects PDF; restore the previous format only if a caller needs ZPL back.
+        $active = (bool) $active;
+        $this->pdf = !$active;
+        $this->zpl = false;
         return $this;
     }
 
@@ -188,7 +191,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
      */
     public function getSize()
     {
-        return $this->lang;
+        return $this->size;
     }
 
     /**

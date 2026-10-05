@@ -15,10 +15,17 @@ final class CreateCourierOrderTest extends TestCase
     }
 
     #[Test]
+    public function it_returns_the_awb_and_pickup_date_that_were_set(): void
+    {
+        $request = $this->request()->setAwb('A1')->setPickupDate('2024-01-02')->setNotes('ignored');
+
+        $this->assertSame('A1', $request->getAwb());
+        $this->assertSame('2024-01-02', $request->getPickupDate());
+    }
+
+    #[Test]
     public function it_packs_a_standard_order_without_a_recipient_block(): void
     {
-        // UPGRADE_PLAN §7 #3/#4 — Phase 3: getPickupDate() returns notes and getAwb() has an
-        // unused required parameter; neither getter is asserted here.
         $packed = $this->request()
             ->setAwb('A1')
             ->setParcels(2)

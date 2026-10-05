@@ -17,8 +17,6 @@ final class GetCostsTest extends TestCase
     #[Test]
     public function it_packs_a_minimal_internal_tariff_request(): void
     {
-        // UPGRADE_PLAN §7 (lower-confidence note) — Phase 3: $reimbursementPaymentType is only a
-        // commented-out property, so it is absent from the payload.
         $this->assertSame(
             [
                 'clientId' => 12345,

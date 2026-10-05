@@ -111,7 +111,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
 	
     }
 	
-	public function getAwb($awbNo)
+	public function getAwb()
 	{
 		return $this->awbNumber;
 	}
@@ -283,7 +283,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
      */
     public function getPickupDate()
     {
-        return $this->notes;
+        return $this->pickupDate;
     }
 
     /**
