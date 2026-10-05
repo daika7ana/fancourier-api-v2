@@ -4,7 +4,7 @@ namespace Fancourier\Objects;
 
 class Street
 {
-	protected int $id = 0;
+	protected string $id = '';
 	protected string $streetName = '';
 	protected string $type = '';
 	protected string $county = '';
@@ -18,7 +18,7 @@ class Street
 	 */
 	public function __construct(array $data)
 		{
-		$this->id			= intval($data['id'] ?? 0);
+		$this->id			= (string) intval($data['id'] ?? 0);
 		$this->streetName	= (string) ($data['street'] ?? '');
 		$this->type			= (string) ($data['type'] ?? '');
 		$this->county		= (string) ($data['county'] ?? '');
@@ -83,7 +83,7 @@ class Street
 	public function getArray(): array
 		{
 		$arr = [
-			'id'		=> $this->id,
+			'id'		=> (int) $this->id,
 			"street"	=> $this->streetName,
 			"type"		=> $this->type,
 			"locality"	=> $this->city,

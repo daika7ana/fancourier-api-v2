@@ -42,7 +42,7 @@ class GetCourierOrderEvents extends AbstractRequest implements RequestInterface
      */
 	public function getLanguage(): string
 	{
-		return $this->language ?? '';
+		return $this->language;
 	}
 	
     /**

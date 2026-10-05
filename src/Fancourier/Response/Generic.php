@@ -57,7 +57,7 @@ class Generic implements ResponseInterface
      * @param mixed  $body     Decoded body (array) or raw response string.
      * @param int|string $code Error code to store.
      * @param string $fallback Message used when the body carries none.
-     * @return $this
+     * @return static
      */
     protected function setErrorFromBody(mixed $body = null, int|string $code = -1, string $fallback = 'Unknown error'): static
     {

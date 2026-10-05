@@ -65,15 +65,6 @@ Array
 	 */
 	public function setAwbList(array $awbList): bool
 		{
-		// check list
-		foreach ($awbList as $awb)
-			{
-			if (!($awb instanceof AwbExtern))
-				{
-				return false;
-				}
-			}
-		
 		$this->awbList = $awbList;
 		return true;
 		}

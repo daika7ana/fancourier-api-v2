@@ -82,17 +82,17 @@ class CourierOrder
 
 	public function getEnvelopes(): int
 		{
-		return (int)$this->packages['envelope'] ?? 0;
+		return (int) ($this->packages['envelope'] ?? 0);
 		}
 
 	public function getParcels(): int
 		{
-		return (int)$this->packages['parcel'] ?? 0;
+		return (int) ($this->packages['parcel'] ?? 0);
 		}
 
 	public function getWeight(): float
 		{
-		return (float)$this->weight ?? 0;
+		return $this->weight;
 		}
 
 	/** @return array<string, mixed> */

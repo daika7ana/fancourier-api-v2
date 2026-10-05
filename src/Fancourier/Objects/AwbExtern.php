@@ -820,7 +820,7 @@ class AwbExtern
 		if (isset($data['errors']) && is_array($data['errors']) && (count($data['errors']) > 0) )
 			{
 			$this->hasErrors = true;
-			$this->errors = $data['errors'] ?? [];
+			$this->errors = $data['errors'];
 			}
 		
 		$this->awb = (string) $data['awbNumber'];

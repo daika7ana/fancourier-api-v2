@@ -50,10 +50,10 @@ class Client {
 			}
 		if (!$this->verify_peer)
 			{
-			curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
 			}
 
-		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
 
 		$this->set_custom_headers();
 		}
@@ -87,7 +87,7 @@ class Client {
 		
 		curl_setopt($this->curl, CURLOPT_URL, $url);
 		//curl_setopt($this->curl, CURLOPT_HEADER, 0);
-		curl_setopt($this->curl, CURLOPT_POST, 0);
+		curl_setopt($this->curl, CURLOPT_POST, false);
 		if ($this->is_put)
 			{
 			curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "PUT");
@@ -140,7 +140,7 @@ class Client {
 		curl_setopt($this->curl, CURLOPT_URL, $url);
 		//curl_setopt($this->curl, CURLOPT_HEADER, 0);
 
-		curl_setopt($this->curl, CURLOPT_POST, 1);
+		curl_setopt($this->curl, CURLOPT_POST, true);
 		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
 		if ($this->is_put)
 			{
@@ -172,7 +172,7 @@ class Client {
 		curl_setopt($this->curl, CURLOPT_URL, $url);
 		//curl_setopt($this->curl, CURLOPT_HEADER, 0);
 
-		curl_setopt($this->curl, CURLOPT_POST, 1);
+		curl_setopt($this->curl, CURLOPT_POST, true);
 		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $datastr);
 		if ($this->is_put)
 			{
@@ -238,7 +238,7 @@ class Client {
 			return false;
 			}
 
-		if ($response === '' || $response === null || $response === false)
+		if ($response === '')
 			{
 			$this->set_error('FAN Courier returned an empty response');
 			$this->close();

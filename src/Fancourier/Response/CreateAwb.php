@@ -14,11 +14,7 @@ class CreateAwb extends Generic implements ResponseInterface
     #[\Override]
     public function setData(mixed $datastr): static
     {
-		try {
-			$response_json = json_decode($datastr, true);
-			}
-		catch (\TypeError $e)
-			{ }
+		$response_json = json_decode($datastr, true);
 		
 		if (json_last_error() === JSON_ERROR_NONE && is_array($response_json))
 			{
@@ -100,15 +96,6 @@ class CreateAwb extends Generic implements ResponseInterface
 	 */
 	public function setAwbList(array $awbList): bool
 		{
-		// check list
-		foreach ($awbList as $awb)
-			{
-			if (!($awb instanceof AwbIntern))
-				{
-				return false;
-				}
-			}
-		
 		$this->awbList = $awbList;
 		return true;
 		}

@@ -250,7 +250,7 @@ abstract class AbstractRequest implements RequestInterface
         if (false === $token || $token === '') {
             $message = 'Authentication failed: no bearer token';
             $authMessage = $this->auth->getTokenMessage();
-            if (is_string($authMessage) && $authMessage !== '') {
+            if ($authMessage !== '') {
                 $message .= ': '.$authMessage;
             }
 

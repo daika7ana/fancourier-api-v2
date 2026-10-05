@@ -58,27 +58,27 @@ class AwbTracker
 
 	public function getReturnAwbNumber(): string
 		{
-		return $this->returnAwbNumber ?? '';
+		return $this->returnAwbNumber;
 		}
 
 	public function getRedirectionAwbNumber(): string
 		{
-		return $this->redirectionAwbNumber ?? '';
+		return $this->redirectionAwbNumber;
 		}
 
 	public function getReimbursementAwbNumber(): string
 		{
-		return $this->reimbursementAwbNumber ?? '';
+		return $this->reimbursementAwbNumber;
 		}
 
 	public function getOPODAwbNumber(): string
 		{
-		return $this->oPODAwbNumber ?? '';
+		return $this->oPODAwbNumber;
 		}
 
 	public function getPaymentDate(): string
 		{
-		return $this->paymentDate ?? '';
+		return $this->paymentDate;
 		}
 
 	public function getMessage(): string
