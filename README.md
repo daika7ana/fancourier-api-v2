@@ -22,7 +22,7 @@
 ## Information
 This version of the library is designed for FANCourier API v2.0 (JSON based responses). The code works and there are examples for all API requests, however, the documentation is not yet ready.  
   
-All requests have the method `getData()` that returns the unprocessed response of the API. Aditional functions depend on the response object type to return processed data.  
+All requests have the method `getData()` that returns the unprocessed response of the API. Additional functions depend on the response object type to return processed data.  
 
 ## Installation
 ### Requirements
@@ -43,6 +43,20 @@ If used without composer, you will need to manually require the `autoload.php` f
 ```php
 require_once '/path/to/fancourier-api/src/autoload.php';
 ```
+
+### Upgrading to 2.0
+2.0 is a breaking major (native types, `Client` camelCase renames, removed dead methods).
+See [`MIGRATION.md`](./MIGRATION.md) for the full break list, then run the Rector codemod to update
+the mechanical renames automatically:
+
+```bash
+composer require --dev rector/rector
+vendor/bin/rector process src tests --dry-run   # review
+vendor/bin/rector process src tests             # apply
+```
+
+Code lists ship as string-backed enums in `Fancourier\Enums\`, but adopting them is **optional** —
+plain string arguments keep working in 2.0.
 
 ## Usage
 
@@ -133,7 +147,7 @@ $response = $fan->createAwb($request);
 
 if ($response->isOk()) {
     var_dump($response->getData()); // raw data
-    // or the AWBIntern objects updated with the response information
+    // or the AwbIntern objects updated with the response information
     $al = $response->getAll();
     echo "Count: ".count($al)."<br />";
     foreach ($al as $awbr)
@@ -155,7 +169,7 @@ if ($response->isOk()) {
 
 ### Create AWB in bulk
 
-Unlike the previous version, there is no longer a CreateAwbBulk request. Simply create as many AWBIntern objects and add them to the request  
+Unlike the previous version, there is no longer a CreateAwbBulk request. Simply create as many AwbIntern objects and add them to the request  
   
 Request
 ```php
@@ -198,7 +212,7 @@ $response = $fan->createAwb($request);
 
 if ($response->isOk()) {
     var_dump($response->getData()); // raw data
-    // or the AWBIntern objects updated with the response information
+    // or the AwbIntern objects updated with the response information
     $al = $response->getAll();
     echo "Count: ".count($al)."<br />";
     foreach ($al as $awbr)
@@ -263,7 +277,7 @@ if ($response->isOk()) {
 
 ### FANBox
 
-You can now easily get information about available FANBox and PayPoint locations. FAN Courier calls there PUDO (Pick Up Drop Off).  
+You can now easily get information about available FANBox and PayPoint locations. FAN Courier calls them PUDO (Pick Up Drop Off).  
 When creating an AWB for them, set the address to the PUDO address as received here as well as calling the function `setPickupLocation(PUDO_ID)` with the ID of the selected PUDO.  
 
 Request
@@ -305,7 +319,6 @@ if ($response->isOk()) {
     echo $response->getData();
 } else {
     var_dump($response->getErrorMessage());
-    print_r($response->getAllErrors());
 }
 ```
 
@@ -328,7 +341,6 @@ if ($response->isOk()) {
     echo $response->getData();
 } else {
     var_dump($response->getErrorMessage());
-    print_r($response->getAllErrors());
 }
 ```
 
@@ -350,7 +362,6 @@ if ($response->isOk()) {
     echo $response->getData();
 } else {
     var_dump($response->getErrorMessage());
-    print_r($response->getAllErrors());
 }
 ```
 

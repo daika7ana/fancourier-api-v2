@@ -1,8 +1,14 @@
 # FAN Courier API v2 — Fork & Refactor Upgrade Plan
 
-Status: **DRAFT / not started**
+Status: **IN PROGRESS — Phases 0–3 and Phase 3b waves W0–W5 are DONE.** Phase 4 (dead-code &
+docs), Phase 5 (`pint`), Phase 6 (examples), and Phase 7 (release/tag `2.0.0`) remain.
 Target: forked public library, major overhaul.
-Baseline commit: `204ec7b` (Merge PR #36), branch `main`.
+Baseline commit: `204ec7b` (Merge PR #36), branch `main`; work on `refactor/2.0.0`.
+
+Phases 0–3 and Phase 3b waves W0–W5 are complete (see the per-phase statuses below and the
+deviation log in §12). Phase 3b is code-complete: the suite is green at 341 tests / 1453
+assertions with PHPStan level 8, but 2.0.0 is **not tagged** yet — Phases 4–7 still gate the
+release.
 
 This document is the authoritative plan for forking and modernising the
 `fancourier-api-v2` package for public use. It covers the confirmed scope,
@@ -156,6 +162,9 @@ Phase 1's tests land, provided write scopes do not overlap.
 
 ### Phase 0 — Fork & baseline (no source changes)
 
+**Status: DONE** — `7d6d16a` (bootstrap 2.0.0 toolchain and hermetic test config), `b124564`
+(refactor plan). Downstream-consumer enumeration was substituted by a fixture canary — see §12.
+
 **Goal:** a forked, tracked, CI-covered starting point that builds and runs without source edits.
 
 Tasks:
@@ -176,18 +185,22 @@ Tasks:
    depending on `shusaura85/fancourier-api`; grep each for usage (facade-only vs direct
    `Client`/`Request`/`Object`/subclass use); pick ONE canary service. This is both a Phase 0
    deliverable and exit criterion — the Phase 3b break list is frozen only after this enumeration.
+   **Superseded:** the fork has no downstream consumers, so this was replaced by a fixture canary
+   (`canary/consumer-v1`) exercised through `rector.php` in CI.
 10. Freeze `main`; do all work on a `refactor` branch (or per-phase branches) with PRs.
 
 **Deliverables:** fork remote, tracked formatter config, CI workflow, `composer.lock` policy,
-`laravel/pint` dev dependency, downstream-consumer inventory + named canary service, `refactor` branch.
+`laravel/pint` dev dependency, fixture canary (`canary/consumer-v1`), `refactor` branch.
 
-**Exit criteria:** CI workflow triggers and is green (unit-only) on unchanged source; downstream
-consumer inventory complete with a named canary service (the Phase 3b break list is frozen only
-after this point).
+**Exit criteria:** CI workflow triggers and is green (unit-only) on unchanged source; the fixture
+canary is migrated by `rector.php` in CI (no named downstream canary service — see the supersession
+note above).
 
 ---
 
 ### Phase 1 — Make it testable (highest priority)
+
+**Status: DONE** — `ed31435` (hermetic offline unit suite, fixtures, fake `Client`).
 
 **Goal:** a regression net that does not require the live API, so later phases are safe.
 
@@ -231,6 +244,9 @@ generated locally; at least one test exercises `send()` via a fake `Client` doub
 
 ### Phase 2 — Version floor, CI, static analysis
 
+**Status: DONE** — `9baa0da` (retire Travis, enable PHPStan, require PHP 8.3), `fe9763a`
+(describe the project as a fork), `7ac3d32` (PHPDoc annotations, unknown-method guard).
+
 **Goal:** declared floor matches reality; tooling enforces the target.
 
 Tasks:
@@ -266,6 +282,12 @@ unit tests.
 
 ### Phase 3 — Defect fixes
 
+**Status: DONE** — `7379f35` (override sites + typed class constants), `21dbb16` (request getters,
+`PrintAwb` size/html, external-tariff casing), `259d183` (object parsing defaults, NUE pack fields,
+currency, acronym casing), `36fea35` (example fixes), `64bc9d2` (response error states, branch /
+confirmation getters), `1d572d2` (ShippingSlip payment string getters), `48f78ef` (auth guard,
+token refresh/retry, empty-response guard).
+
 **Goal:** eliminate every known correctness bug, each with a regression test.
 
 Work the inventory in §7. Ordering guidance: fix parser/getter bugs first (covered by Phase 1
@@ -296,6 +318,21 @@ a test; `phpstan analyse` shows no new errors at the last-green level (no baseli
 ---
 
 ### Phase 3b — Breaking modernization (target: 2.0.0)
+
+**Status: DONE (code-complete).** Waves and their commits:
+
+| Wave | Scope | Commit(s) |
+|---|---|---|
+| W0 | Toolchain + hermetic test config | `7d6d16a` |
+| W1 | Drop dead public API, rename `Client`, add Rector codemod | `76badfa` |
+| W2 | Native types across Request/Response/Objects | `9042fb1`, `9284f15` |
+| W3 | Deduplicate Request/Response pairs and pagination | `02d420c` |
+| W4 | Backed enums + `string\|Enum` setters | `4966106` |
+| W5 | `declare(strict_types=1)` repo-wide | `838bf10` |
+| — | PHPStan ratchet: level 5 → level 8 | `ec1e6ab`, `56067b2` |
+
+Remaining for 2.0.0: tag the release in Phase 7 (Phases 4–6 still outstanding). PHPStan level 9
+(≈474 errors) is deferred as a bounded follow-up. See §12 for the deviation log.
 
 **Goal:** land the deliberate breaking changes in one coordinated major, with the migration path
 shipped alongside.
@@ -341,6 +378,8 @@ a **canary consumer compiles and passes its own test suite using the Rector outp
 
 ### Phase 4 — Dead code & documentation cleanups
 
+**Status: NOT STARTED.**
+
 **Goal:** remove genuine dead weight (breaking public-method removals are handled in Phase 3b).
 
 Tasks:
@@ -360,6 +399,8 @@ symbols removed in THIS phase (Phase 3b owns public removals).
 ---
 
 ### Phase 5 — Apply `pint`
+
+**Status: NOT STARTED.**
 
 **Goal:** normalise formatting in one isolated, reviewable commit.
 
@@ -381,6 +422,8 @@ Tasks:
 
 ### Phase 6 — Examples & docs polish
 
+**Status: NOT STARTED.**
+
 **Goal:** the de-facto docs (examples) and README are correct and runnable.
 
 Tasks:
@@ -399,6 +442,8 @@ Tasks:
 ---
 
 ### Phase 7 — Release (2.0.0)
+
+**Status: NOT STARTED** — blocked on Phases 4–6.
 
 Tasks: tag **`2.0.0`**, finalize `CHANGELOG.md` and `MIGRATION.md`, publish the Rector set and the
 package to the Composer repository (path/VCS), document the install command, the PHP 8.3
@@ -695,7 +740,7 @@ Structural duplication:
 | `minimum-stability: dev` + no lockfile | Medium — non-reproducible CI | Commit a `composer.lock` for the fork |
 | Repo-wide `strict_types` surfaces many latent TypeErrors at once | Medium — large red CI | Declare it repo-wide in Phase 3b (via Rector) only after Phase 3 fixes and green PHPStan; the consumer-facing break is the declared parameter/return types, not `strict_types` itself |
 | Breaking the public API breaks consumers | High | Single `2.0.0` + `MIGRATION.md` + Rector codemod; each consumer verifies with its own test suite before upgrading |
-| Consumers not enumerated; the 2.0 break list is unvalidated | High — blind breaks | Phase 0 downstream-consumer enumeration + a named canary service; freeze the 3b break list only after that, and prove the canary compiles + tests against the Rector output |
+| Consumers not enumerated; the 2.0 break list is unvalidated | High — blind breaks | The fork has no downstream consumers: substituted by a fixture canary (`canary/consumer-v1`) proved against the `rector.php` output in CI. Break list is frozen. |
 | An AI applying a prose migration guide mis-maps symbols | Medium | Keep mappings deterministic and codemod-backed; `MIGRATION.md` uses structured tables, not free prose |
 | PHP 8.1 already EOL / 8.3 will age | Low | 8.3 chosen; revisit before 8.3 EOL (Dec 2026) |
 | The one genuine 8.1 API (`CURLStringFile`) | Low | Valid on 8.3; no guard needed |
@@ -719,12 +764,12 @@ Structural duplication:
    `strict_types` itself.
 8. **PHPUnit ^11 vs ^12** for the 8.3-only dev floor.
 9. **Commit `composer.lock`** for the fork? (recommended: yes.)
-10. **Downstream consumers** — **MOVED to Phase 0** (no longer open). Phase 0 enumerates the
-    repos/services that depend on this package, classifies usage, and names a canary; the Phase 3b
-    break list is frozen only after that.
-11. **Rector set scope** — rename/signature changes only, or also codemod the enum conversions and
-    the `Client` naming migration?
-12. **`Client` public API target names** — confirm the camelCase names listed in `MIGRATION.md`.
+10. **Downstream consumers** — **RESOLVED:** there are none in this fork. Substituted by a fixture
+    canary (`canary/consumer-v1`) migrated through `rector.php` in CI; the break list is frozen.
+11. **Rector set scope** — **RESOLVED:** the shipped `rector.php` is rename-only for consumers;
+    `rector-internal.php` (strict types) is repo-only and not shipped.
+12. **`Client` public API target names** — **RESOLVED:** confirmed as the camelCase names listed in
+    `MIGRATION.md` §3.1.
 
 **Resolved since drafting (2026-10):**
 
@@ -736,6 +781,25 @@ Structural duplication:
   for the ~Dec 2026 security-support end (see §1). Not bumped to 8.4 here.
 - **`strict_types` rollout:** decided — declared repo-wide in Phase 3b via Rector after the Phase 3
   fixes; the consumer-facing break is the declared types (see §12.7).
+
+**Phase 3b outcome — deviations from the seed doc (2026-10):**
+
+- **Canary consumer substituted by a fixture canary.** This fork has no downstream consumers to
+  enumerate, so the Phase 0/3b canary exit criterion is satisfied by a fixture consumer
+  (`canary/consumer-v1`) run through `rector.php` in CI. No real canary service exists.
+- **PHPStan ratcheted to level 8**, not the "likely level 5" the seed expected. Level 9 currently
+  reports ≈474 errors and is deferred as a bounded follow-up; the level-8 run is green with no
+  committed baseline (`phpstan.neon` keeps the commented escape hatch only).
+- **"Internal fork" wording superseded** — the project is described as a public fork of
+  `shusaura85/fancourier-api` (`fe9763a`), and `.travis.yml` was retired for GitHub Actions
+  (`9baa0da`).
+- **PHPUnit ^12** was chosen for the 8.3-only dev floor (resolves open question 8).
+- **Rector scope decided** (resolves open question 11): the shipped `rector.php` is rename-only for
+  consumers; `rector-internal.php` carries `DeclareStrictTypesRector` and is repo-only, not shipped.
+- **`Client` camelCase target names confirmed** (resolves open question 12) — see `MIGRATION.md` §3.1.
+- **Removed, not renamed:** `Client::get_error_no()` / `headers_reset()` were dead and deleted in
+  2.0 (the seed listed them under renames); acronym casing (`getUitCode`→`getUITCode`,
+  `getOpodAwbNumber`→`getOPODAwbNumber`) was applied in Phase 3 as BC-safe cosmetic cleanup.
 
 ---
 
