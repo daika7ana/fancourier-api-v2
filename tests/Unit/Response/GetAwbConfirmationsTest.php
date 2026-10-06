@@ -32,7 +32,7 @@ class GetAwbConfirmationsTest extends TestCase
     }
 
     /**
-     * Defect #9 (UPGRADE_PLAN §7): getRAWbytes() is nullable and getLength()
+     * getRAWbytes() is nullable and getLength()
      * returns an int.
      */
     #[Test]

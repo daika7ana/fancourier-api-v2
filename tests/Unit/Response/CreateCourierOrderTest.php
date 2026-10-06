@@ -31,7 +31,7 @@ class CreateCourierOrderTest extends TestCase
     }
 
     /**
-     * Defect #20 (UPGRADE_PLAN §7): getId() was missing; it exposes data.id.
+     * getId() was missing; it exposes data.id.
      */
     #[Test]
     public function it_falls_back_on_missing_optional_keys(): void

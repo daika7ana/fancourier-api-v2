@@ -1,13 +1,13 @@
 # AGENTS.md
 
 PHP client library for the FAN Courier API v2.0 (JSON). Composer package
-`shusaura85/fancourier-api`, namespace `Fancourier\`, PSR-4 root `src/Fancourier/`.
+`daika7ana/fancourier-api`, namespace `Fancourier\`, PSR-4 root `src/Fancourier/`.
 No framework, no CLI: it is a library plus runnable examples.
 
 ## Commands
 
 ```bash
-composer install                                 # required before tests (no lock file committed)
+composer install                                 # required before tests; composer.lock is committed
 vendor/bin/phpunit --exclude-group integration   # hermetic unit suite
 vendor/bin/phpunit --filter it_can_get_costs     # single test
 vendor/bin/phpunit --group integration           # live API tests (needs env creds + token)
@@ -16,9 +16,12 @@ vendor/bin/rector process --dry-run              # consumer codemod canary
 ```
 
 - There are **no composer scripts** (no `composer test`/`composer lint`).
-- `pint.json` configures Laravel Pint (`per` preset + extra rules); Pint is a dev
-  dependency but formatting is deliberately deferred to a later phase, so do **not**
-  run `pint` yet.
+- `pint.json` configures Laravel Pint (`per` preset + extra rules). Formatting has
+  already been applied; run `vendor/bin/pint` to format and `vendor/bin/pint --test`
+  to verify. CI enforces `pint --test` on PHP 8.3.
+- Pint enables non-cosmetic rules (`protected_to_private`, `ordered_class_elements`,
+  `array_push`), so a formatting pass can change visibility/member order — review the
+  diff rather than blind-committing it.
 
 ## Tests hit the live API
 
@@ -47,7 +50,8 @@ repeatedly.
 - Two Rector configs exist: `rector.php` is the consumer-facing rename codemod (old
   snake_case `Client` methods → camelCase), and `rector-internal.php` only adds
   `declare(strict_types=1)`. The CI canary runs `rector.php` over `canary/consumer-v1`.
-- Pint is configured but intentionally not enforced yet; formatting lands in a later phase.
+- Pint (`per` preset) has been applied repo-wide and is enforced in CI (`pint --test` on
+  PHP 8.3).
 
 ## Request/Response architecture (where to change what)
 

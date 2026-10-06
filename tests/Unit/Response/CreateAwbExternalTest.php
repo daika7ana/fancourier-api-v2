@@ -26,7 +26,7 @@ class CreateAwbExternalTest extends TestCase
     }
 
     /**
-     * Defect #6 (UPGRADE_PLAN §7, uninventoried): the JSON error branch used to
+     * The JSON error branch used to
      * read $response_json['message'] unconditionally on an empty body, emitting
      * an undefined-key warning. It now routes through Generic::setErrorFromBody().
      */

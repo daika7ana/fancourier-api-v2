@@ -55,7 +55,7 @@ class ShippingSlipTest extends TestCase
     #[Test]
     public function it_returns_payment_and_return_payment_as_strings(): void
     {
-        // UPGRADE_PLAN §7 (Objects) — payment codes are strings, not floats.
+        // payment codes are strings, not floats.
         $slip = new ShippingSlip($this->data());
 
         $this->assertSame('expeditor', $slip->getPayment());

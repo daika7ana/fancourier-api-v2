@@ -137,5 +137,5 @@ class FancourierTest extends TestCase
 
     // Bulk tracking (trackAwbBulk / TrackAwbBulk) is not implemented in the
     // current API surface; the previously commented-out test referenced a
-    // nonexistent class. See UPGRADE_PLAN.md §8.1.
+    // nonexistent class.
 }

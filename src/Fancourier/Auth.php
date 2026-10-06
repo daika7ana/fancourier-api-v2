@@ -58,7 +58,7 @@ class Auth
      * The API returns `expiresAt` as 'Y-m-d H:i:s' with an unspecified timezone,
      * so the comparison uses the process timezone. A missing or unparsable
      * expiry is treated as "not expired" (conservative: keep using the cached
-     * token instead of forcing a refresh), see defect #27 / API_GAP_ANALYSIS §6.4.
+     * token instead of forcing a refresh), see defect #27.
      */
     public function isTokenExpired(): bool
     {

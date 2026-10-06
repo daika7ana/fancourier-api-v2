@@ -275,7 +275,7 @@ class AwbInternTest extends TestCase
         $packed = $awb->pack();
 
         $this->assertTrue($packed['info']['isValueUnderThreshold']);
-        // UPGRADE_PLAN §7 #6 — stored NUE_* values must be emitted, not blanked.
+        // stored NUE_* values must be emitted, not blanked.
         $this->assertSame('US', $packed['info']['countryCode']);
         $this->assertSame('VAT123', $packed['info']['vatId']);
         $this->assertSame('ACME', $packed['info']['company']);
@@ -286,7 +286,7 @@ class AwbInternTest extends TestCase
     #[Test]
     public function it_returns_the_threshold_when_it_is_set(): void
     {
-        // UPGRADE_PLAN §7 #5 — the guard was inverted and threw when the value was set.
+        // the guard was inverted and threw when the value was set.
         $awb = (new AwbIntern())->setIsValueUnderThreshold(false);
 
         $this->assertFalse($awb->getIsValueUnderThreshold());
@@ -295,7 +295,7 @@ class AwbInternTest extends TestCase
     #[Test]
     public function it_throws_when_the_threshold_is_not_set(): void
     {
-        // UPGRADE_PLAN §7 #5 — guard must throw only when the value is genuinely unset.
+        // guard must throw only when the value is genuinely unset.
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('isValueUnderThreshold is not set!');
 

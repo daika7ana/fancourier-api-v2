@@ -34,7 +34,7 @@ class AwbExternTest extends TestCase
         $this->assertFalse($awb->hasErrors());
         $this->assertSame([], $awb->getErrors());
         $this->assertNull($awb->getAwb());
-        // UPGRADE_PLAN §7 #18 — default payment is the shared sender type.
+        // default payment is the shared sender type.
         $this->assertSame(AbstractRequest::TYPE_SENDER, $awb->getPaymentType());
     }
 
@@ -270,7 +270,7 @@ class AwbExternTest extends TestCase
         $this->assertSame(3.5, $packed['info']['weight']);
         $this->assertSame(250.0, $packed['info']['declaredValue']);
         $this->assertSame(100.0, $packed['info']['cod']);
-        // UPGRADE_PLAN §7 #15/#23 — currency is now emitted when set.
+        // currency is now emitted when set.
         $this->assertSame('EUR', $packed['info']['currency']);
     }
 

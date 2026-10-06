@@ -37,7 +37,7 @@ class GetPudoTest extends TestCase
     #[Test]
     public function it_falls_back_on_missing_optional_keys(): void
     {
-        // UPGRADE_PLAN §7 #10 — getAddress() falls back to '' for an array return; Phase 3.
+        // getAddress() falls back to '' for an array return; Phase 3.
         $response = (new GetPudo())->setData($this->fixture('getPudo.missing-keys'));
 
         $this->assertTrue($response->isOk());

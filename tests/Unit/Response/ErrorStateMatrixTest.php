@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Defect #22 (UPGRADE_PLAN §7): every response parser must set the error state
+ * Every response parser must set the error state
  * for a non-success body, even when the body omits the error fields, and must
  * never report isOk() === true on such a body.
  *

@@ -36,7 +36,7 @@ class BranchTest extends TestCase
         $this->assertSame('11', $branch->getCityId());
         $this->assertSame('Fabrica de Glucoza', $branch->getStreet());
         $this->assertSame('11C', $branch->getStreetNo());
-        // UPGRADE_PLAN §7 #17 — postal code is read from the camelCase key.
+        // postal code is read from the camelCase key.
         $this->assertSame('020331', $branch->getPostalCode());
         $this->assertSame('B1', $branch->getBuilding());
         $this->assertSame('A', $branch->getEntrance());
@@ -47,7 +47,7 @@ class BranchTest extends TestCase
     #[Test]
     public function it_reads_the_lowercase_zipcode_key(): void
     {
-        // UPGRADE_PLAN §7 #17 / Appendix C — /reports/branches returns "zipcode".
+        // /reports/branches returns "zipcode".
         $data = $this->data();
         unset($data['address']['zipCode']);
         $data['address']['zipcode'] = '020331';

@@ -36,7 +36,7 @@ class AwbTrackerTest extends TestCase
         $this->assertSame('2000000000098', $tracker->getRedirectionAwbNumber());
         $this->assertSame('2000000000097', $tracker->getReimbursementAwbNumber());
         $this->assertSame('2000000000096', $tracker->getOPODAwbNumber());
-        // UPGRADE_PLAN §7 #21 — paymentDate is parsed and now exposed.
+        // paymentDate is parsed and now exposed.
         $this->assertSame('2023-12-01 00:00:00', $tracker->getPaymentDate());
         $this->assertSame('24H', $tracker->getOTD());
         $this->assertTrue($tracker->hasConfirmation());
@@ -73,7 +73,7 @@ class AwbTrackerTest extends TestCase
         $this->assertSame('', $tracker->getContent());
         $this->assertSame([], $tracker->getConfirmation());
         $this->assertSame('', $tracker->getOTD());
-        // UPGRADE_PLAN §7 #21 — getter defaults to '' when absent.
+        // getter defaults to '' when absent.
         $this->assertSame('', $tracker->getPaymentDate());
     }
 }

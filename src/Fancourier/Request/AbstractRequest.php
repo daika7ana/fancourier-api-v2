@@ -22,10 +22,10 @@ abstract class AbstractRequest implements RequestInterface
 
     /*
     * Documented code lists (additive, defect #24). Values are taken verbatim
-    * from the FAN Courier API v2.0 spec (API_GAP_ANALYSIS.md §4) — do not guess.
+    * from the FAN Courier API v2.0 spec — do not guess.
     */
 
-    // AWB service options (spec §5.2 / API_GAP §4.4)
+    // AWB service options (spec §5.2)
     public const string OPTION_OPEN_ON_DELIVERY = 'A';
     public const string OPTION_OPOD = 'B';
     public const string OPTION_DROP_OFF_OFFICE = 'C';
@@ -41,14 +41,14 @@ abstract class AbstractRequest implements RequestInterface
     public const string OPTION_EPOD = 'X';
     public const string OPTION_MPOS = 'Y';
 
-    // Courier order types (spec §5.12 / API_GAP §4.5)
+    // Courier order types (spec §5.12)
     public const string ORDER_TYPE_STANDARD = 'Standard';
     public const string ORDER_TYPE_EXPRESS_LOCO_1H = 'Express Loco 1h';
     public const string ORDER_TYPE_EXPRESS_LOCO_2H = 'Express Loco 2h';
     public const string ORDER_TYPE_EXPRESS_LOCO_4H = 'Express Loco 4h';
     public const string ORDER_TYPE_EXPRESS_LOCO_6H = 'Express Loco 6h';
 
-    // Service types (spec §5.1 / API_GAP §4.6)
+    // Service types (spec §5.1)
     public const string SERVICE_STANDARD = 'Standard';
     public const string SERVICE_REDCODE = 'RedCode';
     public const string SERVICE_CASH_ON_DELIVERY = 'Cont Colector';
@@ -74,7 +74,7 @@ abstract class AbstractRequest implements RequestInterface
     public const string SERVICE_FANBOX = 'FANbox';
     public const string SERVICE_FANBOX_CASH_ON_DELIVERY = 'FANbox Cont Colector';
 
-    // AWB event codes (spec §5.10 / API_GAP §4.7)
+    // AWB event codes (spec §5.10)
     public const string AWB_EVENT_C0 = 'C0';
     public const string AWB_EVENT_C1 = 'C1';
     public const string AWB_EVENT_H0 = 'H0';
@@ -123,7 +123,7 @@ abstract class AbstractRequest implements RequestInterface
     public const string AWB_EVENT_S49 = 'S49';
     public const string AWB_EVENT_S50 = 'S50';
 
-    // Courier order event codes (spec §5.11 / API_GAP §4.8)
+    // Courier order event codes (spec §5.11)
     public const int ORDER_EVENT_PENDING = 0;
     public const int ORDER_EVENT_PLACED = 1;
     public const int ORDER_EVENT_PICKED_UP = 2;
@@ -223,7 +223,7 @@ abstract class AbstractRequest implements RequestInterface
         // #27 refresh + retry exactly once: a transport failure against a stale
         // token may just mean the bearer is no longer accepted. The single `if`
         // (no loop) guarantees at most one retry.
-        // ponytail: the API documents no expiry error body (API_GAP_ANALYSIS §6.4),
+        // ponytail: the API documents no expiry error body,
         // so expiry is approximated by a transport failure plus a stale local
         // token. Upgrade path: parse the API's expiry signature once documented
         // and retry on that signal instead.

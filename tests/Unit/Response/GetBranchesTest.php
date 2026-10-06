@@ -23,7 +23,7 @@ class GetBranchesTest extends TestCase
     }
 
     /**
-     * Defect #8 (UPGRADE_PLAN §7): get($id) declared array but returned false on
+     * get($id) declared array but returned false on
      * a miss; it now returns ?Branch (null on a miss).
      */
     #[Test]
