@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Fancourier;
 
 class Client {
-	private \CurlHandle|false|null $curl = null;
+	private \CurlHandle $curl;
 
 	private string $error		= '';
 
@@ -18,6 +18,7 @@ class Client {
 	private int $timeout = 6;
 	private int $con_timeout = 3;
 
+	/** @var non-empty-string */
 	private string $useragent	= 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0';
 
 	/** @var array<string, string> */
@@ -36,11 +37,12 @@ class Client {
 	*/
 	private function init(): void
 		{
-		$this->curl = curl_init();
-		if ($this->curl === false)
+		$curl = curl_init();
+		if ($curl === false)
 			{
 			throw new \RuntimeException('Failed to initialise cURL');
 			}
+		$this->curl = $curl;
 		// init default data
 		curl_setopt($this->curl, CURLOPT_USERAGENT, $this->useragent);
 
@@ -85,6 +87,10 @@ class Client {
 
 	public function get(string $url): string|false
 		{
+		if ($url === '')
+			{
+			throw new \InvalidArgumentException('URL must not be empty');
+			}
 		//echo '<div style="font-family:monospace; padding: 5px; border: 1px solid red; margin: 5px">'.$url.'</div>';
 		$this->init();
 		
@@ -102,7 +108,7 @@ class Client {
 
 		$response = curl_exec($this->curl);
 
-		if (!curl_error($this->curl) && $response)
+		if (!curl_error($this->curl) && $response && is_string($response))
 			{
 			$this->close();
 			return $response;
@@ -136,8 +142,13 @@ class Client {
 		}
 
 
+	/** @param array<string, mixed> $data */
 	public function post(string $url, array $data): string|false
 		{
+		if ($url === '')
+			{
+			throw new \InvalidArgumentException('URL must not be empty');
+			}
 		$this->init();
 
 		curl_setopt($this->curl, CURLOPT_URL, $url);
@@ -156,12 +167,17 @@ class Client {
 
 		$response = curl_exec($this->curl);
 
-		return $this->complete_transfer($response);
+		return $this->complete_transfer(is_string($response) ? $response : false);
 		}
 	
 	// curl doesn't like multilevel arrays in CURLOPT_POSTFIELDS, so we have to manually build the data with http_build_query
+	/** @param array<string, mixed> $data */
 	public function postMultiArray(string $url, array $data): string|false
 		{
+		if ($url === '')
+			{
+			throw new \InvalidArgumentException('URL must not be empty');
+			}
 		$this->init();
 
 		$datastr = http_build_query($data, '', '&');
@@ -188,11 +204,16 @@ class Client {
 
 		$response = curl_exec($this->curl);
 
-		return $this->complete_transfer($response);
+		return $this->complete_transfer(is_string($response) ? $response : false);
 		}
 	
+	/** @param array<string, mixed> $data */
 	public function postJson(string $url, array $data): string|false
 		{
+		if ($url === '')
+			{
+			throw new \InvalidArgumentException('URL must not be empty');
+			}
 		$this->addHeader('Content-Type', 'application/json'); // add content-type to headers
 		$this->init();
 
@@ -202,6 +223,13 @@ class Client {
 
 		//curl_setopt($this->curl, CURLOPT_POST, 1);
 		$jsondata = json_encode($data);
+		if ($jsondata === false)
+			{
+			$this->deleteHeader('Content-Type');
+			$this->set_error('Failed to encode request payload as JSON');
+			$this->close();
+			return false;
+			}
 		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $jsondata);
 		if ($this->is_put)
 			{
@@ -216,7 +244,7 @@ class Client {
 
 		$response = curl_exec($this->curl);
 
-		return $this->complete_transfer($response);
+		return $this->complete_transfer(is_string($response) ? $response : false);
 		}
 
 	/*

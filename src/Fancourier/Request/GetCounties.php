@@ -17,6 +17,7 @@ class GetCounties extends AbstractRequest implements RequestInterface
         $this->response = new GetCountiesResponse();
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {

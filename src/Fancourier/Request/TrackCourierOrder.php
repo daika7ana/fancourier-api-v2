@@ -32,7 +32,7 @@ class TrackCourierOrder extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
 		$arr = [
-				"clientId" => $this->auth->getClientId(), //obligatoriu 
+				"clientId" => $this->auth()->getClientId(), //obligatoriu 
 				"orderId" => [] // shipments
 				
 			];

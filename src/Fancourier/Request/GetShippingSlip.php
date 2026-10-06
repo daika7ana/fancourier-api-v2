@@ -29,7 +29,7 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
         $arr = [
-				'clientId' => $this->auth->getClientId(),
+				'clientId' => $this->auth()->getClientId(),
 				'date' => $this->date,
 				];
 		

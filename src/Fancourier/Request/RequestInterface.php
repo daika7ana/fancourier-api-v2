@@ -13,5 +13,7 @@ interface RequestInterface
     public function setVerify(bool $verifyHost = true, bool $verifyPeer = true): static;
     public function setTimeout(int $conTimeout = 3, int $timeout = 6): static;
     public function send(): ResponseInterface;
+
+    /** @return array<string, mixed> */
     public function pack(): array;
 }

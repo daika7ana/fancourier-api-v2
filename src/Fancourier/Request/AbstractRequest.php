@@ -163,6 +163,19 @@ abstract class AbstractRequest implements RequestInterface
         return $this;
     }
 
+    /**
+     * Return the configured Auth instance, or fail loudly when a request is
+     * built/sent before authenticate() was called.
+     */
+    protected function auth(): Auth
+    {
+        if ($this->auth === null) {
+            throw new \RuntimeException('No Auth instance set; call authenticate() first');
+        }
+
+        return $this->auth;
+    }
+
     #[\Override]
     public function setVerify(bool $verifyHost = true, bool $verifyPeer = true): static
     {
@@ -195,6 +208,8 @@ abstract class AbstractRequest implements RequestInterface
             throw new \RuntimeException('No Auth instance set; call authenticate() before send()');
         }
 
+        $auth = $this->auth;
+
         if (empty($this->gateway)) {
             throw new \DomainException("No request gateway implemented");
         }
@@ -207,9 +222,9 @@ abstract class AbstractRequest implements RequestInterface
 
 		// #27: remember whether the cached token was already stale before this
 		// call, so a later transport failure can trigger one refresh + retry.
-		$tokenWasExpired = $this->auth->isTokenExpired();
+		$tokenWasExpired = $auth->isTokenExpired();
 
-		$token = $this->auth->getToken();
+		$token = $auth->getToken();
 		$this->assertUsableToken($token);
 
 		// add authorization token
@@ -224,8 +239,8 @@ abstract class AbstractRequest implements RequestInterface
 		// so expiry is approximated by a transport failure plus a stale local
 		// token. Upgrade path: parse the API's expiry signature once documented
 		// and retry on that signal instead.
-		if (false === $responseString && ($tokenWasExpired || $this->auth->isTokenExpired())) {
-			$token = $this->auth->getToken(true);
+		if (false === $responseString && ($tokenWasExpired || $auth->isTokenExpired())) {
+			$token = $auth->getToken(true);
 			$this->assertUsableToken($token);
 			$this->client->addHeader('Authorization', 'Bearer '.$token);
 			$responseString = $this->dispatch($data);
@@ -251,7 +266,7 @@ abstract class AbstractRequest implements RequestInterface
     {
         if (false === $token || $token === '') {
             $message = 'Authentication failed: no bearer token';
-            $authMessage = $this->auth->getTokenMessage();
+            $authMessage = $this->auth()->getTokenMessage();
             if ($authMessage !== '') {
                 $message .= ': '.$authMessage;
             }

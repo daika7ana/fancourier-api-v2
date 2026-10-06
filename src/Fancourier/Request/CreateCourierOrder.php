@@ -29,8 +29,8 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
 	protected string $orderType = 'Standard';
 	
 	protected string $pickupDate = ''; // YYYY-mm-dd
-	/** @var array{min?: int|string, max?: int|string} */
-	protected array $pickupHours = []; // ['min', 'max'] => pickupHours.first, pickupHours.second
+	/** @var array{min: int|string, max: int|string} */
+	protected array $pickupHours = ['min' => '', 'max' => '']; // ['min', 'max'] => pickupHours.first, pickupHours.second
 	
 	protected string $notes = '';										// info.observations
 	
@@ -65,7 +65,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
 		$arr = [
-				"clientId" => $this->auth->getClientId(), //obligatoriu 
+				"clientId" => $this->auth()->getClientId(), //obligatoriu 
 				"info" => [
 							'awbNumber'	=> $this->awbNumber,
 							'packages'	=> [
@@ -307,7 +307,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     }
 
      /**
-     * @return array{min?: int|string, max?: int|string}
+     * @return array{min: int|string, max: int|string}
      */
     public function getPickupHours(): array
     {

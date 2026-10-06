@@ -17,6 +17,7 @@ class GetServices extends AbstractRequest implements RequestInterface
         $this->response = new GetServicesResponse();
     }
 
+    /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {

@@ -32,7 +32,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
         $arr = [
-			'clientId'	=> $this->auth->getClientId(),
+			'clientId'	=> $this->auth()->getClientId(),
             'awbs' => $this->awbs,
             'language' => $this->lang
         ];

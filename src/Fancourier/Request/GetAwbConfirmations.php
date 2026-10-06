@@ -29,7 +29,7 @@ class GetAwbConfirmations extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
 		$arr = [
-				"clientId" => $this->auth->getClientId(), //obligatoriu 
+				"clientId" => $this->auth()->getClientId(), //obligatoriu 
 				"awb" => [] // shipments
 				
 			];

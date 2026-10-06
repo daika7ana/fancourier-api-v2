@@ -24,7 +24,7 @@ class Auth {
 
 	protected string $gateway = 'login';
 
-	public function __construct($clientId, $username, $password, $token = '')
+	public function __construct(int|string $clientId, string $username, string $password, string $token = '')
 		{
 		$this->clientId = $clientId;
 		$this->username = $username;
@@ -104,6 +104,11 @@ class Auth {
 			];
 		$response = $client->post($url, $data);
         // {"status":"success","data":{"token":"48944740|EJU0MgzeWY4y1zy9JpQg3cu3cDiqoVg1ZXsIrqLQ","expiresAt":"2024-06-11 07:23:53"}}
+
+		if ($response === false)
+			{
+			throw new \Exception("Server error: ".$client->getError());
+			}
 
 		$response_json = json_decode($response, true);
 
