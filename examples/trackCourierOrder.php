@@ -2,47 +2,62 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * TrackCourierOrder - track one or more courier pickup orders.
+ *
+ * Endpoint: GET reports/orders/tracking
+ * Request:  Fancourier\Request\TrackCourierOrder
+ * Response: Fancourier\Response\TrackCourierOrder
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new request object
+// --- request ---------------------------------------------------------------
+
 $request = new Fancourier\Request\TrackCourierOrder();
-$request
-    ->addOrder('18650990')
-    ->setLanguage('ro');
 
 /*
-Functions in TrackCourierOrder REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->addOrder($orderId)
-->setOrder($orderId)	// alias for addOrder
-->resetOrders()			// clear added orders
-->setLanguage($language)			// "ro", "en"
-*/
+ * TrackCourierOrder request inputs:
+ *   ->addOrder($orderId)
+ *   ->setOrder($orderId)           // alias for addOrder()
+ *   ->resetOrders()
+ *   ->setLanguage($language)       // Language enum or "ro"/"en"
+ */
+
+$request
+    ->addOrder('18650990')
+    ->setLanguage(Fancourier\Enums\Language::Ro);
+
+// --- send ------------------------------------------------------------------
 
 $response = $fan->trackCourierOrder($request);
 
 /*
-Functions in TrackCourierOrder RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// returns an array of CourierOrderTracker objects
-->getOrder($orderId) 	// returns the CourierOrderTracker object with the specified id (or false if not found)
-*/
+ * TrackCourierOrder response getters:
+ *   ->getData()           // raw API data as an array
+ *   ->getAll()            // map of CourierOrderTracker objects, keyed by order id
+ *   ->getOrder($orderId)  // one CourierOrderTracker object, or false when missing
+ */
 
 if ($response->isOk()) {
     print_r($response->getData());
     echo '<pre>' . print_r($response->getAll(), 1) . '</pre>';
     echo '<hr />';
+
     $order = $response->getOrder('18650990');
-    echo "Status: " . $order->getStatus()['date'] . ": " . $order->getStatus()['name'] . '<br />';
+    if ($order !== false) {
+        echo 'Status: ' . $order->getStatus()['date'] . ': ' . $order->getStatus()['name'] . '<br />';
+    }
 } else {
     var_dump($response->getErrorMessage());
 }
 
 /*
-The CourierOrderTracker object has the following functions:
-->getOrderId()
-->getOrderNo()
-->getMessage()
-->getEvents()
-->getStatus()
-*/
+ * The CourierOrderTracker object has the following functions:
+ *   ->getOrderId()
+ *   ->getOrderNo()
+ *   ->getMessage()
+ *   ->getEvents()
+ *   ->getStatus()
+ */

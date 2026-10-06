@@ -2,31 +2,43 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * TrackAwb - track one or more AWBs.
+ *
+ * Endpoint: GET reports/awb/tracking
+ * Request:  Fancourier\Request\TrackAwb
+ * Response: Fancourier\Response\TrackAwb
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new request object
+// --- request ---------------------------------------------------------------
+
 $request = new Fancourier\Request\TrackAwb();
-$request
-    ->addAwb('2339300120170')
-    ->setLanguage('ro');
 
 /*
-Functions in TrackAwb REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->addAwb($awb)
-->setAwb($awb)	// alias for addAwb()
-->resetAwbs()	// clear currently added awb numbers
-->setLanguage()	// set the language "ro" or "en"
-*/
+ * TrackAwb request inputs:
+ *   ->addAwb($awb)
+ *   ->setAwb($awb)                 // alias for addAwb()
+ *   ->resetAwbs()
+ *   ->setLanguage($language)       // Language enum or "ro"/"en"
+ */
+
+$request
+    ->addAwb('2339300120170')
+    ->setLanguage(Fancourier\Enums\Language::Ro);
+
+// --- send ------------------------------------------------------------------
 
 $response = $fan->trackAwb($request);
 
 /*
-Functions in TrackAwb RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// returns an array of AwbTracker objects
-->getAwb($awbNo) 	// returns the AwbTracker object for the specified awb number
-*/
+ * TrackAwb response getters:
+ *   ->getData()            // raw API data as an array
+ *   ->getAll()             // map of AwbTracker objects, keyed by AWB number
+ *   ->getAwb($awbNo)       // one AwbTracker object, or false when missing
+ */
 
 if ($response->isOk()) {
     print_r($response->getData());
@@ -36,17 +48,18 @@ if ($response->isOk()) {
 }
 
 /*
-The AwbTracker object has the following functions:
-->getAwbNumber()
-->getReturnAwbNumber()
-->getRedirectionAwbNumber()
-->getReimbursementAwbNumber()
-->getOPODAwbNumber()
-->getMessage()
-->getContent()
-->hasConfirmation()
-->getConfirmation()
-->getOTD()
-->getEvents()
-->getStatus()
-*/
+ * The AwbTracker object has the following functions:
+ *   ->getAwbNumber()
+ *   ->getReturnAwbNumber()
+ *   ->getRedirectionAwbNumber()
+ *   ->getReimbursementAwbNumber()
+ *   ->getOPODAwbNumber()
+ *   ->getPaymentDate()
+ *   ->getMessage()
+ *   ->getContent()
+ *   ->hasConfirmation()
+ *   ->getConfirmation()
+ *   ->getOTD()
+ *   ->getEvents()
+ *   ->getStatus()
+ */

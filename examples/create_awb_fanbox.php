@@ -2,124 +2,84 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * CreateAwbFanbox - create an internal AWB delivered to a FANBox locker.
+ *
+ * Endpoint: POST intern-awb
+ * Request:  Fancourier\Request\CreateAwb
+ * Response: Fancourier\Response\CreateAwb
+ *
+ * This is the internal CreateAwb flow with a locker service and a PUDO point.
+ * See create_awb.php for the full AwbIntern reference; only the FANBox-specific
+ * parts are repeated here.
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new AWB object
+// --- build the shipment ----------------------------------------------------
+
 $awb = new Fancourier\Objects\AwbIntern();
 $awb
-    ->setService('FANBox')									// set the service to "FANBox", "FANBox Cont Colector", "CollectPoint" or "CollectPoint Cont Colector"
-    ->setPaymentType(Fancourier\Request\CreateAwb::TYPE_SENDER)				// expeditor		(TYPE_RECIPIENT - destinatar)
+    ->setService('FANBox')                                // "FANBox", "FANBox Cont Colector",
+                                                          // "CollectPoint" or "CollectPoint Cont Colector"
+    ->setPaymentType(Fancourier\Enums\PaymentType::Expeditor) // or PaymentType::Destinatar
     ->setParcels(1)
-    ->setWeight(1)	// in kg
-//	->setReimbursement(199.99) // suma de incasat
+    ->setWeight(1)                                        // kg
     ->setDeclaredValue(1000)
-    ->setSizes(10, 5, 1) // in cm // or use setLength(), setHeight(), setWidth()
+    ->setSizes(10, 5, 1)                                  // cm; or setLength()/setHeight()/setWidth()
     ->setNotes('testing notes')
     ->setContents('SKU-1, SKU-2')
-    ->setRecipientName("John Ivy")
+    ->setRecipientName('John Ivy')
     ->setPhone('0723000000')
     ->setCounty('Tulcea')
     ->setCity('Tulcea')
-    ->setPickupLocation('F1011137"')		// FANBox/Paypoint ID
-    ->setStreet('Str. Babadag')								// must be the street defined in the PUDO details
-    ->setNumber('1')											// must be the street number defined in the PUDO details
-    ->addOption('W')			// PUDO dropoff - required for PUDO delivery, use option "V" for PUDO pickup
-    ->addOption('X');			// ePod
+    ->setPickupLocation('F1011137')                       // FANBox/Paypoint id (see getPudo.php)
+    ->setStreet('Str. Babadag')                           // must match the PUDO point address
+    ->setNumber('1')                                      // must match the PUDO point address
+    ->addOption('W')                                      // locker option: "W" = drop-off, "V" = pickup
+    ->addOption('X');                                     // ePOD
 
-// create a new request object
+// --- request ---------------------------------------------------------------
+
 $request = new Fancourier\Request\CreateAwb();
 $request->addAwb($awb);
 
 /*
-Functions in CreateAwb REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->addAwb(AWBIntern $awb)	// add a new AWBIntern object to the request. You can add as many as you need
-->resetAwbs()				// clears the added AWBIntern objects from the request
-*/
+ * CreateAwb request methods:
+ *   ->addAwb(AwbIntern $awb)         // add a shipment (repeatable)
+ *   ->resetAwbs()                    // drop all added shipments
+ */
+
+// --- send ------------------------------------------------------------------
 
 $response = $fan->createAwb($request);
 
 /*
-Functions in GetCities RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// returns an array with the updated AwbIntern objects
-*/
+ * CreateAwb response getters:
+ *   ->getData()   // raw API payload
+ *   ->getAll()    // the AwbIntern objects, updated with the result
+ */
 
 if ($response->isOk()) {
     var_dump($response->getData());
-    //	file_put_contents('awb.txt', json_encode($response->getData()) );
 
     $al = $response->getAll();
-    echo "Count: " . count($al) . "<br />";
+    echo 'Count: ' . count($al) . '<br />';
     foreach ($al as $awbr) {
         if ($awbr->hasErrors()) {
             print_r($awbr->getErrors());
         } else {
-            echo "AWB: " . $awbr->getAwb() . "<br />";
+            echo 'AWB: ' . $awbr->getAwb() . '<br />';
             print_r($awbr->getDetails());
             echo '<hr />';
         }
     }
-
 } else {
     var_dump($response->getErrorMessage());
 }
 
 /*
-The AwbIntern object is used both in the request as well as in the response (the objects are updated with the response data).
-The AwbIntern object has the following functions:
-
-**********************************************************
-The following functions can be used before processing the request
-**********************************************************
-All set* functions here have an equivalent get* function
-******
-
-->setService($service)
-->setBank($bank)
-->setIban($iban)
-->setEnvelopes($envelopes)
-->setParcels($parcels)
-->setWeight($weight)
-->setReimbursement($cod)				// cash on delivery (ramburs)
-->setCurrency($currency)	// optional; emitted as info.currency
-->setDeclaredValue($declaredValue)
-->setPaymentType($paymentType)		// expeditor/destinatar
-->setRefund($refund)				// restituire
-->setReturnPayment($reimbursementPaymentType)
-->setNotes($notes)
-->setContents($contents)
-->setSizes($length_cm, $height_cm, $width_cm)		// shortcut function for setHeight() setLength() and setWidth()
-->setHeight($height)
-->setLength($length)
-->setWidth($width)
-->setCostCenter($costCenter)
-->getOptions()					// get the set options (array)
-->addOption($option)			// add a option
-->resetOptions()				// clear options
-->setUITCode($uitCode)			// set the unique transport id generated by e-Transport
-->setRecipientName($recipient)
-->setContactPerson($contactPerson)
-->setPhone($phone)
-->setAltPhone($phone)
-->setEmail($email)
-->setCounty($county)
-->setCity($city)
-->setStreet($street)
-->setNumber($number)
-->setPickupLocation($pudoId)		// for PUDO deliveries (where recipient picks up the package)
-->setDropOffLocation($pudoId)		// for PUDO deliveries (where sender leaves package for pickup)
-->setPostalCode($postalCode)
-->setBuilding($building)
-->setEntrance($entrance)
-->setFloor($floor)
-->setApartment($apartment)
-
-**********************************************************
-The following functions can be used after processing the response
-**********************************************************
-->hasErrors()			// if there was a problem creating the awb, this will return true
-->getErrors()			// this will return an array wit the problems encountered when creating the awb
-->getAwb()				// returns the AWB number assigned to this AWBIntern object
-->getDetails()		// returns an array with aditional information
-*/
+ * The AwbIntern object is used both to build the request and to read the
+ * response. Its full setter/getter list is documented in create_awb.php.
+ */

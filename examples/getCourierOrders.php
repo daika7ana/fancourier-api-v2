@@ -2,87 +2,88 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * GetCourierOrders - list the courier pickup orders placed for one day.
+ *
+ * Endpoint: GET reports/orders
+ * Request:  Fancourier\Request\GetCourierOrders
+ * Response: Fancourier\Response\GetCourierOrders
+ *
+ * The response is paginated; the loop below walks every page. Note that for
+ * this endpoint the API's "total" is the number of pages, not the number of
+ * items, so getTotal() and getTotalPages() return the same value.
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new request object
+// --- request ---------------------------------------------------------------
+
 $request = new Fancourier\Request\GetCourierOrders();
-$request
-   // ->setDate(date("d-m-Y", time()-100000))
-    ->setDate('24-11-2023')
-    //->setDate('2023-11-24')
-    ->setPerPage(10);
 
 /*
-Functions in GetCourierOrders REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->setDate($date)	// Fan API expects only "dd-mm-YYYY" format in this request, but you can also set "YYYY-mm-dd" and will be converted internally to the expected format
-->setPage($page = 1)
-->setPerPage($perPage = 10)
-*/
+ * GetCourierOrders request inputs:
+ *   ->setDate($date)         // "dd-mm-YYYY" preferred; "YYYY-mm-dd" is converted automatically
+ *   ->setPage($page)
+ *   ->setPerPage($perPage)   // default 10
+ */
+
+$request
+    ->setDate('24-11-2023')
+    ->setPerPage(10);
+
+// --- send ------------------------------------------------------------------
 
 $response = $fan->getCourierOrders($request);
 
 /*
-Functions in GetCourierOrders RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// returns an array of CourierOrder objects
-->get($id) 			// returns the CourierOrder object with the specified id (or false if $cityname not found)
-->getTotal() 		// total number of pages of results (yes, different from the other API's that return the total number of items)
-->getPerPage() 		// how many items per page
-->getCurrentPage()	// current page of results
-->getTotalPages() 	// added as alias for getTotal()
-*/
+ * GetCourierOrders response getters:
+ *   ->getData()          // raw API data as an array
+ *   ->getAll()           // map of CourierOrder objects, keyed by id
+ *   ->get($id)           // one CourierOrder object, or false when missing
+ *   ->getTotal()         // total number of pages (see note above)
+ *   ->getPerPage() ->getCurrentPage() ->getTotalPages()
+ */
 
-if (!$response->isOk()) {
-    var_dump($response->getErrorMessage());
-} else {
-    // get remaining pages
+if ($response->isOk()) {
+    // walk every page of results
     while ($response->isOk() && ($response->getCurrentPage() <= $response->getTotalPages())) {
-        echo "Total: " . $response->getTotal() . "<br />";
-        echo "Page: " . $response->getCurrentPage() . "<br />";
-        echo "Results per page: " . $response->getPerPage() . "<br />";
+        echo 'Total: ' . $response->getTotal() . '<br />';
+        echo 'Page: ' . $response->getCurrentPage() . '<br />';
+        echo 'Results per page: ' . $response->getPerPage() . '<br />';
+        echo 'Total pages: ' . $response->getTotalPages() . '<br />';
         echo '<pre>' . print_r($response->getAll(), 1) . '</pre>';
-        echo "<hr />";
+        echo '<hr />';
 
-        // if not the last page, request the next page
-        if ($response->getCurrentPage() < $response->getTotalPages()) {
-            $request
-                ->setPage($response->getCurrentPage() + 1);
-
-            $response = $fan->getCourierOrders($request);
-        } else {
+        if ($response->getCurrentPage() >= $response->getTotalPages()) {
             break;
         }
 
+        $request->setPage($response->getCurrentPage() + 1);
+        $response = $fan->getCourierOrders($request);
     }
-
-    echo "Total: " . $response->getTotal() . "<br />";
-    echo "Page: " . $response->getCurrentPage() . "<br />";
-    echo "Results per page: " . $response->getPerPage() . "<br />";
-    echo "Total pages: " . $response->getTotalPages() . "<br />";
-    echo '<pre>' . print_r($response->getAll(), 1) . '</pre>';
-    echo "<hr />";
-
+} else {
+    var_dump($response->getErrorMessage());
 }
 
 /*
-The CourierOrder object has the following functions:
-->getId()
-->getNumber()
-->getStatus()
-->getDate()
-->getHour()
-->getEnvelopes()
-->getParcels()
-->getWeight()
-->getDimensions()
-->getHeight()
-->getLength()
-->getWidth()
-->getPickupDate()
-->getPickupHours()
-->getNotes()
-->getType()
-->getAwbs()
-->getSender()
-*/
+ * The CourierOrder object has the following functions:
+ *   ->getId()
+ *   ->getNumber()
+ *   ->getStatus()
+ *   ->getDate()
+ *   ->getHour()
+ *   ->getEnvelopes()
+ *   ->getParcels()
+ *   ->getWeight()
+ *   ->getDimensions()
+ *   ->getHeight()
+ *   ->getLength()
+ *   ->getWidth()
+ *   ->getPickupDate()
+ *   ->getPickupHours()
+ *   ->getNotes()
+ *   ->getType()
+ *   ->getAwbs()
+ *   ->getSender()
+ */

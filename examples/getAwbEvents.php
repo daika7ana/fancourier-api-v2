@@ -2,26 +2,38 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * GetAwbEvents - list the AWB event codes and their names.
+ *
+ * Endpoint: GET reports/awb-events
+ * Request:  Fancourier\Request\GetAwbEvents
+ * Response: Fancourier\Response\GetAwbEvents
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new request object
+// --- request ---------------------------------------------------------------
+
 $request = new Fancourier\Request\GetAwbEvents();
-$request
-    ->setLanguage('ro');
+
 /*
-Functions in GetAwbEvents REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->setLanguage($language = 'ro') // the language for the events. Accepted values: ro, en
-*/
+ * GetAwbEvents request inputs:
+ *   ->setLanguage($language)   // Language enum or "ro"/"en"
+ */
+
+$request->setLanguage(Fancourier\Enums\Language::Ro);
+
+// --- send ------------------------------------------------------------------
 
 $response = $fan->getAwbEvents($request);
 
 /*
-Functions in GetAwbEvents RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// returns an array of AwbEvent objects
-->getEvent($eventId) 		// returns the AwbEvent object with the specified id (or false if $position not found)
-*/
+ * GetAwbEvents response getters:
+ *   ->getData()            // raw API data as an array
+ *   ->getAll()             // map of AwbEvent objects, keyed by id
+ *   ->getEvent($eventId)   // one AwbEvent object, or false when missing
+ */
 
 if ($response->isOk()) {
     print_r($response->getData());
@@ -31,7 +43,7 @@ if ($response->isOk()) {
 }
 
 /*
-The AwbEvent object has the following functions:
-->getId()
-->getName()
-*/
+ * The AwbEvent object has the following functions:
+ *   ->getId()
+ *   ->getName()
+ */

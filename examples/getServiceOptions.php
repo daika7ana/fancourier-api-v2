@@ -2,29 +2,39 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * GetServiceOptions - list the options available for one service.
+ *
+ * Endpoint: GET reports/service-options
+ * Request:  Fancourier\Request\GetServiceOptions
+ * Response: Fancourier\Response\GetServiceOptions
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new request object
+// --- request ---------------------------------------------------------------
+
 $request = new Fancourier\Request\GetServiceOptions();
-$request
-    ->setService('fanbox');
 
 /*
-Functions in GetServiceOptions REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->setService($serviceName)
-*/
+ * GetServiceOptions request inputs:
+ *   ->setService($serviceName)   // default "Standard"
+ */
+
+$request->setService('fanbox');
+
+// --- send ------------------------------------------------------------------
 
 $response = $fan->getServiceOptions($request);
 
 /*
-Functions in GetServiceOptions RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// returns an array of ServiceOption objects
-->getOption($optionCode) 		// returns the ServiceOption object with the specified code (or false if not found)
-->hasOption($optionCode) 		// returns true if the service option with $optionCode is available for the specified service
-*/
-
+ * GetServiceOptions response getters:
+ *   ->getData()                 // raw API data as an array
+ *   ->getAll()                  // map of ServiceOption objects, keyed by code
+ *   ->getOption($optionCode)    // one ServiceOption object, or false when missing
+ *   ->hasOption($optionCode)    // true when the option exists for the service
+ */
 
 if ($response->isOk()) {
     print_r($response->getData());
@@ -34,7 +44,7 @@ if ($response->isOk()) {
 }
 
 /*
-The ServiceOption object has the following functions:
-->getCode()
-->getName()
-*/
+ * The ServiceOption object has the following functions:
+ *   ->getCode()
+ *   ->getName()
+ */

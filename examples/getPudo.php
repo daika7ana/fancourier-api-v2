@@ -2,33 +2,41 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * GetPudo - look up FAN Courier PUDO (pickup/drop-off) points.
+ *
+ * Endpoint: GET reports/pickup-points
+ * Request:  Fancourier\Request\GetPudo
+ * Response: Fancourier\Response\GetPudo
+ *
+ * Two ways to query:
+ *   1. list the points of a type with setType(...), read them with getAll();
+ *   2. fetch a single point by id with setId(...), read it with get().
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-/*
-This example shows both ways to query PUDO (pickup) points:
-1. list the pickup points of a given type with setType(...) and read them with getAll();
-2. fetch a single pickup point by its id with setId(...) and read it with get().
-*/
+// --- 1. list pickup points by type -----------------------------------------
 
-// --- 1. list pickup points by type ---
 $request = new Fancourier\Request\GetPudo();
-$request
-    ->setType(Fancourier\Request\GetPudo::PUDO_FANBOX);	// PUDO_OFFICE / PUDO_PAYPOINT
+
 /*
-Functions in GetPudo REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->setType($pudoType)		// the type of PUDO to get info about. can be "fanbox", "paypoint", "office"
-->setId($pudoId)			// get the information about a single pudo point. If specified, pudoType is ignored
-*/
+ * GetPudo request inputs:
+ *   ->setType($pudoType)   // PudoType enum or "fanbox"/"paypoint"/"office"
+ *   ->setId($pudoId)       // single point; when set, the type is ignored
+ */
+
+$request->setType(Fancourier\Enums\PudoType::Fanbox);
 
 $response = $fan->getPudo($request);
 
 /*
-Functions in GetPudo RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// returns an array of Pudo objects
-->get($pudoId = null) 			// returns the requested Pudo object (leave param as null to get the first entry or if using setId on the request, otherwise the id of the pudo point you want)
-*/
+ * GetPudo response getters:
+ *   ->getData()   // raw API data as an array
+ *   ->getAll()    // map of Pudo objects, keyed by id
+ *   ->get($id)    // one Pudo object (null argument returns the only entry)
+ */
 
 if ($response->isOk()) {
     print_r($response->getData());
@@ -37,10 +45,10 @@ if ($response->isOk()) {
     var_dump($response->getErrorMessage());
 }
 
-// --- 2. fetch a single pickup point by id ---
+// --- 2. fetch a single pickup point by id ----------------------------------
+
 $request = new Fancourier\Request\GetPudo();
-$request
-    ->setId('S125');	// when setId is used, pudoType is ignored
+$request->setId('S125'); // when setId is used, the type is ignored
 
 $response = $fan->getPudo($request);
 
@@ -51,19 +59,20 @@ if ($response->isOk()) {
     var_dump($response->getErrorMessage());
 }
 
-
 /*
-The Pudo object has the following functions:
-->getId()
-->getName()
-->getRoutingLocation()
-->getDescription()
-->getLatitude()
-->getLongitude()
-->getAddress()
-->getSchedule()
-->getDrawer()
-->getPhones()
-->getEmail()
-->getArray()
-*/
+ * The Pudo object has the following functions:
+ *   ->getId()
+ *   ->getName()
+ *   ->getRoutingLocation()
+ *   ->getDescription()
+ *   ->getLatitude()
+ *   ->getLongitude()
+ *   ->getAddress()
+ *   ->getSchedule()
+ *   ->getDrawer()
+ *   ->getPhones()
+ *   ->getEmail()
+ *   ->getHighDemand()
+ *   ->getPaymentMethods()
+ *   ->getArray()
+ */

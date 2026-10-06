@@ -2,27 +2,38 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * GetCities - list the localities of a Romanian county.
+ *
+ * Endpoint: GET reports/localities
+ * Request:  Fancourier\Request\GetCities
+ * Response: Fancourier\Response\GetCities
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new request object
+// --- request ---------------------------------------------------------------
+
 $request = new Fancourier\Request\GetCities();
-$request
-    ->setCounty('Ilfov');
 
 /*
-Functions in GetCities REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->setCounty($county)
-*/
+ * GetCities request inputs:
+ *   ->setCounty($county)
+ */
+
+$request->setCounty('Ilfov');
+
+// --- send ------------------------------------------------------------------
 
 $response = $fan->getCities($request);
 
 /*
-Functions in GetCities RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// returns an array of City objects
-->getCity($cityname) 		// returns the City object with the specified id (or false if $cityname not found)
-*/
+ * GetCities response getters:
+ *   ->getData()              // raw API data as an array
+ *   ->getAll()               // map of City objects, keyed by id
+ *   ->getCity($cityName)     // one City object, or false when the name is missing
+ */
 
 if ($response->isOk()) {
     print_r($response->getData());
@@ -32,10 +43,10 @@ if ($response->isOk()) {
 }
 
 /*
-The City object has the following functions:
-->getId()
-->getName()
-->getCounty()
-->getAgency()
-->getExtKm()
-*/
+ * The City object has the following functions:
+ *   ->getId()
+ *   ->getName()
+ *   ->getCounty()
+ *   ->getAgency()
+ *   ->getExtKm()
+ */

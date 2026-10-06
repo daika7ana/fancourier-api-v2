@@ -2,67 +2,75 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * GetBranches - list FAN Courier branches.
+ *
+ * Endpoint: GET reports/branches
+ * Request:  Fancourier\Request\GetBranches
+ * Response: Fancourier\Response\GetBranches
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new request object
+// --- request ---------------------------------------------------------------
+
 $request = new Fancourier\Request\GetBranches();
+
+/*
+ * GetBranches request inputs:
+ *   ->setCity($city)
+ *   ->setCounty($county)
+ *
+ * Note: the API documents both as optional, but sending them does not appear
+ * to change the response.
+ */
+
 $request
     ->setCity('Braila')
     ->setCounty('Braila');
-/*
-Functions in GetBranches REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->setCity($city)
-->setCounty($county)
-*/
 
-/*
-* desi documentatia api zice ca se pot specifica optional locality si county,
-* specificarea acestora nu pare sa influenteze in nici un fel raspunsul serverului
-*/
+// --- send ------------------------------------------------------------------
 
 $response = $fan->getBranches($request);
 
 /*
-Functions in GetBranches RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// returns an array of Branch objects
-->get($id) 			// returns the Branch object with the specified id (or false if $position not found)
-*/
-
+ * GetBranches response getters:
+ *   ->getData()   // raw API data as an array
+ *   ->getAll()    // map of Branch objects, keyed by id
+ *   ->get($id)    // one Branch object, or null when missing
+ */
 
 if ($response->isOk()) {
-    echo "Total: " . count($response->getData()['data']);
+    echo 'Total: ' . count($response->getData()['data']);
     echo '<pre>';
-    print_r($response->getAll()) ;
-    echo "<hr />";
+    print_r($response->getAll());
+    echo '<hr />';
     print_r($response->getData());
-
     echo '</pre>';
 } else {
     var_dump($response->getErrorMessage());
 }
 
-
 /*
-The Branch object has the following functions:
-->getId()
-->getName()
-->getBank()
-->getBankAccount()
-->getEmail()
-->getPhone()
-->getSecondaryPhone()
-->getContactPerson()
-->getCounty()
-->getCity()
-->getCountyId()
-->getCityId()
-->getStreet()
-->getStreetNo()
-->getPostalCode()
-->getBuilding()
-->getEntrance()
-->getFloor()
-->getApartment()
-*/
+ * The Branch object has the following functions:
+ *   ->getId()
+ *   ->getName()
+ *   ->getBank()
+ *   ->getBankAccount()
+ *   ->getEmail()
+ *   ->getPhone()
+ *   ->getSecondaryPhone()
+ *   ->getContactPerson()
+ *   ->getCounty()
+ *   ->getCity()
+ *   ->getCountyId()
+ *   ->getCityId()
+ *   ->getStreet()
+ *   ->getStreetNo()
+ *   ->getPostalCode()
+ *   ->getBuilding()
+ *   ->getEntrance()
+ *   ->getFloor()
+ *   ->getApartment()
+ */

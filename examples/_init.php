@@ -2,23 +2,32 @@
 
 declare(strict_types=1);
 
-// load the class autoloader. Prefer Composer when it is present, otherwise fall back to the
-// bundled autoloader. Everything is resolved from this file, so the examples can be run from
-// any working directory (repo root, examples/, etc.).
+/*
+ * Shared bootstrap for every example script.
+ *
+ * - loads the library (Composer autoloader when present, bundled autoloader otherwise);
+ * - reads the account credentials from the environment (never hardcode them);
+ * - caches the 24h bearer token in examples_token.txt next to this file;
+ * - exposes a ready-to-use Fancourier instance as $fan.
+ *
+ * Everything is resolved from __DIR__, so the examples can be run from any
+ * working directory (repo root, examples/, etc.).
+ */
+
 $composerAutoload = __DIR__ . '/../vendor/autoload.php';
 require is_file($composerAutoload) ? $composerAutoload : __DIR__ . '/../src/autoload.php';
 
 $tokenFile = __DIR__ . '/examples_token.txt';
 
-// the bearer token has a life time of 24 hours so we delete it if it's too old to get a new one
+// the bearer token is valid for 24 hours; drop a cached token that is older
 if (is_file($tokenFile) && (filemtime($tokenFile) < time() - 86000)) {
     unlink($tokenFile);
 }
 
-// load the token if we have it, if not, we use an empty string to signify we don't have one
+// reuse the cached token, or use an empty string to signal "no token yet"
 $token = is_file($tokenFile) ? file_get_contents($tokenFile) : '';
 
-// read the account credentials from the environment; never hardcode them
+// account credentials come from the environment
 $clientId = getenv('FANCOURIER_TEST_CLIENT_ID');
 $username = getenv('FANCOURIER_TEST_USERNAME');
 $password = getenv('FANCOURIER_TEST_PASSWORD');
@@ -28,24 +37,21 @@ if ($clientId === false || $username === false || $password === false) {
     exit(1);
 }
 
-// create a normal instance using the credentials from the environment
+// $fan is the shared client used by all examples below
 $fan = new Fancourier\Fancourier($clientId, $username, $password, $token);
 
-// disable curl's certificate validation (do it only if needed, in the examples it's activated by default in case the examples are run from local machine)
+// examples often run from local machines; disable cURL certificate validation
+// (keep it enabled in production)
 $fan->setVerify(false, false);
 
-// if you don't cache the token (not recommended), you don't need to call the getToken() function as it's called automatically when needed
+// without a cached token, fetch one now. Requests also fetch a token
+// automatically on first use; doing it here lets us cache it and fail fast.
 if ($token == '') {
-    $token = $fan->getToken(true);	// force refresh of token (if the param is not set or false, it will just return the existing token or empty string)
+    $token = $fan->getToken(true); // force refresh (no argument returns the cached token or '')
     if ($token) {
-        // save the token
         file_put_contents($tokenFile, $token);
     } else {
-        // error when getting token, show error
         echo $fan->getTokenMessage();
         exit;
     }
 }
-
-// you can get the token at any time using
-// $fan->getToken();

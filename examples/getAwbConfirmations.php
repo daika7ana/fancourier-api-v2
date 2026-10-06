@@ -2,34 +2,46 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * GetAwbConfirmations - download proof-of-delivery images for delivered AWBs.
+ *
+ * Endpoint: GET reports/get-awb-confirmations
+ * Request:  Fancourier\Request\GetAwbConfirmations
+ * Response: Fancourier\Response\GetAwbConfirmations
+ *
+ * The API returns a ZIP archive with one JPEG per AWB. AWBs without a
+ * confirmation (e.g. test AWBs) simply have no image in the archive.
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new request object
+// --- request ---------------------------------------------------------------
+
 $request = new Fancourier\Request\GetAwbConfirmations();
+
+/*
+ * GetAwbConfirmations request inputs:
+ *   ->addAwb($awb)
+ *   ->setAwb($awb)   // alias for addAwb()
+ *   ->resetAwbs()
+ */
+
 $request
     ->addAwb('7000011994717')
     ->addAwb('7000012005411');
 
-// please note that test awb's will always return error as they are not delivered by fan courier so you will need to test it will actual awb numbers
-
-
-/*
-Functions in GetAwbConfirmations REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->addAwb($awb)
-->setAwb($awb)	// alias for addAwb()
-->resetAwbs()	// clear currently added awb numbers
-*/
+// --- send ------------------------------------------------------------------
 
 $response = $fan->getAwbConfirmations($request);
 
 /*
-Functions in GetAwbConfirmations RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getRAWbytes() 	// returns the zip file as a string of bytes (as it comes from the API)
-->getLength()	 	// returns the file size of the zip archive (bytes)
-->saveToFile($filename)	 	// save the zip file to disc. returns the number of bytes written or false on error. you need to check if the destination file can be written
-*/
+ * GetAwbConfirmations response getters:
+ *   ->getData()             // raw response
+ *   ->getRAWbytes()         // the ZIP archive as a string of bytes
+ *   ->getLength()           // archive size in bytes
+ *   ->saveToFile($filename) // write the archive to disk; returns bytes written or false
+ */
 
 if ($response->isOk()) {
     echo 'ZIP size in bytes: ' . $response->getLength() . '<br />';
@@ -38,11 +50,6 @@ if ($response->isOk()) {
     } else {
         echo 'Failed saving file';
     }
-    //    var_dump($response->getRAWbytes());
 } else {
     var_dump($response->getErrorMessage());
 }
-
-/*
-The zip file will contain JPEG images with the name of the AWB it's for. If the AWB has not been delivered/has no confirmation yet, the file for that AWB will not be available.
-*/

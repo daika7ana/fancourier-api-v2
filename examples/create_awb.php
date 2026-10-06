@@ -2,143 +2,113 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * CreateAwb - create one or more internal (Romanian) AWBs.
+ *
+ * Endpoint: POST intern-awb
+ * Request:  Fancourier\Request\CreateAwb
+ * Response: Fancourier\Response\CreateAwb
+ *
+ * Build one AwbIntern per shipment, add them to the request, then read each
+ * AWB back from the response (the response reuses the same objects).
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new AWB object
+// --- build each shipment ---------------------------------------------------
+
 $awb = new Fancourier\Objects\AwbIntern();
 $awb
-    ->setService('Cont Colector')
-    ->setPaymentType(Fancourier\Request\CreateAwb::TYPE_SENDER)				// expeditor		(TYPE_RECIPIENT - destinatar)
+    ->setService('Cont Colector')                                     // cash on delivery service
+    ->setPaymentType(Fancourier\Enums\PaymentType::Expeditor)         // or PaymentType::Destinatar
     ->setParcels(1)
-    ->setWeight(1)	// in kg
-    ->setReimbursement(199.99) // suma de incasat
+    ->setWeight(1)                                                    // kg
+    ->setReimbursement(199.99)                                         // cash on delivery amount
     ->setDeclaredValue(1000)
-    ->setSizes(10, 5, 1) // in cm // or use setLength(), setHeight(), setWidth()
+    ->setSizes(10, 5, 1)                                              // cm; or setLength()/setHeight()/setWidth()
     ->setNotes('testing notes')
     ->setContents('SKU-1, SKU-2')
-    ->setRecipientName("John Ivy")
+    ->setRecipientName('John Ivy')
     ->setPhone('0723000000')
     ->setCounty('Arad')
     ->setCity('Aciuta')
     ->setStreet('Str Lunga')
-    ->setNumber(1)
-    ->addOption('S')			// livrare sambata
-    ->addOption('X');			// ePod
+    ->setNumber('1')
+    ->addOption('S')                                                  // Saturday delivery
+    ->addOption('X');                                                 // ePOD
 
-// create a new request object
+// --- request ---------------------------------------------------------------
+
 $request = new Fancourier\Request\CreateAwb();
-$request->addAwb($awb);
 
 /*
-Functions in CreateAwb REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->addAwb(AWBIntern $awb)	// add a new AWBIntern object to the request. You can add as many as you need
-->resetAwbs()			// clears the added AWBIntern objects from the request
-->setPlatformId($platformId)	// use only if needed and you have a platformId number received from Fan Courier
-*/
+ * CreateAwb request methods:
+ *   ->addAwb(AwbIntern $awb)         // add a shipment (repeatable)
+ *   ->resetAwbs()                    // drop all added shipments
+ *   ->setPlatformId($platformId)     // only if FAN Courier provided one
+ */
+
+$request->addAwb($awb);
+
+// --- send ------------------------------------------------------------------
 
 $response = $fan->createAwb($request);
 
 /*
-Functions in GetCities RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// returns an array with the updated AwbIntern objects
-*/
+ * CreateAwb response getters:
+ *   ->getData()   // raw API payload
+ *   ->getAll()    // the AwbIntern objects, updated with the result
+ */
 
 if ($response->isOk()) {
     var_dump($response->getData());
-    //	file_put_contents('awb.txt', json_encode($response->getData()) );
 
     $al = $response->getAll();
-    echo "Count: " . count($al) . "<br />";
+    echo 'Count: ' . count($al) . '<br />';
     foreach ($al as $awbr) {
         if ($awbr->hasErrors()) {
             print_r($awbr->getErrors());
         } else {
-            echo "AWB: " . $awbr->getAwb() . "<br />";
+            echo 'AWB: ' . $awbr->getAwb() . '<br />';
             print_r($awbr->getDetails());
             echo '<hr />';
         }
     }
-
 } else {
     var_dump($response->getErrorMessage());
 }
 
 /*
-The AwbIntern object is used both in the request as well as in the response (the objects are updated with the response data).
-The AwbIntern object has the following functions:
-
-**********************************************************
-The following functions can be used before processing the request
-**********************************************************
-All set* functions here have an equivalent get* function
-******
-
-->setService($service)
-->setBank($bank)
-->setIban($iban)
-->setEnvelopes($envelopes)
-->setParcels($parcels)
-->setWeight($weight)
-->setReimbursement($cod)				// cash on delivery (ramburs)
-->setCurrency($currency)	// optional; emitted as info.currency
-->setDeclaredValue($declaredValue)
-->setPaymentType($paymentType)		// expeditor/destinatar
-->setRefund($refund)				// restituire
-->setReturnPayment($reimbursementPaymentType)
-->setNotes($notes)
-->setContents($contents)
-->setSizes($length_cm, $height_cm, $width_cm)		// shortcut function for setHeight() setLength() and setWidth()
-->setHeight($height)
-->setLength($length)
-->setWidth($width)
-->setCostCenter($costCenter)
-->getOptions()					// get the set options (array)
-->setOptions()					// set all the options at once in a single string
-->addOption($option)			// add a single option
-->resetOptions()				// clear all set options
-->setUITCode($uitCode)			// set the unique transport id generated by e-Transport
-->setRecipientName($recipient)
-->setContactPerson($contactPerson)
-->setPhone($phone)
-->setAltPhone($phone)
-->setEmail($email)
-->setCounty($county)
-->setCity($city)
-->setStreet($street)
-->setNumber($number)
-->setPickupLocation($pudoId)		// for PUDO deliveries (where recipient picks up the package)
-->setPostalCode($postalCode)
-->setBuilding($building)
-->setEntrance($entrance)
-->setFloor($floor)
-->setApartment($apartment)
-->setSenderName($recipient)
-->setSenderContactPerson($contactPerson)
-->setSenderPhone($phone)
-->setSenderAltPhone($phone)
-->setSenderEmail($email)
-->setSenderCounty($county)
-->setSenderCity($city)
-->setSenderStreet($street)
-->setSenderNumber($number)
-->setDropOffLocation($pudoId)		// for PUDO deliveries (where sender leaves package for pickup)
-->setSenderPostalCode($postalCode)
-->setSenderBuilding($building)
-->setSenderEntrance($entrance)
-->setSenderFloor($floor)
-->setSenderApartment($apartment)
-->setIsValueUnderThreshold($isValueUnderThreshold)		// NON-UE parcel tax - if the parcel value is under the threshold value (true / false) - if this is not set, the fieds for NON-UE parcel tax are not sent
-->setCountryCode($countryCode)							// NON-UE parcel tax - seller's country code (ex: RO, PL, CN, BG, MD, etc)
-->setVatId($vatId)										// NON-UE parcel tax - seller's VAT identification code or internation fiscal id
-->setCompany($company)									// NON-UE parcel tax - seller's legal company name
-
-**********************************************************
-The following functions can be used after processing the response
-**********************************************************
-->hasErrors()			// if there was a problem creating the awb, this will return true
-->getErrors()			// this will return an array wit the problems encountered when creating the awb
-->getAwb()				// returns the AWB number assigned to this AWBIntern object
-->getDetails()		// returns an array with aditional information
-*/
+ * The AwbIntern object is used both to build the request and to read the
+ * response (it is updated with the API result).
+ *
+ * Input setters:
+ *   ->setService($service)               ->setBank($bank)               ->setIban($iban)
+ *   ->setEnvelopes($envelopes)           ->setParcels($parcels)         ->setWeight($weight)
+ *   ->setReimbursement($cod)             // cash on delivery
+ *   ->setCurrency($currency)             // optional
+ *   ->setDeclaredValue($value)           ->setPaymentType($paymentType)
+ *   ->setRefund($refund)                 ->setReturnPayment($paymentType)
+ *   ->setNotes($notes)                   ->setContents($contents)
+ *   ->setSizes($length, $height, $width) // cm; or ->setLength() ->setHeight() ->setWidth()
+ *   ->setCostCenter($costCenter)
+ *   ->addOption($option)                 // add one option letter
+ *   ->setOptions($options)               // replace all options with a single string, e.g. "SX"
+ *   ->resetOptions()                     ->getOptions()   // getOptions() reads the current list
+ *   ->setUITCode($uitCode)               // e-Transport unique transport id
+ *   ->setRecipientName() ->setContactPerson() ->setPhone() ->setAltPhone() ->setEmail()
+ *   ->setCounty() ->setCity() ->setStreet() ->setNumber() ->setPostalCode()
+ *   ->setBuilding() ->setEntrance() ->setFloor() ->setApartment()
+ *   ->setPickupLocation($pudoId)         // recipient picks the parcel up from a PUDO point
+ *   ->setDropOffLocation($pudoId)        // sender leaves the parcel at a PUDO point
+ *   ->setSenderName() ->setSenderContactPerson() ->setSenderPhone() ->setSenderAltPhone() ->setSenderEmail()
+ *   ->setSenderCounty() ->setSenderCity() ->setSenderStreet() ->setSenderNumber() ->setSenderPostalCode()
+ *   ->setSenderBuilding() ->setSenderEntrance() ->setSenderFloor() ->setSenderApartment()
+ *
+ * Non-EU parcel tax (set all four together):
+ *   ->setIsValueUnderThreshold($bool) ->setCountryCode($code) ->setVatId($vatId) ->setCompany($company)
+ *
+ * Result getters (available after the response):
+ *   ->hasErrors() ->getErrors() ->getAwb() ->getDetails()
+ */

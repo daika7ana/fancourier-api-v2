@@ -2,22 +2,29 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * GetServices - list the services available to the account.
+ *
+ * Endpoint: GET reports/services
+ * Request:  Fancourier\Request\GetServices (no inputs)
+ * Response: Fancourier\Response\GetServices
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-/*
-GetServices REQUEST has no options that can be set. Just call the function without a request
-*/
+// --- send ------------------------------------------------------------------
 
+// GetServices takes no request object and no inputs
 $response = $fan->getServices();
 
 /*
-Functions in GetServices RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// get an array of Service objects
-->getService($serviceName)	// get the Service object for the specified service name
-->hasService($serviceName)	// returns true if the service name is available
-*/
+ * GetServices response getters:
+ *   ->getData()                 // raw API data as an array
+ *   ->getAll()                  // map of Service objects, keyed by name
+ *   ->getService($serviceName)  // one Service object, or false when missing
+ *   ->hasService($serviceName)  // true when the service is available
+ */
 
 if ($response->isOk()) {
     print_r($response->getData());
@@ -27,8 +34,8 @@ if ($response->isOk()) {
 }
 
 /*
-The Service object has the following functions:
-->getId()
-->getName()
-->getDescription()
-*/
+ * The Service object has the following functions:
+ *   ->getId()
+ *   ->getName()
+ *   ->getDescription()
+ */

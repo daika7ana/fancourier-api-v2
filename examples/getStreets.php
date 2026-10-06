@@ -2,71 +2,76 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * GetStreets - list the streets of a city.
+ *
+ * Endpoint: GET reports/streets
+ * Request:  Fancourier\Request\GetStreets
+ * Response: Fancourier\Response\GetStreets
+ *
+ * The response is paginated; the loop below walks every page.
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new request object
+// --- request ---------------------------------------------------------------
+
 $request = new Fancourier\Request\GetStreets();
+
+/*
+ * GetStreets request inputs:
+ *   ->setCounty($county)
+ *   ->setCity($city)
+ *   ->setPage($page)
+ *   ->setPerPage($perPage)   // default 1000
+ */
+
 $request
     ->setCity('Braila')
     ->setCounty('Braila')
     ->setPerPage(1000);
 
-/*
-Functions in GetStreets REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->setCounty($county)
-->setCity($county)
-->setPage($page)
-->setPerPage($perPage)
-*/
-
+// --- send ------------------------------------------------------------------
 
 $response = $fan->getStreets($request);
 
 /*
-Functions in GetStreets RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// returns an array of Street objects
-->getTotal() 		// the total number of streets found
-->getPerPage() 		// how many items to return per page
-->getCurrentPage() 	// the current page number (starts at 1)
-->getTotalPages() 	// the total number of pages of results
-*/
+ * GetStreets response getters:
+ *   ->getData()          // raw API data as an array
+ *   ->getAll()           // map of Street objects, keyed by id
+ *   ->getTotal() ->getPerPage() ->getCurrentPage() ->getTotalPages()
+ */
 
-if (!$response->isOk()) {
-    var_dump($response->getErrorMessage());
-} else {
-    // get remaining pages
+if ($response->isOk()) {
+    // walk every page of results
     while ($response->isOk() && ($response->getCurrentPage() <= $response->getTotalPages())) {
-        echo "Total: " . $response->getTotal() . "<br />";
-        echo "Page: " . $response->getCurrentPage() . "<br />";
-        echo "Results per page: " . $response->getPerPage() . "<br />";
-        echo "Total pages: " . $response->getTotalPages() . "<br />";
+        echo 'Total: ' . $response->getTotal() . '<br />';
+        echo 'Page: ' . $response->getCurrentPage() . '<br />';
+        echo 'Results per page: ' . $response->getPerPage() . '<br />';
+        echo 'Total pages: ' . $response->getTotalPages() . '<br />';
         echo '<pre>' . print_r($response->getAll(), 1) . '</pre>';
-        echo "<hr />";
+        echo '<hr />';
 
-        $request
-            ->setPage($response->getCurrentPage() + 1);
-
-        // if not the last page, request the next page
-        if ($response->getCurrentPage() < $response->getTotalPages()) {
-            $request
-                ->setPage($response->getCurrentPage() + 1);
-
-            $response = $fan->getStreets($request);
-        } else {
+        if ($response->getCurrentPage() >= $response->getTotalPages()) {
             break;
         }
-    }
 
+        $request->setPage($response->getCurrentPage() + 1);
+        $response = $fan->getStreets($request);
+    }
+} else {
+    var_dump($response->getErrorMessage());
 }
 
-
 /*
-The Street object has the following functions:
-->getId()
-->getName()
-->getCounty()
-->getAgency()
-->getExtKm()
-*/
+ * The Street object has the following functions:
+ *   ->getId()
+ *   ->getName()
+ *   ->getType()
+ *   ->getCounty()
+ *   ->getCity()
+ *   ->hasZipCode($zipCode)
+ *   ->getDetails($zipCode)
+ *   ->getArray()
+ */

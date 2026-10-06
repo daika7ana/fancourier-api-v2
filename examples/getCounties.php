@@ -2,21 +2,28 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * GetCounties - list the Romanian counties.
+ *
+ * Endpoint: GET reports/counties
+ * Request:  Fancourier\Request\GetCounties (no inputs)
+ * Response: Fancourier\Response\GetCounties
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-/*
-GetCounties REQUEST has no options that can be set. Just call the function without a request
-*/
+// --- send ------------------------------------------------------------------
 
+// GetCounties takes no request object and no inputs
 $response = $fan->getCounties();
 
 /*
-Functions in GetCosts RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// get an array of County objects
-->getCounty($county)	// get the County object for the specified county name
-*/
+ * GetCounties response getters:
+ *   ->getData()               // raw API data as an array
+ *   ->getAll()                // map of County objects, keyed by name
+ *   ->getCounty($countyName)  // one County object, or false when missing
+ */
 
 if ($response->isOk()) {
     print_r($response->getData());
@@ -26,7 +33,7 @@ if ($response->isOk()) {
 }
 
 /*
-The County object has the following functions:
-->getId()
-->getName()
-*/
+ * The County object has the following functions:
+ *   ->getId()
+ *   ->getName()
+ */

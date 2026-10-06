@@ -2,42 +2,54 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * PrintAwb - render AWB labels.
+ *
+ * Endpoint: GET awb/label
+ * Request:  Fancourier\Request\PrintAwb
+ * Response: Fancourier\Response\PrintAwb
+ *
+ * Returns the label as a PDF (default), ZPL for label printers, or HTML.
+ * PDF and ZPL are mutually exclusive. Use setDpi() together with ZPL, and
+ * setSize() for the page format.
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new request object
-$request = new Fancourier\Request\PrintAwb();
-$request
-//    ->setPdf(false)
-//    ->setZpl(true)
-//    ->setDpi(203)
-    ->setSize('A5')
-    ->addAwb('2326300120204');
-/*
-Functions in PrintAwb REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->addAwb($awb)				// add an AWB number to print
-->setAwb($awb)				// alias for addAwb()
-->setPdf($wantPdf)			// set this as true if you want to get a PDF for printing instead of HTML. Will automatically disable ZPL option if active
-->setZpl($wantZpl)			// set this as true if you want to get a Zebra Programming Language (ZPL) file for use on label printers. Will automatically disable PDF option if active
-->setDpi($dpivalue)			// Use this to specify the DPI value (dots per inch) you need for your label printer. Default not set. Set to -1 to disable if previously set
-->setLang($language)		// "ro" or "en". The language to use for the generated AWB
+// --- request ---------------------------------------------------------------
 
-Note that you can't enable PDF and ZPL at the same time
-*/
+$request = new Fancourier\Request\PrintAwb();
+
+/*
+ * PrintAwb request methods:
+ *   ->addAwb($awb)            // add an AWB to print (repeatable)
+ *   ->setAwb($awb)            // alias for addAwb()
+ *   ->setPdf($active)         // default true; disables ZPL
+ *   ->setZpl($active)         // Zebra label output; disables PDF
+ *   ->setDpi($dpi)            // ZPL only; -1 disables
+ *   ->setHtml($active)        // HTML output (neither PDF nor ZPL)
+ *   ->setSize($format)        // LabelFormat enum or "A4"/"A5"/"A6"
+ *   ->setLang($language)      // Language enum or "ro"/"en"
+ */
+
+$request
+    // ->setZpl(true)->setDpi(203)
+    ->setSize(Fancourier\Enums\LabelFormat::A5)
+    ->setLang(Fancourier\Enums\Language::Ro)
+    ->addAwb('2326300120204');
+
+// --- send ------------------------------------------------------------------
 
 $response = $fan->printAwb($request);
 
 /*
-Functions in PrintAwb RESPONSE (only get* functions are available)
-->getData() 		// returns the HTML/PDF file contents
-*/
+ * PrintAwb response getters:
+ *   ->getData()   // label contents (PDF, ZPL or HTML)
+ */
 
 if ($response->isOk()) {
-    echo($response->getData());
+    echo $response->getData();
 } else {
     var_dump($response->getErrorMessage());
 }
-
-/*
-There is no dedicated object for PrintAwb()
-*/

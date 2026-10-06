@@ -2,27 +2,38 @@
 
 declare(strict_types=1);
 
-// initialize examples instance and autoloader
+/*
+ * GetCourierOrderEvents - list the courier order event codes and their names.
+ *
+ * Endpoint: GET reports/order-events
+ * Request:  Fancourier\Request\GetCourierOrderEvents
+ * Response: Fancourier\Response\GetCourierOrderEvents
+ */
+
+// bootstrap the library and the shared Fancourier instance ($fan)
 require __DIR__ . '/_init.php';
 
-// create a new request object
+// --- request ---------------------------------------------------------------
+
 $request = new Fancourier\Request\GetCourierOrderEvents();
-$request
-    ->setLanguage('ro');
+
 /*
-Functions in GetCourierOrderEvents REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->setLanguage($lang)	the language for the returned event strings. "ro" or "en"
-*/
+ * GetCourierOrderEvents request inputs:
+ *   ->setLanguage($language)   // Language enum or "ro"/"en"
+ */
+
+$request->setLanguage(Fancourier\Enums\Language::Ro);
+
+// --- send ------------------------------------------------------------------
 
 $response = $fan->getCourierOrderEvents($request);
 
 /*
-Functions in GetCourierOrderEvents RESPONSE (only get* functions are available)
-->getData() 		// returns the unprocessed response of the API as an array (available in all response objects)
-->getAll() 			// returns an array of CourierOrderEvent objects
-->getEvent($courierEventId) 			// returns the CourierOrderEvent object with the specified id (or false if not found)
-*/
-
+ * GetCourierOrderEvents response getters:
+ *   ->getData()                    // raw API data as an array
+ *   ->getAll()                     // map of CourierOrderEvent objects, keyed by id
+ *   ->getEvent($courierEventId)    // one CourierOrderEvent object, or false when missing
+ */
 
 if ($response->isOk()) {
     print_r($response->getData());
@@ -32,7 +43,7 @@ if ($response->isOk()) {
 }
 
 /*
-The CourierOrderEvent object has the following functions:
-->getId()
-->getName()
-*/
+ * The CourierOrderEvent object has the following functions:
+ *   ->getId()
+ *   ->getName()
+ */
