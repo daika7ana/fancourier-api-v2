@@ -216,5 +216,5 @@ so the examples can be run from any working directory. They cache the bearer tok
 ## Upgrading from 1.x
 
 Version 2.0 is a breaking major (typed API, camelCase `Client` methods, removed dead
-methods, backed enums). See [Upgrading to 2.0](upgrading-to-2.0.md) and the authoritative
-[`MIGRATION.md`](../MIGRATION.md).
+methods, backed enums). See [Upgrading to 2.0](upgrading-to-2.0.md) for the full
+upgrade guide.

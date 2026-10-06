@@ -17,12 +17,11 @@ says so explicitly instead of guessing.
 | [Objects reference](objects.md) | The `Fancourier\Objects\*` data holders (`AwbIntern`, `AwbExtern`, `Pudo`, …) and their getters/setters. |
 | [Enums and code lists](enums.md) | The string-backed enums in `Fancourier\Enums\`; setters accept either the enum or its string value. |
 | [Error handling](errors.md) | `isOk()`, `getErrorCode()` / `getErrorMessage()`, `status:"fail"` bodies, empty-body failures, and auth failures. |
-| [Upgrading to 2.0](upgrading-to-2.0.md) | Pointer to the full 1.x → 2.0 migration guide and the high-level break list. |
+| [Upgrading to 2.0](upgrading-to-2.0.md) | The complete 1.x → 2.0 upgrade guide: requirements, codemod, renames, removals, behaviour fixes, enums, and a checklist. |
 
 Related material outside this folder:
 
 - [`../README.md`](../README.md) — package-level readme and worked usage snippets.
-- [`../MIGRATION.md`](../MIGRATION.md) — the authoritative 1.x → 2.0 migration guide.
 - [`../examples/`](../examples) — runnable scripts for every endpoint (`_init.php` bootstraps them).
 - [`../CHANGELOG.md`](../CHANGELOG.md) — release history.
 

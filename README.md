@@ -36,7 +36,7 @@ echo $cost->isOk() ? $cost->getCostTotal() : $cost->getErrorMessage();
 - **Batteries included** — 341 hermetic unit tests, an opt-in live suite, and a runnable
   example for every endpoint in [`examples/`](./examples/README.md).
 - **A real upgrade path** — the 1.x → 2.0 renames are codemoddable via Rector, with the full
-  break list in [`MIGRATION.md`](./MIGRATION.md).
+  break list in [`docs/upgrading-to-2.0.md`](./docs/upgrading-to-2.0.md).
 - **Production ready** — opt-in retry/backoff (`RetryPolicy`), PSR-3 logging and a PSR-16
   token cache; secrets are never logged and non-idempotent `POST`s are not retried by default.
 
@@ -250,7 +250,7 @@ Authentication uses `POST /login` (handled by the client).
 ## Upgrading from 1.x
 
 2.0 is a deliberate breaking major: native types, `Client` camelCase renames, dead methods
-removed, enums added. The full mapping is in [`MIGRATION.md`](./MIGRATION.md), and the
+removed, enums added. The full mapping is in [`docs/upgrading-to-2.0.md`](./docs/upgrading-to-2.0.md), and the
 mechanical renames are automated by the bundled Rector set:
 
 ```bash

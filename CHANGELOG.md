@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The first modernised release. This is a **breaking major**: the public API is
 re-typed, renamed, trimmed, and extended. Every break has a row or section in
-[`MIGRATION.md`](./MIGRATION.md), and the mechanical renames are codemoddable via
-`rector.php` (see §2 of the migration guide).
+[`docs/upgrading-to-2.0.md`](./docs/upgrading-to-2.0.md), and the mechanical renames are codemoddable via
+`rector.php` (see Step 2 of the migration guide).
 
 ### Removed
 
@@ -23,7 +23,8 @@ re-typed, renamed, trimmed, and extended. Every break has a row or section in
 
 ### Renamed
 
-`Fancourier\Client` snake_case → camelCase (breaking; see `MIGRATION.md` §3.1):
+`Fancourier\Client` snake_case → camelCase (breaking; see
+[`docs/upgrading-to-2.0.md` §A](./docs/upgrading-to-2.0.md#a-renamed-client-methods)):
 
 | Old | New |
 |---|---|
@@ -58,12 +59,12 @@ library, no consumer action): `getUITCode`/`setUITCode` and
 - Native parameter, property, and return types across the public API.
 - `declare(strict_types=1)` in every PHP file. Note: `strict_types` is per
   **calling** file, so the consumer-facing break is the **declared types**, not
-  `strict_types` itself (see `MIGRATION.md` §3.4).
+  `strict_types` itself (see Step 4 of [`docs/upgrading-to-2.0.md`](./docs/upgrading-to-2.0.md)).
 
 ### Fixed
 
-Behaviour corrections (a codemod cannot apply these; see the `MIGRATION.md` §4
-B-list for the full table). Headline fixes: `getPerPage()` returned the page
+Behaviour corrections (a codemod cannot apply these; see the
+[`docs/upgrading-to-2.0.md` behaviour-fixes table](./docs/upgrading-to-2.0.md#c-behaviour-fixes) for the full list). Headline fixes: `getPerPage()` returned the page
 instead of the page size; `PrintAwb::getSize()`/`setHtml()`; `getPickupDate()`;
 `Branch` postal-code key; `AwbExtern` default payment; `GetCostsExternal`
 delivery mode; `Generic::isOk()` error-state handling; `GetBranches::get()`
