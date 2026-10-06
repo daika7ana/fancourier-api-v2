@@ -13,11 +13,11 @@ use Fancourier\Enums\Language;
  */
 trait LanguageTrait
 {
-    protected string $language = '';
+    protected Language|string $language = '';
 
     public function getLanguage(): string
     {
-        return $this->language;
+        return $this->language instanceof Language ? $this->language->value : $this->language;
     }
 
     public function setLanguage(string|Language $language): static
@@ -25,7 +25,7 @@ trait LanguageTrait
         $language = $language instanceof Language ? $language->value : $language;
         $language = trim(strtolower($language));
         if (in_array($language, ['ro', 'en'])) {
-            $this->language = $language;
+            $this->language = Language::from($language);
         }
 
         return $this;

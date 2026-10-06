@@ -26,7 +26,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     protected int|float $length = 0; // cm
     protected int|float $height = 0; // cm
 
-    protected string $orderType = 'Standard';
+    protected OrderType|string $orderType = OrderType::Standard;
 
     protected string $pickupDate = ''; // YYYY-mm-dd
     /** @var array{min: int|string, max: int|string} */
@@ -64,6 +64,8 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     #[\Override]
     public function pack(): array
     {
+        $orderType = $this->getOrderType();
+
         $arr = [
             "clientId" => $this->auth()->getClientId(), //obligatoriu
             "info" => [
@@ -78,7 +80,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
                     'length' => $this->length,
                     'height' => $this->height,
                 ],
-                'orderType' => $this->orderType,
+                'orderType' => $orderType,
                 'pickupDate' => $this->pickupDate,
                 'pickupHours' => [
                     'first' => $this->pickupHours['min'],
@@ -88,7 +90,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
             ],
         ];
 
-        if (strtolower($this->orderType) != 'standard') {
+        if (strtolower($orderType) != 'standard') {
             // doar pt orderType = 'Express Loco ...'
             $arr["recipient"] = [ //obligatoriu
                 "name" => $this->name,
@@ -279,7 +281,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
      */
     public function getOrderType(): string
     {
-        return $this->orderType;
+        return $this->orderType instanceof OrderType ? $this->orderType->value : $this->orderType;
     }
 
     /**
@@ -288,7 +290,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
      */
     public function setOrderType(string|OrderType $orderType): static
     {
-        $this->orderType = $orderType instanceof OrderType ? $orderType->value : $orderType;
+        $this->orderType = $orderType;
 
         return $this;
     }

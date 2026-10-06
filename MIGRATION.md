@@ -156,12 +156,12 @@ These are **not** renames; a codemod cannot detect them. Each is a deliberate co
 | B23 | `Objects\ShippingSlip::getPayment()` / `getReturnPayment()` | returned non-string shapes | return `string` |
 | B24 | `Response\CreateAwbExternal::setData()` | an empty successful body was treated as an empty result | empty body is flagged as an error (`setErrorFromBody()`) instead of silently returning `[]` |
 
-### 4.1 Code lists — additive (constants + enums), no forced cutover
+### 4.1 Code lists — enums, no forced cutover
 
-2.0 ships each code list **additively**: as constants on `AbstractRequest` **and** as backed enum
-classes in `Fancourier\Enums\`. Where practical, the setters accept `string|BackedEnum`, so existing
-string calls keep working unchanged. Consumers are **not required** to switch to enums in 2.0 —
-adoption is **optional and can be done incrementally**.
+2.0 ships each code list as backed enum classes in `Fancourier\Enums\`. Where practical, the
+setters accept `string|BackedEnum`, so existing string calls keep working unchanged. Consumers
+are **not required** to switch to enums in 2.0 — adoption is **optional and can be done
+incrementally**.
 
 Rector **cannot** rewrite string literals passed as arguments, so enum adoption is manual; it is not
 a hard break. The raw string values below remain valid and are kept as reference:
@@ -175,9 +175,6 @@ a hard break. The raw string values below remain valid and are kept as reference
 | PUDO type | `fanbox`, `paypoint`, `office` | `Fancourier\Enums\PudoType` |
 | Language | `ro`, `en` | `Fancourier\Enums\Language` |
 | Print format | `A4`, `A5`, `A6` | `Fancourier\Enums\LabelFormat` |
-
-The constant sets on `AbstractRequest` (`TYPE_*`, `PUDO_*`, `OPTION_*`, `ORDER_TYPE_*`, `SERVICE_*`,
-`AWB_EVENT_*`, `ORDER_EVENT_*`) remain parallel to the enums.
 
 **Additive internal bases (no consumer action):** `Response\PaginatedResponse` and the
 `Request\PaginationTrait`, `Request\LanguageTrait`, `Request\AwbStringListTrait` bases;

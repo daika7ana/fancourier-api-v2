@@ -7,19 +7,14 @@ namespace Fancourier\Objects;
 use Fancourier\Enums\DeliveryMode;
 use Fancourier\Enums\DocumentType;
 use Fancourier\Enums\PaymentType;
-use Fancourier\Request\AbstractRequest;
 
 class AwbExtern
 {
-    // response fields only
-    protected ?string $awb = null;
-    /** @var array<int, mixed>|null */
-    protected ?array $errors = null;
-    protected bool $hasErrors = false;
+    use AwbResultTrait;
 
     protected string $service = 'Export';				// "Export" sau "Export-Cont Colector"
-    protected string $deliveryMode = 'rutier';			// "rutier" sau "aerian"
-    protected string $documentType = 'document';		// "document" sau "non document"
+    protected DeliveryMode $deliveryMode = DeliveryMode::Rutier;			// "rutier" sau "aerian"
+    protected DocumentType $documentType = DocumentType::Document;		// "document" sau "non document"
 
     protected string $bank = '';	// optional						// info.bank
     protected string $iban = '';	// optional						// info.bankAccount
@@ -76,7 +71,7 @@ class AwbExtern
 
     protected float|int|string $CoD = '';	// cash on delivery, optional			// info.cod
     protected string $currency = 'RON';								// info.currency (apare doar in borderou in documentatie, nu stiu daca afecteaza crearea de awb)
-    protected string $paymentType = AbstractRequest::TYPE_SENDER;	// info.payment
+    protected PaymentType|string $paymentType = PaymentType::Expeditor;	// info.payment
     protected string $refund = '';	// refund payment			// info.refund
     protected string $returnPayment = ''; //refund	// info.returnPayment
 
@@ -89,9 +84,9 @@ class AwbExtern
 
         $arr = [
             "info" => [
-                "deliveryMode" => $this->deliveryMode,
+                "deliveryMode" => $this->deliveryMode->value,
                 "service" => $this->service, // "Export" sau "Export-Cont Colector". Note that the API returns "The selected info.service is invalid" for "Export-Cont Colector". Use "Export" instead. If using CoD, it will be changed by fan courier automatically
-                "contentType" => $this->documentType,
+                "contentType" => $this->documentType->value,
                 "bank" => $this->bank, //optional
                 "bankAccount" => $this->iban, //optional
                 "packages" => [
@@ -109,7 +104,7 @@ class AwbExtern
                 "cod" => $this->CoD,	// optional - daca se doreste trimiterea cu ramburs
                 // ponytail: default is 'RON', so "when set" is always true; emitted unconditionally to match AwbIntern. Add a nullable/unset state if the API ever needs currency suppressed.
                 "currency" => $this->currency, // optional
-                "payment" => $this->paymentType,
+                "payment" => $this->getPaymentType(),
                 "refund" => $this->refund,
                 "returnPayment" => $this->returnPayment,
 
@@ -179,7 +174,7 @@ class AwbExtern
 
     public function getDeliveryMode(): string
     {
-        return $this->deliveryMode;
+        return $this->deliveryMode->value;
     }
 
     /**
@@ -191,7 +186,7 @@ class AwbExtern
         $deliveryMode = $deliveryMode instanceof DeliveryMode ? $deliveryMode->value : $deliveryMode;
         $deliveryMode = strtolower($deliveryMode);
         if (($deliveryMode == 'rutier') || ($deliveryMode == 'aerian')) {
-            $this->deliveryMode = $deliveryMode;
+            $this->deliveryMode = DeliveryMode::from($deliveryMode);
         }
 
         return $this;
@@ -199,7 +194,7 @@ class AwbExtern
 
     public function getDocumentType(): string
     {
-        return $this->documentType;
+        return $this->documentType->value;
     }
 
     /**
@@ -211,7 +206,7 @@ class AwbExtern
         $documentType = $documentType instanceof DocumentType ? $documentType->value : $documentType;
         $documentType = strtolower($documentType);
         if (($documentType == 'document') || ($documentType == 'non document')) {
-            $this->documentType = $documentType;
+            $this->documentType = DocumentType::from($documentType);
         }
 
         return $this;
@@ -384,12 +379,12 @@ class AwbExtern
 
     public function getPaymentType(): string
     {
-        return $this->paymentType;
+        return $this->paymentType instanceof PaymentType ? $this->paymentType->value : $this->paymentType;
     }
 
     public function setPaymentType(string|PaymentType $paymentType): static
     {
-        $this->paymentType = $paymentType instanceof PaymentType ? $paymentType->value : $paymentType;
+        $this->paymentType = $paymentType;
 
         return $this;
     }
@@ -874,23 +869,6 @@ class AwbExtern
         }
 
         $this->awb = (string) $data['awbNumber'];
-    }
-
-
-    public function hasErrors(): bool
-    {
-        return $this->hasErrors;
-    }
-
-    /** @return array<int, mixed> */
-    public function getErrors(): array
-    {
-        return $this->errors ?? [];
-    }
-
-    public function getAwb(): ?string
-    {
-        return $this->awb;
     }
 
 }

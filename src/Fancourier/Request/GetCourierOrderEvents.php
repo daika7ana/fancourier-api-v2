@@ -30,8 +30,9 @@ class GetCourierOrderEvents extends AbstractRequest implements RequestInterface
     {
         $arr = [];
 
-        if ($this->language != '') {
-            $arr['language'] = $this->language;
+        $language = $this->getLanguage();
+        if ($language != '') {
+            $arr['language'] = $language;
         }
 
         return $arr;

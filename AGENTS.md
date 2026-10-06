@@ -84,12 +84,10 @@ Non-obvious details:
 
 - `examples/*.php` demonstrate every endpoint; `examples/README.md` indexes them.
   Each example header lists its endpoint and Request/Response classes. The shared
-  bootstrap `examples/_init.php` is CWD-independent (prefers `vendor/autoload.php`,
-  falls back to `src/autoload.php`) and caches the token in
+  bootstrap `examples/_init.php` requires `vendor/autoload.php` and caches the token in
   `examples/examples_token.txt` (gitignored). Credentials come from
   `FANCOURIER_TEST_CLIENT_ID`/`FANCOURIER_TEST_USERNAME`/`FANCOURIER_TEST_PASSWORD`.
 - `docs/` holds the reference documentation (index: `docs/README.md`): endpoints,
   objects, enums, errors and getting-started.
 - Auth: bearer token has a 24h lifetime; `getToken($refresh)` refreshes it. Examples
   cache it in `examples/examples_token.txt` (gitignored).
-- Non-Composer usage loads `src/autoload.php` (a hand-rolled autoloader), not vendor.

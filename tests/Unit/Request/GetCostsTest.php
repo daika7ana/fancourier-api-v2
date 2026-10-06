@@ -37,7 +37,7 @@ final class GetCostsTest extends TestCase
     {
         $packed = $this->request()
             ->setService('Rutier')
-            ->setPaymentType(GetCosts::TYPE_SENDER)
+            ->setPaymentType('expeditor')
             ->setWeight(2.5)
             ->setEnvelopes(1)
             ->setParcels(2)

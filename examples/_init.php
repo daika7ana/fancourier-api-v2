@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * Shared bootstrap for every example script.
  *
- * - loads the library (Composer autoloader when present, bundled autoloader otherwise);
+ * - loads the library via the Composer autoloader;
  * - reads the account credentials from the environment (never hardcode them);
  * - caches the 24h bearer token in examples_token.txt next to this file;
  * - exposes a ready-to-use Fancourier instance as $fan.
@@ -14,8 +14,7 @@ declare(strict_types=1);
  * working directory (repo root, examples/, etc.).
  */
 
-$composerAutoload = __DIR__ . '/../vendor/autoload.php';
-require is_file($composerAutoload) ? $composerAutoload : __DIR__ . '/../src/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $tokenFile = __DIR__ . '/examples_token.txt';
 

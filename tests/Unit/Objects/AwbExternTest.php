@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Fancourier\Tests\Unit\Objects;
 
 use Fancourier\Objects\AwbExtern;
-use Fancourier\Request\AbstractRequest;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -35,7 +34,7 @@ class AwbExternTest extends TestCase
         $this->assertSame([], $awb->getErrors());
         $this->assertNull($awb->getAwb());
         // default payment is the shared sender type.
-        $this->assertSame(AbstractRequest::TYPE_SENDER, $awb->getPaymentType());
+        $this->assertSame('expeditor', $awb->getPaymentType());
     }
 
     #[Test]

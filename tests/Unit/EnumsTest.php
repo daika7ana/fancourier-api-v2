@@ -14,7 +14,6 @@ use Fancourier\Enums\PaymentType;
 use Fancourier\Enums\PudoType;
 use Fancourier\Objects\AwbExtern;
 use Fancourier\Objects\AwbIntern;
-use Fancourier\Request\AbstractRequest;
 use Fancourier\Request\CreateCourierOrder;
 use Fancourier\Request\GetPudo;
 use Fancourier\Request\PrintAwb;
@@ -22,36 +21,35 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Phase 3b W4: the additive backed enums must mirror the code-list constants
- * (or the documented literal where no constant exists), and passing an enum to
- * a setter must store exactly the string the enum carries.
+ * Phase 3b W4: the backed enums must carry the documented literal values, and
+ * passing an enum to a setter must store exactly the string the enum carries.
  */
 final class EnumsTest extends TestCase
 {
     #[Test]
-    public function payment_type_cases_match_the_constants(): void
+    public function payment_type_cases_match_the_literals(): void
     {
-        $this->assertSame(AbstractRequest::TYPE_SENDER, PaymentType::Expeditor->value);
-        $this->assertSame(AbstractRequest::TYPE_RECIPIENT, PaymentType::Destinatar->value);
-        $this->assertSame(AbstractRequest::TYPE_OTHER, PaymentType::Altul->value);
+        $this->assertSame('expeditor', PaymentType::Expeditor->value);
+        $this->assertSame('destinatar', PaymentType::Destinatar->value);
+        $this->assertSame('Altul', PaymentType::Altul->value);
     }
 
     #[Test]
-    public function order_type_cases_match_the_constants(): void
+    public function order_type_cases_match_the_literals(): void
     {
-        $this->assertSame(AbstractRequest::ORDER_TYPE_STANDARD, OrderType::Standard->value);
-        $this->assertSame(AbstractRequest::ORDER_TYPE_EXPRESS_LOCO_1H, OrderType::ExpressLoco1h->value);
-        $this->assertSame(AbstractRequest::ORDER_TYPE_EXPRESS_LOCO_2H, OrderType::ExpressLoco2h->value);
-        $this->assertSame(AbstractRequest::ORDER_TYPE_EXPRESS_LOCO_4H, OrderType::ExpressLoco4h->value);
-        $this->assertSame(AbstractRequest::ORDER_TYPE_EXPRESS_LOCO_6H, OrderType::ExpressLoco6h->value);
+        $this->assertSame('Standard', OrderType::Standard->value);
+        $this->assertSame('Express Loco 1h', OrderType::ExpressLoco1h->value);
+        $this->assertSame('Express Loco 2h', OrderType::ExpressLoco2h->value);
+        $this->assertSame('Express Loco 4h', OrderType::ExpressLoco4h->value);
+        $this->assertSame('Express Loco 6h', OrderType::ExpressLoco6h->value);
     }
 
     #[Test]
-    public function pudo_type_cases_match_the_constants(): void
+    public function pudo_type_cases_match_the_literals(): void
     {
-        $this->assertSame(AbstractRequest::PUDO_FANBOX, PudoType::Fanbox->value);
-        $this->assertSame(AbstractRequest::PUDO_PAYPOINT, PudoType::Paypoint->value);
-        $this->assertSame(AbstractRequest::PUDO_OFFICE, PudoType::Office->value);
+        $this->assertSame('fanbox', PudoType::Fanbox->value);
+        $this->assertSame('paypoint', PudoType::Paypoint->value);
+        $this->assertSame('office', PudoType::Office->value);
     }
 
     #[Test]

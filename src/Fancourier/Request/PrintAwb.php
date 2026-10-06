@@ -18,8 +18,8 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     private bool $pdf = true;
     private bool $zpl = false;
     private int $dpi = -1;	// dots per inch. only applies for ZPL
-    private string $lang = 'ro';
-    private string $size = '';
+    private Language $lang = Language::Ro;
+    private LabelFormat|string $size = '';
 
     public function __construct()
     {
@@ -34,7 +34,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
         $arr = [
             'clientId' => $this->auth()->getClientId(),
             'awbs' => $this->awbs,
-            'language' => $this->lang,
+            'language' => $this->getLang(),
         ];
 
         // send pdf variable only if active (can't send both pdf and zpl at the same time)
@@ -49,8 +49,9 @@ class PrintAwb extends AbstractRequest implements RequestInterface
         }
 
         // add the format only if user requests a specific size
-        if ($this->size != '') {
-            $arr['format'] = $this->size;
+        $size = $this->getSize();
+        if ($size != '') {
+            $arr['format'] = $size;
         }
 
         return $arr;
@@ -162,7 +163,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     }
 
     /**
-     / Set the DPI (dots per inch) for the returned label (only applies to ZPL)
+     * Set the DPI (dots per inch) for the returned label (only applies to ZPL)
      * @param int $dpi
      * @return static
      */
@@ -178,7 +179,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
      */
     public function getLang(): string
     {
-        return $this->lang;
+        return $this->lang->value;
     }
 
     /**
@@ -193,7 +194,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
             $lang = 'ro';
         }
 
-        $this->lang = $lang;
+        $this->lang = Language::from($lang);
 
         return $this;
     }
@@ -203,7 +204,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
      */
     public function getSize(): string
     {
-        return $this->size;
+        return $this->size instanceof LabelFormat ? $this->size->value : $this->size;
     }
 
     /**
@@ -218,7 +219,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
             $pageSize = '';
         }
 
-        $this->size = $pageSize;
+        $this->size = $pageSize === '' ? '' : LabelFormat::from($pageSize);
 
         return $this;
     }

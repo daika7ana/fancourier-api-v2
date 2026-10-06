@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace Fancourier\Objects;
 
 use Fancourier\Enums\PaymentType;
-use Fancourier\Request\CreateAwb;
 
 class AwbIntern
 {
+    use AwbResultTrait;
+
     // response fields only
-    protected ?string $awb = null;
     /** @var array<string, mixed>|null */
     protected ?array $details = null;
-    /** @var array<int, mixed>|null */
-    protected ?array $errors = null;
-    protected bool $hasErrors = false;
 
     protected string $service = 'Standard';			// info.service
     protected string $bank = '';	// optional						// info.bank
@@ -29,9 +26,9 @@ class AwbIntern
     protected float|int|string $CoD = '';	// cash on delivery, optional			// info.cod
     protected string $currency = 'RON';								// info.currency (apare doar in borderou in documentatie, nu stiu daca afecteaza crearea de awb)
     protected int|float $declaredValue = 0;								// info.declaredValue
-    protected string $paymentType = CreateAwb::TYPE_RECIPIENT;			// info.payment
+    protected PaymentType|string $paymentType = PaymentType::Destinatar;			// info.payment
     protected string $refund = '';	// refund payment			// info.refund
-    protected string $returnPayment = CreateAwb::TYPE_SENDER; //refund	// info.returnPayment
+    protected string $returnPayment = PaymentType::Expeditor->value; //refund	// info.returnPayment
     protected string $notes = '';		// observation					// info.observation
     protected string $contents = '';									// info.content
 
@@ -106,7 +103,7 @@ class AwbIntern
                 "cod" => $this->CoD, //optional
                 "currency" => $this->currency, //optional
                 "declaredValue" => $this->declaredValue, //optional
-                "payment" => $this->paymentType, //obligatoriu
+                "payment" => $this->getPaymentType(), //obligatoriu
                 "refund" => $this->refund, //optional
                 "returnPayment" => $this->returnPayment, //optional
                 "observation" => $this->notes, //optional
@@ -292,12 +289,12 @@ class AwbIntern
 
     public function getPaymentType(): string
     {
-        return $this->paymentType;
+        return $this->paymentType instanceof PaymentType ? $this->paymentType->value : $this->paymentType;
     }
 
     public function setPaymentType(string|PaymentType $paymentType): static
     {
-        $this->paymentType = $paymentType instanceof PaymentType ? $paymentType->value : $paymentType;
+        $this->paymentType = $paymentType;
 
         return $this;
     }
@@ -943,22 +940,6 @@ class AwbIntern
 
     }
 
-
-    public function hasErrors(): bool
-    {
-        return $this->hasErrors;
-    }
-
-    /** @return array<int, mixed> */
-    public function getErrors(): array
-    {
-        return $this->errors ?? [];
-    }
-
-    public function getAwb(): ?string
-    {
-        return $this->awb;
-    }
 
     /** @return array<string, mixed>|null */
     public function getDetails(): ?array

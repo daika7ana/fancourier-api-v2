@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fancourier\Request;
 
 use Fancourier\Enums\DeliveryMode;
+use Fancourier\Enums\DocumentType;
 use Fancourier\Response\GetCostsExternal as GetCostsExternalResponse;
 
 class GetCostsExternal extends AbstractRequest implements RequestInterface
@@ -23,8 +24,8 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     private int|float $height = 0;
 
     private string $service = 'Export';
-    private string $deliveryMode = 'rutier';		// "rutier" sau "aerian" (metodele disponibile se pot afla prin GetCountries)
-    private string $documentType = 'document';		// "document" sau "non document"
+    private DeliveryMode $deliveryMode = DeliveryMode::Rutier;		// "rutier" sau "aerian" (metodele disponibile se pot afla prin GetCountries)
+    private DocumentType $documentType = DocumentType::Document;		// "document" sau "non document"
 
     public function __construct()
     {
@@ -40,8 +41,8 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
             'clientId' => $this->auth()->getClientId(),
             'info' => [
                 'service' => $this->service,
-                'deliveryMode' => $this->deliveryMode,
-                'documentType' => $this->documentType,
+                'deliveryMode' => $this->deliveryMode->value,
+                'documentType' => $this->documentType->value,
                 'weight' => $this->weight,
                 'dimensions' => [
                     'height' => $this->height,
@@ -78,7 +79,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
      */
     public function getDeliveryMode(): string
     {
-        return $this->deliveryMode;
+        return $this->deliveryMode->value;
     }
 
     /**
@@ -90,7 +91,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
         $deliveryMode = $deliveryMode instanceof DeliveryMode ? $deliveryMode->value : $deliveryMode;
         $deliveryMode = strtolower($deliveryMode);
         if (($deliveryMode == 'rutier') || ($deliveryMode == 'aerian')) {
-            $this->deliveryMode = $deliveryMode;
+            $this->deliveryMode = DeliveryMode::from($deliveryMode);
         }
 
         return $this;
@@ -101,18 +102,19 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
      */
     public function getDocumentType(): string
     {
-        return $this->documentType;
+        return $this->documentType->value;
     }
 
     /**
-     * @param string $documentType
+     * @param string|DocumentType $documentType
      * @return static
      */
-    public function setDocumentType(string $documentType): static
+    public function setDocumentType(string|DocumentType $documentType): static
     {
+        $documentType = $documentType instanceof DocumentType ? $documentType->value : $documentType;
         $documentType = strtolower($documentType);
         if (($documentType == 'document') || ($documentType == 'non document')) {
-            $this->documentType = $documentType;
+            $this->documentType = DocumentType::from($documentType);
         }
 
         return $this;

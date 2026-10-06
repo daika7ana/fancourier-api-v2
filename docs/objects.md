@@ -299,8 +299,7 @@ Use `Pudo::getId()` with `AwbIntern::setPickupLocation()` / `setDropOffLocation(
 |---|---|
 | `getId(): string` / `getName(): string` | Event id and label. |
 
-The matching ids are the `AbstractRequest::AWB_EVENT_*` constants (see
-[enums](enums.md#awb-event-codes)).
+The event ids are returned verbatim by the API.
 
 ## CourierOrderEvent
 
@@ -311,8 +310,7 @@ The matching ids are the `AbstractRequest::AWB_EVENT_*` constants (see
 |---|---|
 | `getId(): string` / `getName(): string` | Event id and label. |
 
-The matching ids are the `AbstractRequest::ORDER_EVENT_*` constants (see
-[enums](enums.md#courier-order-event-codes)).
+The event ids are returned verbatim by the API.
 
 ## AwbTracker
 

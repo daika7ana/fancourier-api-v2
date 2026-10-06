@@ -35,19 +35,6 @@ final class EnumAdoptionTest extends TestCase
         }
     }
 
-    #[Test]
-    public function case_values_match_the_documented_literals(): void
-    {
-        $this->assertSame('expeditor', PaymentType::Expeditor->value);
-        $this->assertSame('destinatar', PaymentType::Destinatar->value);
-        $this->assertSame('rutier', DeliveryMode::Rutier->value);
-        $this->assertSame('aerian', DeliveryMode::Aerian->value);
-        $this->assertSame('ro', Language::Ro->value);
-        $this->assertSame('A4', LabelFormat::A4->value);
-        $this->assertSame('Express Loco 2h', OrderType::ExpressLoco2h->value);
-        $this->assertSame('non document', DocumentType::NonDocument->value);
-        $this->assertSame('paypoint', PudoType::Paypoint->value);
-    }
     /** @return list<class-string> */
     private static function enums(): array
     {

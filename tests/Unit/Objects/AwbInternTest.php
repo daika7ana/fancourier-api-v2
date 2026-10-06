@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Fancourier\Tests\Unit\Objects;
 
 use Fancourier\Objects\AwbIntern;
-use Fancourier\Request\CreateAwb;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -25,8 +24,8 @@ class AwbInternTest extends TestCase
         $this->assertSame('', $awb->getReimbursement());
         $this->assertSame('RON', $awb->getCurrency());
         $this->assertSame(0, $awb->getDeclaredValue());
-        $this->assertSame(CreateAwb::TYPE_RECIPIENT, $awb->getPaymentType());
-        $this->assertSame(CreateAwb::TYPE_SENDER, $awb->getReturnPayment());
+        $this->assertSame('destinatar', $awb->getPaymentType());
+        $this->assertSame('expeditor', $awb->getReturnPayment());
         $this->assertSame('', $awb->getCompany());
         $this->assertSame(['length' => 0, 'height' => 0, 'width' => 0], $awb->getSizes());
         $this->assertSame([], $awb->getOptions());
@@ -51,9 +50,9 @@ class AwbInternTest extends TestCase
             ->setReimbursement(100.0)
             ->setCurrency('EUR')
             ->setDeclaredValue(250.0)
-            ->setPaymentType(CreateAwb::TYPE_SENDER)
+            ->setPaymentType('expeditor')
             ->setRefund('refund')
-            ->setReturnPayment(CreateAwb::TYPE_RECIPIENT)
+            ->setReturnPayment('destinatar')
             ->setNotes('fragile')
             ->setContents('books')
             ->setCostCenter('CC1')
@@ -69,9 +68,9 @@ class AwbInternTest extends TestCase
         $this->assertSame(100.0, $awb->getReimbursement());
         $this->assertSame('EUR', $awb->getCurrency());
         $this->assertSame(250.0, $awb->getDeclaredValue());
-        $this->assertSame(CreateAwb::TYPE_SENDER, $awb->getPaymentType());
+        $this->assertSame('expeditor', $awb->getPaymentType());
         $this->assertSame('refund', $awb->getRefund());
-        $this->assertSame(CreateAwb::TYPE_RECIPIENT, $awb->getReturnPayment());
+        $this->assertSame('destinatar', $awb->getReturnPayment());
         $this->assertSame('fragile', $awb->getNotes());
         $this->assertSame('books', $awb->getContents());
         $this->assertSame('CC1', $awb->getCostCenter());

@@ -14,7 +14,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     /** @var array<string> */
     protected array $options = [];	// optional					// info.options
 
-    private string $paymentType = self::TYPE_RECIPIENT;	// info['payment']
+    private PaymentType $paymentType = PaymentType::Destinatar;	// info['payment']
     private ?string $city = null;
     private ?string $county = null;
     private ?string $senderCity = null;
@@ -42,7 +42,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
             'clientId' => $this->auth()->getClientId(),
             'info' => [
                 'service' => $this->service,
-                'payment' => $this->paymentType,
+                'payment' => $this->paymentType->value,
                 'weight' => $this->weight,
                 'packages' => [],
             ],
@@ -94,7 +94,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
      */
     public function getPaymentType(): string
     {
-        return $this->paymentType;
+        return $this->paymentType->value;
     }
 
     /**
@@ -103,13 +103,13 @@ class GetCosts extends AbstractRequest implements RequestInterface
      */
     public function setPaymentType(string|PaymentType $paymentType): static
     {
-        $paymentType = $paymentType instanceof PaymentType ? $paymentType->value : $paymentType;
+        $value = $paymentType instanceof PaymentType ? $paymentType->value : $paymentType;
 
-        if ($paymentType != self::TYPE_RECIPIENT && $paymentType != self::TYPE_SENDER) {
+        if ($value != PaymentType::Destinatar->value && $value != PaymentType::Expeditor->value) {
             throw new \InvalidArgumentException("Invalid paymentType value");
         }
 
-        $this->paymentType = $paymentType;
+        $this->paymentType = PaymentType::from($value);
 
         return $this;
     }

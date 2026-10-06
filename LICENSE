@@ -19,3 +19,20 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+## Credits
+
+This library is a community fork and modernization of the original FAN Courier API client.
+The MIT terms above apply to all of the work credited here.
+
+- **Original author** — Shu Saura ([@shusaura85](https://github.com/shusaura85)),
+  original `shusaura85/fancourier-api`, © 2020.
+- **Fork maintainer** — daika7ana ([daika7ana/fancourier-api](https://github.com/daika7ana/fancourier-api-v2)),
+  maintainer of this fork and the 2.0 modernization: PHP 8.3 typing, string-backed enums,
+  hermetic test suite, error-state handling and the Rector migration codemod.
+- **Contributors** — everyone who has filed issues or sent pull requests upstream to
+  `shusaura85/fancourier-api` and to this fork.
+
+Thank you for building and sharing the original client this project stands on.

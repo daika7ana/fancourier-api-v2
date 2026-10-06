@@ -20,16 +20,7 @@ composer require daika7ana/fancourier-api
 The package is PSR-4 autoloaded under the `Fancourier\` namespace with its root at
 `src/Fancourier/`.
 
-### Without Composer
-
-The library ships a hand-rolled autoloader at `src/autoload.php`:
-
-```php
-require_once '/path/to/fancourier-api/src/autoload.php';
-```
-
-The bundled examples prefer `vendor/autoload.php` when Composer has installed the
-dependencies and fall back to `src/autoload.php` otherwise (see `examples/_init.php`).
+The bundled examples require Composer's `vendor/autoload.php` (see `examples/_init.php`).
 
 ## Authentication and the token lifecycle
 
