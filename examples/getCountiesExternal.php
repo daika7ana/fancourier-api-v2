@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 // create a new request object
 $request = new Fancourier\Request\GetCountiesExternal();
@@ -11,7 +11,7 @@ $request
     ->setCountry('Moldova');
 /*
 Functions in GetCountiesExternal REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->setCountry($country) 
+->setCountry($country)
 */
 
 $response = $fan->getCountiesExternal($request);
@@ -34,7 +34,7 @@ Functions in GetCountiesExternal RESPONSE (only get* functions are available)
 
 if ($response->isOk()) {
     print_r($response->getData());
-    echo '<pre>'. print_r($response->getAll(), 1) . '</pre>';
+    echo '<pre>' . print_r($response->getAll(), 1) . '</pre>';
 } else {
     var_dump($response->getErrorMessage());
 }

@@ -10,21 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class StreetTest extends TestCase
 {
-    private function data(): array
-    {
-        return [
-            'id' => 17,
-            'street' => 'Fabrica de Glucoza',
-            'type' => 'Sosea',
-            'county' => 'Bucuresti',
-            'locality' => 'Bucuresti',
-            'details' => [
-                ['zipCode' => '020331', 'sector' => '2'],
-                ['zipCode' => '020332', 'sector' => '2'],
-            ],
-        ];
-    }
-
     #[Test]
     public function it_exposes_the_constructor_values(): void
     {
@@ -64,5 +49,19 @@ class StreetTest extends TestCase
                 '020332' => ['zipCode' => '020332', 'sector' => '2'],
             ],
         ], $street->getArray());
+    }
+    private function data(): array
+    {
+        return [
+            'id' => 17,
+            'street' => 'Fabrica de Glucoza',
+            'type' => 'Sosea',
+            'county' => 'Bucuresti',
+            'locality' => 'Bucuresti',
+            'details' => [
+                ['zipCode' => '020331', 'sector' => '2'],
+                ['zipCode' => '020332', 'sector' => '2'],
+            ],
+        ];
     }
 }

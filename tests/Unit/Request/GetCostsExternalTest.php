@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class GetCostsExternalTest extends TestCase
 {
-    private function request(): GetCostsExternal
-    {
-        return (new GetCostsExternal())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_a_minimal_external_tariff_request(): void
     {
@@ -28,11 +23,11 @@ final class GetCostsExternalTest extends TestCase
         $this->assertNull($packed['info']['weight']);
         $this->assertSame(
             ['height' => 0, 'width' => 0, 'length' => 0],
-            $packed['info']['dimensions']
+            $packed['info']['dimensions'],
         );
         $this->assertSame(
             ['envelope' => 0, 'parcel' => 0],
-            $packed['info']['packages']
+            $packed['info']['packages'],
         );
         $this->assertSame(['country' => 'DE'], $packed['recipient']);
         $this->assertArrayNotHasKey('sender', $packed);
@@ -69,7 +64,7 @@ final class GetCostsExternalTest extends TestCase
                 'recipient' => ['country' => 'DE'],
                 'sender' => ['locality' => 'Bucuresti', 'county' => 'Ilfov'],
             ],
-            $packed
+            $packed,
         );
     }
 
@@ -80,5 +75,9 @@ final class GetCostsExternalTest extends TestCase
         $request->setDeliveryMode('submarin');
 
         $this->assertSame('aerian', $request->getDeliveryMode());
+    }
+    private function request(): GetCostsExternal
+    {
+        return (new GetCostsExternal())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

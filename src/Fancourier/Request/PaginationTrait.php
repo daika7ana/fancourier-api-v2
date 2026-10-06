@@ -24,6 +24,7 @@ trait PaginationTrait
     public function setPage(int $page): static
     {
         $this->page = $page;
+
         return $this;
     }
 
@@ -39,6 +40,7 @@ trait PaginationTrait
             $perPage = $max;
         }
         $this->perPage = $perPage;
+
         return $this;
     }
 

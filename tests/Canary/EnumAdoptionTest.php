@@ -21,31 +21,17 @@ use PHPUnit\Framework\TestCase;
  */
 final class EnumAdoptionTest extends TestCase
 {
-    /** @return list<class-string> */
-    private static function enums(): array
-    {
-        return [
-            DeliveryMode::class,
-            DocumentType::class,
-            LabelFormat::class,
-            Language::class,
-            OrderType::class,
-            PaymentType::class,
-            PudoType::class,
-        ];
-    }
-
     #[Test]
     public function every_enum_exists_and_is_a_string_backed_enum(): void
     {
         foreach (self::enums() as $enum) {
-            $this->assertTrue(enum_exists($enum), $enum.' should exist');
+            $this->assertTrue(enum_exists($enum), $enum . ' should exist');
 
             $reflection = new \ReflectionEnum($enum);
-            $this->assertTrue($reflection->isBacked(), $enum.' should be a backed enum');
+            $this->assertTrue($reflection->isBacked(), $enum . ' should be a backed enum');
             $backing = $reflection->getBackingType();
-            $this->assertNotNull($backing, $enum.' should declare a backing type');
-            $this->assertSame('string', $backing->getName(), $enum.' should be string-backed');
+            $this->assertNotNull($backing, $enum . ' should declare a backing type');
+            $this->assertSame('string', $backing->getName(), $enum . ' should be string-backed');
         }
     }
 
@@ -61,5 +47,18 @@ final class EnumAdoptionTest extends TestCase
         $this->assertSame('Express Loco 2h', OrderType::ExpressLoco2h->value);
         $this->assertSame('non document', DocumentType::NonDocument->value);
         $this->assertSame('paypoint', PudoType::Paypoint->value);
+    }
+    /** @return list<class-string> */
+    private static function enums(): array
+    {
+        return [
+            DeliveryMode::class,
+            DocumentType::class,
+            LabelFormat::class,
+            Language::class,
+            OrderType::class,
+            PaymentType::class,
+            PudoType::class,
+        ];
     }
 }

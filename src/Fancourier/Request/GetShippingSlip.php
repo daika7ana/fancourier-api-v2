@@ -11,7 +11,7 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
     use PaginationTrait;
 
     protected string $gateway = 'reports/awb';
-	protected string $method = 'GET';
+    protected string $method = 'GET';
 
     private string $date = '';
 
@@ -19,8 +19,8 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
     {
         parent::__construct();
         $this->response = new GetShippingSlipResponse();
-		
-		$this->date = date("Y-m-d");
+
+        $this->date = date("Y-m-d");
         $this->perPage = 100;
     }
 
@@ -29,11 +29,11 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
         $arr = [
-				'clientId' => $this->auth()->getClientId(),
-				'date' => $this->date,
-				];
-		
-		return $this->withPagination($arr);
+            'clientId' => $this->auth()->getClientId(),
+            'date' => $this->date,
+        ];
+
+        return $this->withPagination($arr);
     }
 
     /**
@@ -51,6 +51,7 @@ class GetShippingSlip extends AbstractRequest implements RequestInterface
     public function setDate(string $usedate): static
     {
         $this->date = $usedate;
+
         return $this;
     }
 

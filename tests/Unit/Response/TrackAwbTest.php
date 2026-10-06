@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class TrackAwbTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_parses_a_success_body(): void
     {
@@ -50,5 +45,9 @@ class TrackAwbTest extends TestCase
         $this->assertSame('', $response->getAwb(2347300120337)->getMessage());
         $this->assertSame([], $response->getAwb(2347300120337)->getEvents());
         $this->assertFalse($response->getAwb(2347300120337)->hasConfirmation());
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

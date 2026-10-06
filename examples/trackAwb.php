@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 // create a new request object
 $request = new Fancourier\Request\TrackAwb();
 $request
-	->addAwb('2339300120170')
+    ->addAwb('2339300120170')
     ->setLanguage('ro');
 
 /*
@@ -30,7 +30,7 @@ Functions in TrackAwb RESPONSE (only get* functions are available)
 
 if ($response->isOk()) {
     print_r($response->getData());
-    echo '<pre>'. print_r($response->getAll(), 1) . '</pre>';
+    echo '<pre>' . print_r($response->getAll(), 1) . '</pre>';
 } else {
     var_dump($response->getErrorMessage());
 }

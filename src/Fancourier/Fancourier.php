@@ -20,25 +20,21 @@ use Fancourier\Request\GetCosts;
 use Fancourier\Request\GetCostsExternal;
 use Fancourier\Request\GetPudo;
 use Fancourier\Request\PrintAwb;
-
 use Fancourier\Request\CreateCourierOrder;
 use Fancourier\Request\DeleteCourierOrder;
-
 use Fancourier\Request\GetShippingSlip;
 use Fancourier\Request\GetAwbEvents;
 use Fancourier\Request\TrackAwb;
 use Fancourier\Request\GetBankTransfers;
 use Fancourier\Request\GetAwbConfirmations;
-
 use Fancourier\Request\GetCourierOrders;
 use Fancourier\Request\GetCourierOrderEvents;
 use Fancourier\Request\TrackCourierOrder;
-
 use Fancourier\Request\GetBranches;
 
 class Fancourier
 {
-    const string API_URL			= 'https://api.fancourier.ro/';
+    public const string API_URL = 'https://api.fancourier.ro/';
 
     protected Auth $auth;
 
@@ -63,6 +59,7 @@ class Fancourier
         $this->verifyHost = $verifyHost;
         $this->verifyPeer = $verifyPeer;
         $this->auth->setVerify($verifyHost, $verifyPeer);
+
         return $this;
     }
 
@@ -76,6 +73,7 @@ class Fancourier
         $this->conTimeout = $conTimeout;
         $this->timeout = $timeout;
         $this->auth->setTimeout($conTimeout, $timeout);
+
         return $this;
     }
 
@@ -389,19 +387,6 @@ class Fancourier
     }
 
     /**
-     * @param RequestInterface $request
-     * @return \Fancourier\Response\ResponseInterface
-     */
-    protected function send(RequestInterface $request): Response\ResponseInterface
-    {
-        return $request
-            ->authenticate($this->auth)
-            ->setVerify($this->verifyHost, $this->verifyPeer)
-            ->setTimeout($this->conTimeout, $this->timeout)
-            ->send();
-    }
-
-    /**
      * @param bool $refresh Force token refresh even if token given in constructor
      * @return string|false
      */
@@ -424,5 +409,18 @@ class Fancourier
     public function getTokenMessage(): string
     {
         return $this->auth->getTokenMessage();
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @return \Fancourier\Response\ResponseInterface
+     */
+    protected function send(RequestInterface $request): Response\ResponseInterface
+    {
+        return $request
+            ->authenticate($this->auth)
+            ->setVerify($this->verifyHost, $this->verifyPeer)
+            ->setTimeout($this->conTimeout, $this->timeout)
+            ->send();
     }
 }

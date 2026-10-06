@@ -27,6 +27,7 @@ trait LanguageTrait
         if (in_array($language, ['ro', 'en'])) {
             $this->language = $language;
         }
+
         return $this;
     }
 }

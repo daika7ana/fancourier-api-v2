@@ -51,11 +51,6 @@ class ErrorStateMatrixTest extends TestCase
         return array_diff_key(self::responseClasses(), ['PrintAwb' => true]);
     }
 
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     #[DataProvider('responseClasses')]
     public function it_reports_failure_when_status_is_fail_without_error_fields(string $class): void
@@ -87,5 +82,10 @@ class ErrorStateMatrixTest extends TestCase
         $this->assertFalse($response->isOk());
         $this->assertNotEmpty($response->getErrorCode());
         $this->assertSame('not-json', $response->getErrorMessage());
+    }
+
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

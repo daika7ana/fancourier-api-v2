@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class GetPudoTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_parses_a_success_body(): void
     {
@@ -50,5 +45,9 @@ class GetPudoTest extends TestCase
         $this->assertSame('', $response->get('1')->getName());
         $this->assertSame('', $response->get('1')->getEmail());
         $this->assertFalse($response->get('1')->getHighDemand());
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

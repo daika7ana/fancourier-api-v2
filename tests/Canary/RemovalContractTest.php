@@ -40,9 +40,9 @@ final class RemovalContractTest extends TestCase
     #[Test]
     public function removed_test_credential_constants_are_undefined(): void
     {
-        $this->assertFalse(defined(Fancourier::class.'::TEST_CLIENT_ID'));
-        $this->assertFalse(defined(Fancourier::class.'::TEST_USERNAME'));
-        $this->assertFalse(defined(Fancourier::class.'::TEST_PASSWORD'));
+        $this->assertFalse(defined(Fancourier::class . '::TEST_CLIENT_ID'));
+        $this->assertFalse(defined(Fancourier::class . '::TEST_USERNAME'));
+        $this->assertFalse(defined(Fancourier::class . '::TEST_PASSWORD'));
     }
 
     #[Test]
@@ -61,7 +61,7 @@ final class RemovalContractTest extends TestCase
         ];
 
         foreach ($renamed as $method) {
-            $this->assertTrue(method_exists(Client::class, $method), $method.' should exist');
+            $this->assertTrue(method_exists(Client::class, $method), $method . ' should exist');
         }
     }
 }

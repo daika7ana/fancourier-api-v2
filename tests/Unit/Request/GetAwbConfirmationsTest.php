@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class GetAwbConfirmationsTest extends TestCase
 {
-    private function request(): GetAwbConfirmations
-    {
-        return (new GetAwbConfirmations())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_an_empty_awb_list_by_default(): void
     {
@@ -29,5 +24,9 @@ final class GetAwbConfirmationsTest extends TestCase
 
         $this->assertSame(['clientId' => 12345, 'awb' => ['A1', 'A2']], $request->pack());
         $this->assertSame(['clientId' => 12345, 'awb' => []], $request->resetAwbs()->pack());
+    }
+    private function request(): GetAwbConfirmations
+    {
+        return (new GetAwbConfirmations())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

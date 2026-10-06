@@ -11,17 +11,12 @@ use PHPUnit\Framework\TestCase;
 
 final class PrintAwbTest extends TestCase
 {
-    private function request(): PrintAwb
-    {
-        return (new PrintAwb())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_pdf_mode_by_default(): void
     {
         $this->assertSame(
             ['clientId' => 12345, 'awbs' => [], 'language' => 'ro', 'pdf' => 1],
-            $this->request()->pack()
+            $this->request()->pack(),
         );
     }
 
@@ -56,7 +51,7 @@ final class PrintAwbTest extends TestCase
 
         $this->assertSame(
             ['clientId' => 12345, 'awbs' => ['A1', 'A2'], 'language' => 'en', 'pdf' => 1, 'format' => 'A4'],
-            $packed
+            $packed,
         );
     }
 
@@ -67,7 +62,11 @@ final class PrintAwbTest extends TestCase
 
         $this->assertSame(
             ['clientId' => 12345, 'awbs' => [], 'language' => 'ro', 'zpl' => 1, 'dpi' => 203],
-            $packed
+            $packed,
         );
+    }
+    private function request(): PrintAwb
+    {
+        return (new PrintAwb())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

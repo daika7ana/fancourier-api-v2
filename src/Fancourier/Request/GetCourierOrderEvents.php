@@ -13,10 +13,10 @@ use Fancourier\Response\GetCourierOrderEvents as GetCourierOrderEventsResponse;
  */
 class GetCourierOrderEvents extends AbstractRequest implements RequestInterface
 {
-	use LanguageTrait;
+    use LanguageTrait;
 
-	protected string $gateway = 'reports/order-events';
-	protected string $method = 'GET';
+    protected string $gateway = 'reports/order-events';
+    protected string $method = 'GET';
 
     public function __construct()
     {
@@ -28,15 +28,14 @@ class GetCourierOrderEvents extends AbstractRequest implements RequestInterface
     #[\Override]
     public function pack(): array
     {
-		$arr = [];
-		
-		if ($this->language != '')
-			{
-			$arr['language'] = $this->language;
-			}
-		
-		return $arr;
-	
+        $arr = [];
+
+        if ($this->language != '') {
+            $arr['language'] = $this->language;
+        }
+
+        return $arr;
+
     }
 
 }

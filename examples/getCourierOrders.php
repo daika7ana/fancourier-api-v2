@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 // create a new request object
 $request = new Fancourier\Request\GetCourierOrders();
@@ -33,44 +33,37 @@ Functions in GetCourierOrders RESPONSE (only get* functions are available)
 ->getTotalPages() 	// added as alias for getTotal()
 */
 
-if (!$response->isOk())
-	{
+if (!$response->isOk()) {
     var_dump($response->getErrorMessage());
-	}
-else
-	{
-	// get remaining pages
-	while ($response->isOk() && ($response->getCurrentPage() <= $response->getTotalPages()) )
-		{
-		echo "Total: ".$response->getTotal()."<br />";
-		echo "Page: ".$response->getCurrentPage()."<br />";
-		echo "Results per page: ".$response->getPerPage()."<br />";
-		echo '<pre>'. print_r($response->getAll(), 1) . '</pre>';
-		echo "<hr />";
+} else {
+    // get remaining pages
+    while ($response->isOk() && ($response->getCurrentPage() <= $response->getTotalPages())) {
+        echo "Total: " . $response->getTotal() . "<br />";
+        echo "Page: " . $response->getCurrentPage() . "<br />";
+        echo "Results per page: " . $response->getPerPage() . "<br />";
+        echo '<pre>' . print_r($response->getAll(), 1) . '</pre>';
+        echo "<hr />";
 
-		// if not the last page, request the next page
-		if ($response->getCurrentPage() < $response->getTotalPages())
-			{
-			$request
-				->setPage( $response->getCurrentPage()+1 );
+        // if not the last page, request the next page
+        if ($response->getCurrentPage() < $response->getTotalPages()) {
+            $request
+                ->setPage($response->getCurrentPage() + 1);
 
-			$response = $fan->getCourierOrders($request);
-			}
-		else
-			{
-			break;
-			}
+            $response = $fan->getCourierOrders($request);
+        } else {
+            break;
+        }
 
-		}
+    }
 
-	echo "Total: ".$response->getTotal()."<br />";
-	echo "Page: ".$response->getCurrentPage()."<br />";
-	echo "Results per page: ".$response->getPerPage()."<br />";
-	echo "Total pages: ".$response->getTotalPages()."<br />";
-	echo '<pre>'. print_r($response->getAll(), 1) . '</pre>';
-	echo "<hr />";
+    echo "Total: " . $response->getTotal() . "<br />";
+    echo "Page: " . $response->getCurrentPage() . "<br />";
+    echo "Results per page: " . $response->getPerPage() . "<br />";
+    echo "Total pages: " . $response->getTotalPages() . "<br />";
+    echo '<pre>' . print_r($response->getAll(), 1) . '</pre>';
+    echo "<hr />";
 
-	}
+}
 
 /*
 The CourierOrder object has the following functions:

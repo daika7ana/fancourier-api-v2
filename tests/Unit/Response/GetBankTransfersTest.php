@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class GetBankTransfersTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_parses_a_success_body(): void
     {
@@ -52,5 +47,9 @@ class GetBankTransfersTest extends TestCase
         $this->assertSame(0.0, $response->get(0)->getAmountCollected());
         $this->assertSame('', $response->get(0)->getContent());
         $this->assertSame(1, $response->getTotal());
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

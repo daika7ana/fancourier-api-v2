@@ -14,46 +14,46 @@ use Fancourier\Response\CreateCourierOrder as CreateCourierOrderResponse;
  */
 class CreateCourierOrder extends AbstractRequest implements RequestInterface
 {
-	protected string $gateway = 'order';
-	protected string $method = 'POST';
-	
-	protected string $awbNumber = '';
-	protected int $parcels = 0;
-	protected int $envelopes = 0;
-	
-	protected int|float $weight = 1; // kg
-	protected int|float $width = 0; // cm
-	protected int|float $length = 0; // cm
-	protected int|float $height = 0; // cm
-	
-	protected string $orderType = 'Standard';
-	
-	protected string $pickupDate = ''; // YYYY-mm-dd
-	/** @var array{min: int|string, max: int|string} */
-	protected array $pickupHours = ['min' => '', 'max' => '']; // ['min', 'max'] => pickupHours.first, pickupHours.second
-	
-	protected string $notes = '';										// info.observations
-	
+    protected string $gateway = 'order';
+    protected string $method = 'POST';
+
+    protected string $awbNumber = '';
+    protected int $parcels = 0;
+    protected int $envelopes = 0;
+
+    protected int|float $weight = 1; // kg
+    protected int|float $width = 0; // cm
+    protected int|float $length = 0; // cm
+    protected int|float $height = 0; // cm
+
+    protected string $orderType = 'Standard';
+
+    protected string $pickupDate = ''; // YYYY-mm-dd
+    /** @var array{min: int|string, max: int|string} */
+    protected array $pickupHours = ['min' => '', 'max' => '']; // ['min', 'max'] => pickupHours.first, pickupHours.second
+
+    protected string $notes = '';										// info.observations
+
     protected ?string $name = null;										// info.recipient.name
     protected string $contactPerson = '';								// info.recipient.contactPerson
     protected string $phone = '';										// info.recipient.phone
     protected string $altPhone = '';									// info.recipient.secondaryPhone
     protected string $email = '';									// info.recipient.email
-	
+
     protected string $county = ''; 									// info.recipient.address.county
     protected string $city = ''; // locality							// info.recipient.address.locality
     protected string $street = '';										// info.recipient.address.street
     protected string $number = '';									// info.recipient.address.streetNo
-	
+
     protected string $postalCode = '';								// info.recipient.address.zipcode
-	
+
     protected string $building = '';								// info.recipient.address.building
     protected string $entrance = '';								// info.recipient.address.entrance
     protected string $floor = '';									// info.recipient.address.floor
     protected string $apartment = '';								// info.recipient.address.apartment
-	
-	
-	
+
+
+
     public function __construct()
     {
         parent::__construct();
@@ -64,71 +64,71 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     #[\Override]
     public function pack(): array
     {
-		$arr = [
-				"clientId" => $this->auth()->getClientId(), //obligatoriu 
-				"info" => [
-							'awbNumber'	=> $this->awbNumber,
-							'packages'	=> [
-											'parcel'	=> $this->parcels,
-											'envelope'	=> $this->envelopes
-											],
-							'weight'		=> $this->weight,
-							'dimensions'	=> [
-												'width' => $this->width,
-												'length' => $this->length,
-												'height' => $this->height
-												],
-							'orderType'	=> $this->orderType,
-							'pickupDate'	=> $this->pickupDate,
-							'pickupHours'	=> [
-												'first' => $this->pickupHours['min'],
-												'second' => $this->pickupHours['max'],
-												],
-							'observations' => $this->notes,
-							]
-			];
-			
-			if (strtolower($this->orderType) != 'standard')
-				{
-				// doar pt orderType = 'Express Loco ...'
-				$arr["recipient"] = [ //obligatoriu
-						"name" => $this->name, 
-						"contactPerson" => $this->contactPerson, // obligatoriu
-						"phone" => $this->phone,
-						"secondaryPhone" => $this->altPhone, // optional
-						"email" => $this->email, 
-						"address" => [ //obligatoriu
-								"county" => $this->county, // {{url}}/counties 
-								"locality" => $this->city, // {{url}}/localities 
-								"street" => $this->street, // {{url}}/streets 
-								"streetNo" => strval($this->number), 
-								"zipCode" => $this->postalCode,
-								"building" => $this->building, 
-								"entrance" => $this->entrance, 
-								"floor" => $this->floor, 
-								"apartment" => $this->apartment,
-								] 
-						];
-				}
-		
-		return $arr;
-	
+        $arr = [
+            "clientId" => $this->auth()->getClientId(), //obligatoriu
+            "info" => [
+                'awbNumber' => $this->awbNumber,
+                'packages' => [
+                    'parcel' => $this->parcels,
+                    'envelope' => $this->envelopes,
+                ],
+                'weight' => $this->weight,
+                'dimensions' => [
+                    'width' => $this->width,
+                    'length' => $this->length,
+                    'height' => $this->height,
+                ],
+                'orderType' => $this->orderType,
+                'pickupDate' => $this->pickupDate,
+                'pickupHours' => [
+                    'first' => $this->pickupHours['min'],
+                    'second' => $this->pickupHours['max'],
+                ],
+                'observations' => $this->notes,
+            ],
+        ];
+
+        if (strtolower($this->orderType) != 'standard') {
+            // doar pt orderType = 'Express Loco ...'
+            $arr["recipient"] = [ //obligatoriu
+                "name" => $this->name,
+                "contactPerson" => $this->contactPerson, // obligatoriu
+                "phone" => $this->phone,
+                "secondaryPhone" => $this->altPhone, // optional
+                "email" => $this->email,
+                "address" => [ //obligatoriu
+                    "county" => $this->county, // {{url}}/counties
+                    "locality" => $this->city, // {{url}}/localities
+                    "street" => $this->street, // {{url}}/streets
+                    "streetNo" => strval($this->number),
+                    "zipCode" => $this->postalCode,
+                    "building" => $this->building,
+                    "entrance" => $this->entrance,
+                    "floor" => $this->floor,
+                    "apartment" => $this->apartment,
+                ],
+            ];
+        }
+
+        return $arr;
+
     }
-	
-	/**
-	 * @return string
-	 */
-	public function getAwb(): string
-	{
-		return $this->awbNumber;
-	}
-	
-	public function setAwb(string $awbNo): static
-	{
-		$this->awbNumber = $awbNo;
-		return $this;
-	}
-	
+
+    /**
+     * @return string
+     */
+    public function getAwb(): string
+    {
+        return $this->awbNumber;
+    }
+
+    public function setAwb(string $awbNo): static
+    {
+        $this->awbNumber = $awbNo;
+
+        return $this;
+    }
+
     /**
      * @return int
      */
@@ -144,6 +144,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setEnvelopes(int $envelopes): static
     {
         $this->envelopes = $envelopes;
+
         return $this;
     }
 
@@ -162,6 +163,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setParcels(int $parcels): static
     {
         $this->parcels = $parcels;
+
         return $this;
     }
 
@@ -180,6 +182,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setWeight(int|float $weight): static
     {
         $this->weight = $weight;
+
         return $this;
     }
 
@@ -189,10 +192,10 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function getSizes(): array
     {
         return [
-			'length' => $this->length,
-			'height' => $this->height,
-			'width' => $this->width,
-			];
+            'length' => $this->length,
+            'height' => $this->height,
+            'width' => $this->width,
+        ];
     }
 
     /**
@@ -203,16 +206,15 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
      */
     public function setSizes(int|float $length_cm, int|float $height_cm, int|float $width_cm): static
     {
-		if ( ($length_cm > 0) && ($height_cm > 0) && ($width_cm > 0) )
-			{
-			$this->length = $length_cm;
-			$this->height = $height_cm;
-			$this->width = $width_cm;
-			
-			return $this;
-			}
-		
-		throw new \Exception("You can't set sizes to 0 or lower");
+        if (($length_cm > 0) && ($height_cm > 0) && ($width_cm > 0)) {
+            $this->length = $length_cm;
+            $this->height = $height_cm;
+            $this->width = $width_cm;
+
+            return $this;
+        }
+
+        throw new \Exception("You can't set sizes to 0 or lower");
     }
 
     /**
@@ -230,6 +232,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setHeight(int|float $height): static
     {
         $this->height = $height;
+
         return $this;
     }
 
@@ -248,6 +251,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setLength(int|float $length): static
     {
         $this->length = $length;
+
         return $this;
     }
 
@@ -266,6 +270,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setWidth(int|float $width): static
     {
         $this->width = $width;
+
         return $this;
     }
 
@@ -284,12 +289,13 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setOrderType(string|OrderType $orderType): static
     {
         $this->orderType = $orderType instanceof OrderType ? $orderType->value : $orderType;
+
         return $this;
     }
 
-     /**
-     * @return string
-     */
+    /**
+    * @return string
+    */
     public function getPickupDate(): string
     {
         return $this->pickupDate;
@@ -302,12 +308,13 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setPickupDate(string $date): static
     {
         $this->pickupDate = $date;
+
         return $this;
     }
 
-     /**
-     * @return array{min: int|string, max: int|string}
-     */
+    /**
+    * @return array{min: int|string, max: int|string}
+    */
     public function getPickupHours(): array
     {
         return $this->pickupHours;
@@ -321,15 +328,16 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setPickupHours(int|string $firstHour, int|string $lastHour): static
     {
         $this->pickupHours = [
-							'min' => $firstHour,
-							'max' => $lastHour
-							];
+            'min' => $firstHour,
+            'max' => $lastHour,
+        ];
+
         return $this;
     }
 
-     /**
-     * @return string
-     */
+    /**
+    * @return string
+    */
     public function getNotes(): string
     {
         return $this->notes;
@@ -342,10 +350,11 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setNotes(string $notes): static
     {
         $this->notes = $notes;
+
         return $this;
     }
 
-	/**
+    /**
      * @return string|null
      */
     public function getRecipientName(): ?string
@@ -360,12 +369,13 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setRecipientName(string $recipient): static
     {
         $this->name = $recipient;
+
         return $this;
     }
 
-   /**
-     * @return string
-     */
+    /**
+      * @return string
+      */
     public function getContactPerson(): string
     {
         return $this->contactPerson;
@@ -378,6 +388,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setContactPerson(string $contactPerson): static
     {
         $this->contactPerson = $contactPerson;
+
         return $this;
     }
 
@@ -396,6 +407,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -415,6 +427,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setAltPhone(string $phone): static
     {
         $this->altPhone = $phone;
+
         return $this;
     }
 
@@ -434,6 +447,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -452,6 +466,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setCounty(string $county): static
     {
         $this->county = $county;
+
         return $this;
     }
 
@@ -470,6 +485,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setCity(string $city): static
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -488,6 +504,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setStreet(string $street): static
     {
         $this->street = $street;
+
         return $this;
     }
 
@@ -506,6 +523,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setNumber(string $number): static
     {
         $this->number = $number;
+
         return $this;
     }
 
@@ -524,6 +542,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setPostalCode(string $postalCode): static
     {
         $this->postalCode = $postalCode;
+
         return $this;
     }
 
@@ -542,6 +561,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setBuilding(string $building): static
     {
         $this->building = $building;
+
         return $this;
     }
 
@@ -560,6 +580,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setEntrance(string $entrance): static
     {
         $this->entrance = $entrance;
+
         return $this;
     }
 
@@ -578,6 +599,7 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setFloor(string $floor): static
     {
         $this->floor = $floor;
+
         return $this;
     }
 
@@ -596,9 +618,10 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
     public function setApartment(string $apartment): static
     {
         $this->apartment = $apartment;
+
         return $this;
     }
-	
+
 
 
 }

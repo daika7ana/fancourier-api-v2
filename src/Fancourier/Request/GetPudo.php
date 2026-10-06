@@ -10,10 +10,10 @@ use Fancourier\Response\GetPudo as GetPudoResponse;
 class GetPudo extends AbstractRequest implements RequestInterface
 {
     protected string $gateway = 'reports/pickup-points';
-	protected string $method = 'GET';
-	
+    protected string $method = 'GET';
+
     protected string $type = self::PUDO_FANBOX;
-	protected ?string $pudoId = null;					// if id is set, type will be ignored
+    protected ?string $pudoId = null;					// if id is set, type will be ignored
 
     public function __construct()
     {
@@ -25,20 +25,17 @@ class GetPudo extends AbstractRequest implements RequestInterface
     #[\Override]
     public function pack(): array
     {
-		if (empty($this->pudoId))
-			{
-			$arr = [
-				'type' => $this->type
-				];
-			}
-		else
-			{
-			$arr = [
-				'id' => $this->pudoId
-				];
-			}
-		
-		return $arr;
+        if (empty($this->pudoId)) {
+            $arr = [
+                'type' => $this->type,
+            ];
+        } else {
+            $arr = [
+                'id' => $this->pudoId,
+            ];
+        }
+
+        return $arr;
     }
 
     public function getType(): string
@@ -53,6 +50,7 @@ class GetPudo extends AbstractRequest implements RequestInterface
     public function setType(string|PudoType $pudoType): static
     {
         $this->type = $pudoType instanceof PudoType ? $pudoType->value : $pudoType;
+
         return $this;
     }
 
@@ -71,6 +69,7 @@ class GetPudo extends AbstractRequest implements RequestInterface
     public function setId(string $pudoId): static
     {
         $this->pudoId = $pudoId;
+
         return $this;
     }
 

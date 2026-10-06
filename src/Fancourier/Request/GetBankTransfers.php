@@ -11,7 +11,7 @@ class GetBankTransfers extends AbstractRequest implements RequestInterface
     use PaginationTrait;
 
     protected string $gateway = 'reports/bank-transfers';
-	protected string $method = 'GET';
+    protected string $method = 'GET';
 
     private string $date = '';
 
@@ -19,8 +19,8 @@ class GetBankTransfers extends AbstractRequest implements RequestInterface
     {
         parent::__construct();
         $this->response = new GetBankTransfersResponse();
-		
-		$this->date = date("Y-m-d");
+
+        $this->date = date("Y-m-d");
         $this->perPage = 100;
     }
 
@@ -29,11 +29,11 @@ class GetBankTransfers extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
         $arr = [
-				'clientId' => $this->auth()->getClientId(),
-				'date' => $this->date,
-				];
-		
-		return $this->withPagination($arr);
+            'clientId' => $this->auth()->getClientId(),
+            'date' => $this->date,
+        ];
+
+        return $this->withPagination($arr);
     }
 
     /**
@@ -51,6 +51,7 @@ class GetBankTransfers extends AbstractRequest implements RequestInterface
     public function setDate(string $usedate): static
     {
         $this->date = $usedate;
+
         return $this;
     }
 

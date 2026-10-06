@@ -9,7 +9,7 @@ use Fancourier\Response\DeleteCourierOrder as DeleteCourierOrderResponse;
 class DeleteCourierOrder extends AbstractRequest implements RequestInterface
 {
     protected string $gateway = 'order';
-	protected string $method = 'DELETE';
+    protected string $method = 'DELETE';
 
     private ?string $orderId = null;
 
@@ -24,11 +24,11 @@ class DeleteCourierOrder extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
         $arr = [
-			'clientId'	=> $this->auth()->getClientId(),
-			'id'		=> $this->orderId
-			];
-		
-		return $arr;
+            'clientId' => $this->auth()->getClientId(),
+            'id' => $this->orderId,
+        ];
+
+        return $arr;
     }
 
     /**
@@ -46,6 +46,7 @@ class DeleteCourierOrder extends AbstractRequest implements RequestInterface
     public function setOrder(string $orderId): static
     {
         $this->orderId = $orderId;
+
         return $this;
     }
 }

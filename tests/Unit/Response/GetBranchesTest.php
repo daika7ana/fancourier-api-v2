@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class GetBranchesTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_parses_a_success_body(): void
     {
@@ -57,5 +52,9 @@ class GetBranchesTest extends TestCase
         $this->assertTrue($response->isOk());
         $this->assertSame([], $response->getAll());
         $this->assertNull($response->get('1'));
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

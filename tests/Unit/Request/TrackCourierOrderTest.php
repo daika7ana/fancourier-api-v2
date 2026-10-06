@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class TrackCourierOrderTest extends TestCase
 {
-    private function request(): TrackCourierOrder
-    {
-        return (new TrackCourierOrder())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_an_empty_order_list_by_default(): void
     {
@@ -29,7 +24,7 @@ final class TrackCourierOrderTest extends TestCase
 
         $this->assertSame(
             ['clientId' => 12345, 'orderId' => ['O1', 'O2'], 'language' => 'ro'],
-            $request->pack()
+            $request->pack(),
         );
     }
 
@@ -39,5 +34,9 @@ final class TrackCourierOrderTest extends TestCase
         $request = $this->request()->addOrder('O1');
 
         $this->assertSame(['clientId' => 12345, 'orderId' => []], $request->resetOrders()->pack());
+    }
+    private function request(): TrackCourierOrder
+    {
+        return (new TrackCourierOrder())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

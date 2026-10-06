@@ -23,11 +23,6 @@ use PHPUnit\Framework\TestCase;
  */
 class ShapeDriftTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function costs_normalizes_numeric_string_money_and_missing_keys(): void
     {
@@ -99,5 +94,9 @@ class ShapeDriftTest extends TestCase
         $this->assertInstanceOf(CityExternal::class, $response->getAll()[1]);
         $this->assertSame('1', $response->getAll()[1]->getId());
         $this->assertSame(2, $response->getTotalPages());
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class DeleteCourierOrderTest extends TestCase
 {
-    private function request(): DeleteCourierOrder
-    {
-        return (new DeleteCourierOrder())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_a_null_id_by_default(): void
     {
@@ -27,7 +22,11 @@ final class DeleteCourierOrderTest extends TestCase
     {
         $this->assertSame(
             ['clientId' => 12345, 'id' => 'ORDER-1'],
-            $this->request()->setOrder('ORDER-1')->pack()
+            $this->request()->setOrder('ORDER-1')->pack(),
         );
+    }
+    private function request(): DeleteCourierOrder
+    {
+        return (new DeleteCourierOrder())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

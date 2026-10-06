@@ -16,30 +16,6 @@ use PHPUnit\Framework\TestCase;
  */
 final class AuthTest extends TestCase
 {
-    private function setExpiry(Auth $auth, string $expiresAt): void
-    {
-        $property = new \ReflectionProperty(Auth::class, 'btoken_expires_at');
-        $property->setAccessible(true);
-        $property->setValue($auth, $expiresAt);
-    }
-
-    /**
-     * @return Auth the anonymous test subclass, with its public counters
-     */
-    private function retrievingAuth(string $token): Auth
-    {
-        return new class(1, 'u', 'p', $token) extends Auth {
-            public int $retrieveCalls = 0;
-
-            protected function retrieve_token(): bool
-            {
-                $this->retrieveCalls++;
-
-                return true;
-            }
-        };
-    }
-
     #[Test]
     public function get_token_refreshes_when_the_stored_token_is_expired(): void
     {
@@ -111,7 +87,7 @@ final class AuthTest extends TestCase
     #[Test]
     public function send_throws_and_makes_no_http_call_when_auth_has_no_token(): void
     {
-        $auth = new class(1, 'u', 'p') extends Auth {
+        $auth = new class (1, 'u', 'p') extends Auth {
             public function getToken(bool $refresh = false): string|false
             {
                 return false;
@@ -158,7 +134,7 @@ final class AuthTest extends TestCase
     #[Test]
     public function send_throws_when_auth_returns_an_empty_token(): void
     {
-        $auth = new class(1, 'u', 'p') extends Auth {
+        $auth = new class (1, 'u', 'p') extends Auth {
             public function getToken(bool $refresh = false): string|false
             {
                 return '';
@@ -193,5 +169,28 @@ final class AuthTest extends TestCase
         } finally {
             $this->assertSame('', $client->lastCall);
         }
+    }
+    private function setExpiry(Auth $auth, string $expiresAt): void
+    {
+        $property = new \ReflectionProperty(Auth::class, 'btoken_expires_at');
+        $property->setAccessible(true);
+        $property->setValue($auth, $expiresAt);
+    }
+
+    /**
+     * @return Auth the anonymous test subclass, with its public counters
+     */
+    private function retrievingAuth(string $token): Auth
+    {
+        return new class (1, 'u', 'p', $token) extends Auth {
+            public int $retrieveCalls = 0;
+
+            protected function retrieve_token(): bool
+            {
+                $this->retrieveCalls++;
+
+                return true;
+            }
+        };
     }
 }

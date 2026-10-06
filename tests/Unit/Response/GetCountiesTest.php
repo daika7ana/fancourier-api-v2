@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class GetCountiesTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_parses_a_success_body(): void
     {
@@ -45,5 +40,9 @@ class GetCountiesTest extends TestCase
         $this->assertTrue($response->isOk());
         $this->assertSame([], $response->getAll());
         $this->assertFalse($response->getCounty('Cluj'));
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

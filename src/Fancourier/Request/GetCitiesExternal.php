@@ -11,7 +11,7 @@ class GetCitiesExternal extends AbstractRequest implements RequestInterface
     use PaginationTrait;
 
     protected string $gateway = 'reports/external-localities';
-	protected string $method = 'GET';
+    protected string $method = 'GET';
 
     private string $country = '';
     private string $county = '';
@@ -28,17 +28,15 @@ class GetCitiesExternal extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
         $arr = [];
-		if ($this->country != '')
-			{
-			$arr['country'] = $this->country;
-			}
-		
-		if ($this->county != '')
-			{
-			$arr['county'] = $this->county;
-			}
-		
-		return $this->withPagination($arr);
+        if ($this->country != '') {
+            $arr['country'] = $this->country;
+        }
+
+        if ($this->county != '') {
+            $arr['county'] = $this->county;
+        }
+
+        return $this->withPagination($arr);
     }
 
     /**
@@ -56,6 +54,7 @@ class GetCitiesExternal extends AbstractRequest implements RequestInterface
     public function setCountry(string $country): static
     {
         $this->country = $country;
+
         return $this;
     }
 
@@ -74,6 +73,7 @@ class GetCitiesExternal extends AbstractRequest implements RequestInterface
     public function setCounty(string $county): static
     {
         $this->county = $county;
+
         return $this;
     }
 

@@ -11,17 +11,12 @@ use PHPUnit\Framework\TestCase;
 
 final class GetBankTransfersTest extends TestCase
 {
-    private function request(): GetBankTransfers
-    {
-        return (new GetBankTransfers())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_todays_date_and_the_default_page_size(): void
     {
         $this->assertSame(
             ['clientId' => 12345, 'date' => date('Y-m-d'), 'perPage' => 100],
-            $this->request()->pack()
+            $this->request()->pack(),
         );
     }
 
@@ -41,7 +36,7 @@ final class GetBankTransfersTest extends TestCase
 
         $this->assertSame(
             ['clientId' => 12345, 'date' => '2024-01-02', 'page' => 3, 'perPage' => 50],
-            $packed
+            $packed,
         );
     }
 
@@ -51,5 +46,9 @@ final class GetBankTransfersTest extends TestCase
         $packed = $this->request()->setDate('2024-01-02')->setPerPage(500)->pack();
 
         $this->assertSame(100, $packed['perPage']);
+    }
+    private function request(): GetBankTransfers
+    {
+        return (new GetBankTransfers())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

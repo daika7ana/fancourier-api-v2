@@ -32,25 +32,12 @@ final class ClientTest extends TestCase
         $this->tempFiles = [];
     }
 
-    private function tempFile(string $contents): string
-    {
-        $path = tempnam(sys_get_temp_dir(), 'fanclient_');
-        if ($path === false) {
-            self::fail('Could not create a temporary file');
-        }
-
-        file_put_contents($path, $contents);
-        $this->tempFiles[] = $path;
-
-        return $path;
-    }
-
     #[Test]
     public function post_json_treats_an_empty_body_as_a_failure(): void
     {
         $client = new Client();
 
-        $result = $client->postJson('file://'.$this->tempFile(''), ['a' => 1]);
+        $result = $client->postJson('file://' . $this->tempFile(''), ['a' => 1]);
 
         $this->assertFalse($result);
         $this->assertSame(self::EMPTY_RESPONSE_ERROR, $client->getError());
@@ -61,7 +48,7 @@ final class ClientTest extends TestCase
     {
         $client = new Client();
 
-        $result = $client->post('file://'.$this->tempFile(''), ['a' => 1]);
+        $result = $client->post('file://' . $this->tempFile(''), ['a' => 1]);
 
         $this->assertFalse($result);
         $this->assertSame(self::EMPTY_RESPONSE_ERROR, $client->getError());
@@ -72,7 +59,7 @@ final class ClientTest extends TestCase
     {
         $client = new Client();
 
-        $result = $client->postMultiArray('file://'.$this->tempFile(''), ['a' => 1]);
+        $result = $client->postMultiArray('file://' . $this->tempFile(''), ['a' => 1]);
 
         $this->assertFalse($result);
         $this->assertSame(self::EMPTY_RESPONSE_ERROR, $client->getError());
@@ -83,7 +70,7 @@ final class ClientTest extends TestCase
     {
         $client = new Client();
 
-        $result = $client->postJson('file://'.$this->tempFile('{"ok":true}'), ['a' => 1]);
+        $result = $client->postJson('file://' . $this->tempFile('{"ok":true}'), ['a' => 1]);
 
         $this->assertSame('{"ok":true}', $result);
         $this->assertSame('', $client->getError());
@@ -99,5 +86,18 @@ final class ClientTest extends TestCase
         $this->assertFalse($result);
         $this->assertNotSame('', $client->getError());
         $this->assertNotSame(self::EMPTY_RESPONSE_ERROR, $client->getError());
+    }
+
+    private function tempFile(string $contents): string
+    {
+        $path = tempnam(sys_get_temp_dir(), 'fanclient_');
+        if ($path === false) {
+            self::fail('Could not create a temporary file');
+        }
+
+        file_put_contents($path, $contents);
+        $this->tempFiles[] = $path;
+
+        return $path;
     }
 }

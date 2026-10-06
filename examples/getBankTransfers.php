@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 // create a new request object
 $request = new Fancourier\Request\GetBankTransfers();
 $request
   //  ->setDate( date("Y-m-d") )
-    ->setDate( '2023-11-20' )
+    ->setDate('2023-11-20')
     ->setPerPage(100);
 /*
 Functions in GetBankTransfers REQUEST (only the set* functions are shown, the get* functions simply return the set values)
@@ -32,37 +32,30 @@ Functions in GetBankTransfers RESPONSE (only get* functions are available)
 */
 
 
-if (!$response->isOk())
-	{ // show error message if error encountered
+if (!$response->isOk()) { // show error message if error encountered
     var_dump($response->getErrorMessage());
-	}
-else
-	{
-	print_r($response->getData());
-	// get remaining pages
-	while ($response->isOk() && ($response->getCurrentPage() <= $response->getTotalPages()) )
-		{
-		echo "Total: ".$response->getTotal()."<br />";
-		echo "Page: ".$response->getCurrentPage()."<br />";
-		echo "Results per page: ".$response->getPerPage()."<br />";
-		echo "Total pages: ".$response->getTotalPages()."<br />";
-		echo '<pre>'. print_r($response->getAll(), 1) . '</pre>';
-		echo "<hr />";
+} else {
+    print_r($response->getData());
+    // get remaining pages
+    while ($response->isOk() && ($response->getCurrentPage() <= $response->getTotalPages())) {
+        echo "Total: " . $response->getTotal() . "<br />";
+        echo "Page: " . $response->getCurrentPage() . "<br />";
+        echo "Results per page: " . $response->getPerPage() . "<br />";
+        echo "Total pages: " . $response->getTotalPages() . "<br />";
+        echo '<pre>' . print_r($response->getAll(), 1) . '</pre>';
+        echo "<hr />";
 
-		// if not the last page, request the next page
-		if ($response->getCurrentPage() < $response->getTotalPages())
-			{
-			$request
-				->setPage( $response->getCurrentPage()+1 );
+        // if not the last page, request the next page
+        if ($response->getCurrentPage() < $response->getTotalPages()) {
+            $request
+                ->setPage($response->getCurrentPage() + 1);
 
-			$response = $fan->getBankTransfers($request);
-			}
-		else
-			{
-			break;
-			}
-		}
-	}
+            $response = $fan->getBankTransfers($request);
+        } else {
+            break;
+        }
+    }
+}
 
 /*
 The BankTransfer object has the following functions:

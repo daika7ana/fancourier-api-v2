@@ -9,7 +9,7 @@ use Fancourier\Response\GetServices as GetServicesResponse;
 class GetServices extends AbstractRequest implements RequestInterface
 {
     protected string $gateway = 'reports/services';
-	protected string $method = 'GET';
+    protected string $method = 'GET';
 
     public function __construct()
     {
@@ -21,6 +21,6 @@ class GetServices extends AbstractRequest implements RequestInterface
     #[\Override]
     public function pack(): array
     {
-		return [];
+        return [];
     }
 }

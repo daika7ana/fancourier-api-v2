@@ -10,33 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class ShippingSlipTest extends TestCase
 {
-    private function data(): array
-    {
-        return [
-            'info' => [
-                'awbNumber' => '6324356450139',
-                'service' => 'Cont Colector',
-                'serviceId' => '4',
-                'weight' => '1',
-                'dimensions' => ['height' => 10, 'width' => 20, 'length' => 30],
-                'payment' => 'expeditor',
-                'returnPayment' => 'destinatar',
-                'cod' => 75.29,
-                'declaredValue' => 59.88,
-                'observations' => 'POS',
-                'content' => 'Order #465',
-                'packages' => ['envelope' => 1, 'parcel' => 2],
-                'date' => '2023-11-20 18:53:07',
-                'cost' => 14.4,
-                'costCenter' => 'CC1',
-                'refund' => 'refunded',
-                'currency' => 'LEI',
-            ],
-            'recipient' => ['name' => 'COM S.R.L.'],
-            'sender' => ['name' => 'NETWORK SRL'],
-        ];
-    }
-
     #[Test]
     public function it_exposes_the_constructor_values(): void
     {
@@ -96,5 +69,31 @@ class ShippingSlipTest extends TestCase
 
         $this->assertSame('', $slip->getPayment());
         $this->assertSame('', $slip->getReturnPayment());
+    }
+    private function data(): array
+    {
+        return [
+            'info' => [
+                'awbNumber' => '6324356450139',
+                'service' => 'Cont Colector',
+                'serviceId' => '4',
+                'weight' => '1',
+                'dimensions' => ['height' => 10, 'width' => 20, 'length' => 30],
+                'payment' => 'expeditor',
+                'returnPayment' => 'destinatar',
+                'cod' => 75.29,
+                'declaredValue' => 59.88,
+                'observations' => 'POS',
+                'content' => 'Order #465',
+                'packages' => ['envelope' => 1, 'parcel' => 2],
+                'date' => '2023-11-20 18:53:07',
+                'cost' => 14.4,
+                'costCenter' => 'CC1',
+                'refund' => 'refunded',
+                'currency' => 'LEI',
+            ],
+            'recipient' => ['name' => 'COM S.R.L.'],
+            'sender' => ['name' => 'NETWORK SRL'],
+        ];
     }
 }

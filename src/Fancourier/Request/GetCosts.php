@@ -10,7 +10,9 @@ use Fancourier\Response\GetCosts as GetCostsResponse;
 class GetCosts extends AbstractRequest implements RequestInterface
 {
     protected string $gateway = 'reports/awb/internal-tariff';
-	protected string $method = 'GET';
+    protected string $method = 'GET';
+    /** @var array<string> */
+    protected array $options = [];	// optional					// info.options
 
     private string $paymentType = self::TYPE_RECIPIENT;	// info['payment']
     private ?string $city = null;
@@ -24,8 +26,6 @@ class GetCosts extends AbstractRequest implements RequestInterface
     private int|float $width = 0;
     private int|float $height = 0;
     private int|float|null $declaredValue = null;
-    /** @var array<string> */
-    protected array $options = [];	// optional					// info.options
     private string $service = 'Standard';
 
     public function __construct()
@@ -39,62 +39,54 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
         $arr = [
-			'clientId'	=> $this->auth()->getClientId(),
-			'info'		=> [
-							'service'	=>	$this->service,
-							'payment'	=>	$this->paymentType,
-							'weight'	=>	$this->weight,
-							'packages'	=>	[],
-						],
-			'recipient'	=> [
-						'locality'	=> $this->city,
-						'county'	=> $this->county
-						],
-			];
+            'clientId' => $this->auth()->getClientId(),
+            'info' => [
+                'service' => $this->service,
+                'payment' => $this->paymentType,
+                'weight' => $this->weight,
+                'packages' => [],
+            ],
+            'recipient' => [
+                'locality' => $this->city,
+                'county' => $this->county,
+            ],
+        ];
 
-		if (count($this->options) > 0)
-			{
-			$arr['info']['options'] = $this->options;
-			}
+        if (count($this->options) > 0) {
+            $arr['info']['options'] = $this->options;
+        }
 
-		if ( ($this->width > 0) && ($this->height > 0) && ($this->length > 0) )
-			{
-			$arr['info']['dimensions'] = [
-										'height'	=> $this->height,
-										'width'		=> $this->width,
-										'length'	=> $this->length,
-										];
-			}
+        if (($this->width > 0) && ($this->height > 0) && ($this->length > 0)) {
+            $arr['info']['dimensions'] = [
+                'height' => $this->height,
+                'width' => $this->width,
+                'length' => $this->length,
+            ];
+        }
 
-		if ($this->envelopes > 0)
-			{
-			$arr['info']['packages']['envelope'] = $this->envelopes;
-			}
+        if ($this->envelopes > 0) {
+            $arr['info']['packages']['envelope'] = $this->envelopes;
+        }
 
-		if ($this->parcels > 0)
-			{
-			$arr['info']['packages']['parcel'] = $this->parcels;
-			}
+        if ($this->parcels > 0) {
+            $arr['info']['packages']['parcel'] = $this->parcels;
+        }
 
-		if (!empty($this->declaredValue))
-			{
-			$arr['info']['declaredValue'] = $this->declaredValue;
-			}
+        if (!empty($this->declaredValue)) {
+            $arr['info']['declaredValue'] = $this->declaredValue;
+        }
 
-		if (!empty($this->senderCity) || !empty($this->senderCounty))
-			{
-			$arr['sender'] = [];
-			}
-		if (!empty($this->senderCity))
-			{
-			$arr['sender']['locality'] = $this->senderCity;
-			}
-		if (!empty($this->senderCounty))
-			{
-			$arr['sender']['county'] = $this->senderCounty;
-			}
+        if (!empty($this->senderCity) || !empty($this->senderCounty)) {
+            $arr['sender'] = [];
+        }
+        if (!empty($this->senderCity)) {
+            $arr['sender']['locality'] = $this->senderCity;
+        }
+        if (!empty($this->senderCounty)) {
+            $arr['sender']['county'] = $this->senderCounty;
+        }
 
-		return $arr;
+        return $arr;
     }
 
     /**
@@ -118,6 +110,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
         }
 
         $this->paymentType = $paymentType;
+
         return $this;
     }
 
@@ -136,6 +129,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function setCity(string $city): static
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -154,6 +148,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function setCounty(string $county): static
     {
         $this->county = $county;
+
         return $this;
     }
 
@@ -172,6 +167,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function setSenderCity(string $city): static
     {
         $this->senderCity = $city;
+
         return $this;
     }
 
@@ -190,6 +186,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function setSenderCounty(string $county): static
     {
         $this->senderCounty = $county;
+
         return $this;
     }
 
@@ -208,6 +205,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function setEnvelopes(int $envelopes): static
     {
         $this->envelopes = $envelopes;
+
         return $this;
     }
 
@@ -226,6 +224,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function setParcels(int $parcels): static
     {
         $this->parcels = $parcels;
+
         return $this;
     }
 
@@ -244,6 +243,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function setWeight(int|float $weight): static
     {
         $this->weight = $weight;
+
         return $this;
     }
 
@@ -262,6 +262,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function setLength(int|float $length): static
     {
         $this->length = $length;
+
         return $this;
     }
 
@@ -280,6 +281,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function setWidth(int|float $width): static
     {
         $this->width = $width;
+
         return $this;
     }
 
@@ -298,6 +300,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function setHeight(int|float $height): static
     {
         $this->height = $height;
+
         return $this;
     }
 
@@ -316,6 +319,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function setDeclaredValue(int|float $declaredValue): static
     {
         $this->declaredValue = $declaredValue;
+
         return $this;
     }
 
@@ -328,40 +332,42 @@ class GetCosts extends AbstractRequest implements RequestInterface
     }
 
     /**
-	 * Replace all options with string containing options
+     * Replace all options with string containing options
      * @param string $options
      * @return static
      */
     public function setOptions(string $options): static
     {
         $this->options = str_split($options);
+
         return $this;
     }
 
     /**
-	 * Add a single option letter
+     * Add a single option letter
      * @param string $option
      * @return static
      */
     public function addOption(string $option): static
     {
-		if (strlen ($option) == 1)
-			{
-			$this->options[] = strtoupper($option);
-			}
+        if (strlen($option) == 1) {
+            $this->options[] = strtoupper($option);
+        }
+
         return $this;
     }
 
     /**
-	 * Clear all set options
+     * Clear all set options
      * @return static
      */
     public function resetOptions(): static
     {
         $this->options = [];
+
         return $this;
     }
-	
+
     /**
      * @return string
      */
@@ -377,6 +383,7 @@ class GetCosts extends AbstractRequest implements RequestInterface
     public function setService(string $service): static
     {
         $this->service = $service;
+
         return $this;
     }
 }

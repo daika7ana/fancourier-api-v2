@@ -9,7 +9,7 @@ use Fancourier\Response\DeleteAwb as DeleteAwbResponse;
 class DeleteAwb extends AbstractRequest implements RequestInterface
 {
     protected string $gateway = 'awb';
-	protected string $method = 'DELETE';
+    protected string $method = 'DELETE';
 
     private ?string $awb = null;
 
@@ -24,11 +24,11 @@ class DeleteAwb extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
         $arr = [
-			'clientId'	=> $this->auth()->getClientId(),
-			'awb'		=> $this->awb
-			];
-		
-		return $arr;
+            'clientId' => $this->auth()->getClientId(),
+            'awb' => $this->awb,
+        ];
+
+        return $arr;
     }
 
     /**
@@ -46,6 +46,7 @@ class DeleteAwb extends AbstractRequest implements RequestInterface
     public function setAwb(string $awb): static
     {
         $this->awb = $awb;
+
         return $this;
     }
 }

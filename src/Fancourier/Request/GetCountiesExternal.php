@@ -9,8 +9,8 @@ use Fancourier\Response\GetCountiesExternal as GetCountiesExternalResponse;
 class GetCountiesExternal extends AbstractRequest implements RequestInterface
 {
     protected string $gateway = 'reports/external-counties';
-	protected string $method = 'GET';
-	
+    protected string $method = 'GET';
+
     protected string $country = '';
 
     public function __construct()
@@ -23,13 +23,12 @@ class GetCountiesExternal extends AbstractRequest implements RequestInterface
     #[\Override]
     public function pack(): array
     {
-		$arr = [];
-		if ($this->country != '')
-			{
-			$arr['country'] = $this->country;
-			}
-		
-		return $arr;
+        $arr = [];
+        if ($this->country != '') {
+            $arr['country'] = $this->country;
+        }
+
+        return $arr;
     }
 
     /**
@@ -47,6 +46,7 @@ class GetCountiesExternal extends AbstractRequest implements RequestInterface
     public function setCountry(string $country): static
     {
         $this->country = $country;
+
         return $this;
     }
 

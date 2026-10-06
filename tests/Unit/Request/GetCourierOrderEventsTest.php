@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class GetCourierOrderEventsTest extends TestCase
 {
-    private function request(): GetCourierOrderEvents
-    {
-        return (new GetCourierOrderEvents())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_an_empty_query_by_default(): void
     {
@@ -32,5 +27,9 @@ final class GetCourierOrderEventsTest extends TestCase
     public function it_ignores_an_unsupported_language(): void
     {
         $this->assertSame([], $this->request()->setLanguage('de')->pack());
+    }
+    private function request(): GetCourierOrderEvents
+    {
+        return (new GetCourierOrderEvents())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

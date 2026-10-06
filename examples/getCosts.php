@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 // create a new request object
 $request = new Fancourier\Request\GetCosts();
@@ -15,7 +15,7 @@ $request
     ->setDeclaredValue(125);
 /*
 Functions in GetCosts REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->setPaymentType($paymentType) 
+->setPaymentType($paymentType)
 ->setCity($city)
 ->setCounty($county)
 ->setSenderCity($city)
@@ -51,18 +51,26 @@ Functions in GetCosts RESPONSE (only get* functions are available)
 
 if ($response->isOk()) {
     var_dump($response->getData());
-	echo '<hr />';
-	echo "extraKmCost: ". $response->getKmCost();	echo '<br />';
-	echo "weightCost: ". $response->getWeightCost();	echo '<br />';
-	echo "insuranceCost: ". $response->getInsuranceCost();	echo '<br />';
-	echo "optionsCost: ". $response->getOptionsCost();	echo '<br />';
-	echo "fuelCost: ". $response->getFuelCost();	echo '<br />';
-	echo "costNoVAT: ". $response->getCost();	echo '<br />';
-	echo "vat: ". $response->getCostVat(); echo '<br />';
-	echo "total: ".$response->getCostTotal();	echo '<br />';
+    echo '<hr />';
+    echo "extraKmCost: " . $response->getKmCost();
+    echo '<br />';
+    echo "weightCost: " . $response->getWeightCost();
+    echo '<br />';
+    echo "insuranceCost: " . $response->getInsuranceCost();
+    echo '<br />';
+    echo "optionsCost: " . $response->getOptionsCost();
+    echo '<br />';
+    echo "fuelCost: " . $response->getFuelCost();
+    echo '<br />';
+    echo "costNoVAT: " . $response->getCost();
+    echo '<br />';
+    echo "vat: " . $response->getCostVat();
+    echo '<br />';
+    echo "total: " . $response->getCostTotal();
+    echo '<br />';
 } else {
     var_dump($response->getErrorMessage());
-	print_r($response->getAllErrors());
+    print_r($response->getAllErrors());
 }
 
 /*

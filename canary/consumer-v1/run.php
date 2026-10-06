@@ -12,12 +12,12 @@
  * both layouts resolve vendor/ two levels up.
  */
 
-require __DIR__.'/../../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 function assert_true(bool $cond, string $msg): void
 {
     if (!$cond) {
-        fwrite(STDERR, 'canary FAIL: '.$msg."\n");
+        fwrite(STDERR, 'canary FAIL: ' . $msg . "\n");
         exit(1);
     }
 }
@@ -71,6 +71,6 @@ try {
     fwrite(STDOUT, "canary OK\n");
     exit(0);
 } catch (\Throwable $e) {
-    fwrite(STDERR, 'canary FAIL: '.$e->getMessage()."\n");
+    fwrite(STDERR, 'canary FAIL: ' . $e->getMessage() . "\n");
     exit(1);
 }

@@ -6,10 +6,9 @@ declare(strict_types=1);
 require '../src/autoload.php';
 
 // the bearer token has a life time of 24 hours so we delete it if it's too old to get a new one
-if ( is_file('./examples_token.txt') && (filemtime('./examples_token.txt') < time()-86000) )
-	{
-	unlink('./examples_token.txt');
-	}
+if (is_file('./examples_token.txt') && (filemtime('./examples_token.txt') < time() - 86000)) {
+    unlink('./examples_token.txt');
+}
 
 // load the token if we have it, if not, we use an empty string to signify we don't have one
 $token = is_file('./examples_token.txt') ? file_get_contents('./examples_token.txt') : '';
@@ -19,11 +18,10 @@ $clientId = getenv('FANCOURIER_TEST_CLIENT_ID');
 $username = getenv('FANCOURIER_TEST_USERNAME');
 $password = getenv('FANCOURIER_TEST_PASSWORD');
 
-if ($clientId === false || $username === false || $password === false)
-	{
-	fwrite(STDERR, "Set FANCOURIER_TEST_CLIENT_ID, FANCOURIER_TEST_USERNAME and FANCOURIER_TEST_PASSWORD environment variables.\n");
-	exit(1);
-	}
+if ($clientId === false || $username === false || $password === false) {
+    fwrite(STDERR, "Set FANCOURIER_TEST_CLIENT_ID, FANCOURIER_TEST_USERNAME and FANCOURIER_TEST_PASSWORD environment variables.\n");
+    exit(1);
+}
 
 // create a normal instance using the credentials from the environment
 $fan = new Fancourier\Fancourier($clientId, $username, $password, $token);
@@ -32,21 +30,17 @@ $fan = new Fancourier\Fancourier($clientId, $username, $password, $token);
 $fan->setVerify(false, false);
 
 // if you don't cache the token (not recommended), you don't need to call the getToken() function as it's called automatically when needed
-if ($token == '')
-	{
-	$token = $fan->getToken(true);	// force refresh of token (if the param is not set or false, it will just return the existing token or empty string)
-	if ($token)
-		{
-		// save the token
-		file_put_contents('./examples_token.txt', $token);
-		}
-	else
-		{
-		// error when getting token, show error
-		echo $fan->getTokenMessage();
-		exit;
-		}
-	}
+if ($token == '') {
+    $token = $fan->getToken(true);	// force refresh of token (if the param is not set or false, it will just return the existing token or empty string)
+    if ($token) {
+        // save the token
+        file_put_contents('./examples_token.txt', $token);
+    } else {
+        // error when getting token, show error
+        echo $fan->getTokenMessage();
+        exit;
+    }
+}
 
 // you can get the token at any time using
 // $fan->getToken();

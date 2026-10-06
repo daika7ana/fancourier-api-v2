@@ -11,13 +11,13 @@ use Fancourier\Response\PrintAwb as PrintAwbResponse;
 class PrintAwb extends AbstractRequest implements RequestInterface
 {
     protected string $gateway = 'awb/label';
-	protected string $method = 'GET';
+    protected string $method = 'GET';
 
     /** @var array<string> */
     private array $awbs = [];
     private bool $pdf = true;
     private bool $zpl = false;
-	private int $dpi = -1;	// dots per inch. only applies for ZPL
+    private int $dpi = -1;	// dots per inch. only applies for ZPL
     private string $lang = 'ro';
     private string $size = '';
 
@@ -32,33 +32,28 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
         $arr = [
-			'clientId'	=> $this->auth()->getClientId(),
+            'clientId' => $this->auth()->getClientId(),
             'awbs' => $this->awbs,
-            'language' => $this->lang
+            'language' => $this->lang,
         ];
-		
-		// send pdf variable only if active (can't send both pdf and zpl at the same time)
-		if ($this->pdf)
-			{
-			$arr['pdf'] = 1;
-			}
-		else // send zpl variable only if active
-		if ($this->zpl)
-			{
-			$arr['zpl'] = 1;
-			if ($this->dpi > 0)
-				{
-				$arr['dpi'] = $this->dpi;
-				}
-			}
-		
-		// add the format only if user requests a specific size
-		if ($this->size != '')
-			{
-			$arr['format'] = $this->size;
-			}
-		
-		return $arr;
+
+        // send pdf variable only if active (can't send both pdf and zpl at the same time)
+        if ($this->pdf) {
+            $arr['pdf'] = 1;
+        } elseif // send zpl variable only if active
+        ($this->zpl) {
+            $arr['zpl'] = 1;
+            if ($this->dpi > 0) {
+                $arr['dpi'] = $this->dpi;
+            }
+        }
+
+        // add the format only if user requests a specific size
+        if ($this->size != '') {
+            $arr['format'] = $this->size;
+        }
+
+        return $arr;
     }
 
     /**
@@ -85,6 +80,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     public function addAwb(string $awb): static
     {
         $this->awbs[] = $awb;
+
         return $this;
     }
 
@@ -109,6 +105,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
         $active = (bool) $active;
         $this->pdf = !$active;
         $this->zpl = false;
+
         return $this;
     }
 
@@ -127,7 +124,10 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     public function setPdf(bool $active = true): static
     {
         $this->pdf = $active;
-        if ($this->zpl) { $this->zpl = false; }	// disable ZPL in case it's active
+        if ($this->zpl) {
+            $this->zpl = false;
+        }	// disable ZPL in case it's active
+
         return $this;
     }
 
@@ -146,7 +146,10 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     public function setZpl(bool $active = false): static
     {
         $this->zpl = $active;
-        if ($this->pdf) { $this->pdf = false; }	// disable PDF in case it's active
+        if ($this->pdf) {
+            $this->pdf = false;
+        }	// disable PDF in case it's active
+
         return $this;
     }
 
@@ -159,13 +162,14 @@ class PrintAwb extends AbstractRequest implements RequestInterface
     }
 
     /**
-	 / Set the DPI (dots per inch) for the returned label (only applies to ZPL)
+     / Set the DPI (dots per inch) for the returned label (only applies to ZPL)
      * @param int $dpi
      * @return static
      */
     public function setDpi(int $dpi = -1): static
     {
         $this->dpi = $dpi;
+
         return $this;
     }
 
@@ -190,6 +194,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
         }
 
         $this->lang = $lang;
+
         return $this;
     }
 
@@ -214,6 +219,7 @@ class PrintAwb extends AbstractRequest implements RequestInterface
         }
 
         $this->size = $pageSize;
+
         return $this;
     }
 }

@@ -14,15 +14,6 @@ use Fancourier\Client;
  */
 final class FakeClient extends Client
 {
-    /** @var string */
-    private $response = '{}';
-
-    /** @var bool */
-    private $failure = false;
-
-    /** @var string */
-    private $error = '';
-
     /** @var string One of: '', 'get', 'post', 'post_json', 'post_ma'. */
     public $lastCall = '';
 
@@ -40,6 +31,14 @@ final class FakeClient extends Client
 
     /** @var string|null */
     public $lastAuthorization = null;
+    /** @var string */
+    private $response = '{}';
+
+    /** @var bool */
+    private $failure = false;
+
+    /** @var string */
+    private $error = '';
 
     public function setResponse(string $response): self
     {

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 /****************************************
 Documentatia specifica ca se pot folosi servicii "Export" si "Export-Cont Colector"
@@ -17,40 +17,40 @@ Aparent pentru cont colector la export, trebuie setat campul "repayment" (functi
 // create a new AWB object
 $awb = new Fancourier\Objects\AwbExtern();
 $awb
-	->setService("Export")		// "Export" sau "Export-Cont Colector"
-	->setDeliveryMode('rutier')				// "document" sau "non document"
-	->setDocumentType('document')				// "document" sau "non document"
-	->setBank('RAIFFEISEN BANK ROMANA')
-	->setIban('RO53RZBR0000060009520959')
-	->setParcels(1)
-	->setWeight(1)	// in kg
-	->setReimbursement(199.99)
-	->setCurrency('BGN')
-	->setDeclaredValue(1000)
-	->setSizes(10,5,1) // in cm // or use setLength(), setHeight(), setWidth()
-	->setNotes('testing notes')
-	->setContents('SKU-1, SKU-2')
+    ->setService("Export")		// "Export" sau "Export-Cont Colector"
+    ->setDeliveryMode('rutier')				// "document" sau "non document"
+    ->setDocumentType('document')				// "document" sau "non document"
+    ->setBank('RAIFFEISEN BANK ROMANA')
+    ->setIban('RO53RZBR0000060009520959')
+    ->setParcels(1)
+    ->setWeight(1)	// in kg
+    ->setReimbursement(199.99)
+    ->setCurrency('BGN')
+    ->setDeclaredValue(1000)
+    ->setSizes(10, 5, 1) // in cm // or use setLength(), setHeight(), setWidth()
+    ->setNotes('testing notes')
+    ->setContents('SKU-1, SKU-2')
 
-	->setSenderName("John Ivy")
-	->setSenderPhone('0723000000')
-	->setSenderCounty('Arad')
-	->setSenderCity('Aciuta')
-	->setSenderStreet('Str Lunga')
-	->setSenderNumber('1')
+    ->setSenderName("John Ivy")
+    ->setSenderPhone('0723000000')
+    ->setSenderCounty('Arad')
+    ->setSenderCity('Aciuta')
+    ->setSenderStreet('Str Lunga')
+    ->setSenderNumber('1')
 
-	->setRecipientName("John Ivy")
-	->setPhone('0723000000')
-	->setCountry('Bulgaria')
-	->setCounty('Sofia')
-	->setCity('Sofia')
-	->setStreet('ul. Ivan Denkoglu')
-	->setNumber('17')
-	->setBuilding('B9')
-	->setEntrance('69')
-	->setFloor('6')
-	->setApartment('9')
-	->setPostalCode('1000')
-	->addOption('S');
+    ->setRecipientName("John Ivy")
+    ->setPhone('0723000000')
+    ->setCountry('Bulgaria')
+    ->setCounty('Sofia')
+    ->setCity('Sofia')
+    ->setStreet('ul. Ivan Denkoglu')
+    ->setNumber('17')
+    ->setBuilding('B9')
+    ->setEntrance('69')
+    ->setFloor('6')
+    ->setApartment('9')
+    ->setPostalCode('1000')
+    ->addOption('S');
 
 // create a new request object
 $request = new Fancourier\Request\CreateAwbExternal();
@@ -72,27 +72,23 @@ Functions in CreateAwbExternal RESPONSE (only get* functions are available)
 */
 
 if ($response->isOk()) {
-	var_dump($response->getData());
-//	file_put_contents('awb_extern.txt', json_encode($response->getData()) );
+    var_dump($response->getData());
+    //	file_put_contents('awb_extern.txt', json_encode($response->getData()) );
 
-	$al = $response->getAll();
-	echo "Count: ".count($al)."<br />";
-	foreach ($al as $awbr)
-		{
-		if ($awbr->hasErrors())
-			{
-			print_r($awbr->getErrors());
-			}
-		else
-			{
-			echo "AWB: ".$awbr->getAwb()."<br />";
-			echo "Errors: ".print_r($awbr->getErrors(),1)."<br />";
-			echo '<hr />';
-			}
-		}
+    $al = $response->getAll();
+    echo "Count: " . count($al) . "<br />";
+    foreach ($al as $awbr) {
+        if ($awbr->hasErrors()) {
+            print_r($awbr->getErrors());
+        } else {
+            echo "AWB: " . $awbr->getAwb() . "<br />";
+            echo "Errors: " . print_r($awbr->getErrors(), 1) . "<br />";
+            echo '<hr />';
+        }
+    }
 
 } else {
-	var_dump($response->getErrorMessage());
+    var_dump($response->getErrorMessage());
 }
 
 /*
@@ -169,4 +165,3 @@ The following functions can be used after processing the response
 ->getErrors()			// this will return an array wit the problems encountered when creating the awb
 ->getAwb()				// returns the AWB number assigned to this AwbExtern object
 */
-

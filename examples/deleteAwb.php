@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 // create a new request object
 $request = new Fancourier\Request\DeleteAwb();
@@ -15,7 +15,7 @@ $response = $fan->deleteAwb($request);
 // check if valid response
 if ($response->isOk()) {
     var_dump($response->getData());
-	// getData() will return true if delete succeded or false if there's an error
+    // getData() will return true if delete succeded or false if there's an error
 } else {
     var_dump($response->getErrorMessage());
 }

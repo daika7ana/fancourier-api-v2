@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class GetServiceOptionsTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_parses_a_success_body(): void
     {
@@ -47,5 +42,9 @@ class GetServiceOptionsTest extends TestCase
         $this->assertSame([], $response->getAll());
         $this->assertFalse($response->hasOption('R'));
         $this->assertFalse($response->getOption('R'));
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

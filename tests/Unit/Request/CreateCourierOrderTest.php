@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class CreateCourierOrderTest extends TestCase
 {
-    private function request(): CreateCourierOrder
-    {
-        return (new CreateCourierOrder())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_returns_the_awb_and_pickup_date_that_were_set(): void
     {
@@ -53,7 +48,7 @@ final class CreateCourierOrderTest extends TestCase
                     'observations' => 'leave at the gate',
                 ],
             ],
-            $packed
+            $packed,
         );
         $this->assertArrayNotHasKey('recipient', $packed);
     }
@@ -99,7 +94,11 @@ final class CreateCourierOrderTest extends TestCase
                     'apartment' => '4',
                 ],
             ],
-            $packed['recipient']
+            $packed['recipient'],
         );
+    }
+    private function request(): CreateCourierOrder
+    {
+        return (new CreateCourierOrder())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

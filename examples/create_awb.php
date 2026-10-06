@@ -3,28 +3,28 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 // create a new AWB object
 $awb = new Fancourier\Objects\AwbIntern();
 $awb
-	->setService('Cont Colector')
-	->setPaymentType(Fancourier\Request\CreateAwb::TYPE_SENDER)				// expeditor		(TYPE_RECIPIENT - destinatar)
-	->setParcels(1)
-	->setWeight(1)	// in kg
-	->setReimbursement(199.99) // suma de incasat
-	->setDeclaredValue(1000)
-	->setSizes(10,5,1) // in cm // or use setLength(), setHeight(), setWidth()
-	->setNotes('testing notes')
-	->setContents('SKU-1, SKU-2')
-	->setRecipientName("John Ivy")
-	->setPhone('0723000000')
-	->setCounty('Arad')
-	->setCity('Aciuta')
-	->setStreet('Str Lunga')
-	->setNumber(1)
-	->addOption('S')			// livrare sambata
-	->addOption('X');			// ePod
+    ->setService('Cont Colector')
+    ->setPaymentType(Fancourier\Request\CreateAwb::TYPE_SENDER)				// expeditor		(TYPE_RECIPIENT - destinatar)
+    ->setParcels(1)
+    ->setWeight(1)	// in kg
+    ->setReimbursement(199.99) // suma de incasat
+    ->setDeclaredValue(1000)
+    ->setSizes(10, 5, 1) // in cm // or use setLength(), setHeight(), setWidth()
+    ->setNotes('testing notes')
+    ->setContents('SKU-1, SKU-2')
+    ->setRecipientName("John Ivy")
+    ->setPhone('0723000000')
+    ->setCounty('Arad')
+    ->setCity('Aciuta')
+    ->setStreet('Str Lunga')
+    ->setNumber(1)
+    ->addOption('S')			// livrare sambata
+    ->addOption('X');			// ePod
 
 // create a new request object
 $request = new Fancourier\Request\CreateAwb();
@@ -46,27 +46,23 @@ Functions in GetCities RESPONSE (only get* functions are available)
 */
 
 if ($response->isOk()) {
-	var_dump($response->getData());
-//	file_put_contents('awb.txt', json_encode($response->getData()) );
+    var_dump($response->getData());
+    //	file_put_contents('awb.txt', json_encode($response->getData()) );
 
-	$al = $response->getAll();
-	echo "Count: ".count($al)."<br />";
-	foreach ($al as $awbr)
-		{
-		if ($awbr->hasErrors())
-			{
-			print_r($awbr->getErrors());
-			}
-		else
-			{
-			echo "AWB: ".$awbr->getAwb()."<br />";
-			print_r($awbr->getDetails());
-			echo '<hr />';
-			}
-		}
+    $al = $response->getAll();
+    echo "Count: " . count($al) . "<br />";
+    foreach ($al as $awbr) {
+        if ($awbr->hasErrors()) {
+            print_r($awbr->getErrors());
+        } else {
+            echo "AWB: " . $awbr->getAwb() . "<br />";
+            print_r($awbr->getDetails());
+            echo '<hr />';
+        }
+    }
 
 } else {
-	var_dump($response->getErrorMessage());
+    var_dump($response->getErrorMessage());
 }
 
 /*
@@ -146,4 +142,3 @@ The following functions can be used after processing the response
 ->getAwb()				// returns the AWB number assigned to this AWBIntern object
 ->getDetails()		// returns an array with aditional information
 */
-

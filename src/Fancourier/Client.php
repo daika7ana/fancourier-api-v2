@@ -4,330 +4,318 @@ declare(strict_types=1);
 
 namespace Fancourier;
 
-class Client {
-	private \CurlHandle $curl;
+class Client
+{
+    private \CurlHandle $curl;
 
-	private string $error		= '';
+    private string $error = '';
 
-	private bool $is_put		= false;
-	private bool $is_delete		= false;
-	
-	private bool $verify_host = true;
-	private bool $verify_peer = true;
+    private bool $is_put = false;
+    private bool $is_delete = false;
 
-	private int $timeout = 6;
-	private int $con_timeout = 3;
+    private bool $verify_host = true;
+    private bool $verify_peer = true;
 
-	/** @var non-empty-string */
-	private string $useragent	= 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0';
+    private int $timeout = 6;
+    private int $con_timeout = 3;
 
-	/** @var array<string, string> */
-	private array $headers	= [];	// custom headers
+    /** @var non-empty-string */
+    private string $useragent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0';
 
-	public function __construct(?string $useragent = null)
-		{
-		if (!is_null($useragent) && ($useragent != '') )
-			{
-			$this->useragent = $useragent;
-			}
-		}
+    /** @var array<string, string> */
+    private array $headers = [];	// custom headers
 
-	/*
-	* Init curl and set common options. Called by get/post functions
-	*/
-	private function init(): void
-		{
-		$curl = curl_init();
-		if ($curl === false)
-			{
-			throw new \RuntimeException('Failed to initialise cURL');
-			}
-		$this->curl = $curl;
-		// init default data
-		curl_setopt($this->curl, CURLOPT_USERAGENT, $this->useragent);
+    public function __construct(?string $useragent = null)
+    {
+        if (!is_null($useragent) && ($useragent != '')) {
+            $this->useragent = $useragent;
+        }
+    }
 
-		curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, $this->con_timeout);
-		curl_setopt($this->curl, CURLOPT_TIMEOUT, $this->timeout);
+    public function get(string $url): string|false
+    {
+        if ($url === '') {
+            throw new \InvalidArgumentException('URL must not be empty');
+        }
+        $this->init();
 
-		if (!$this->verify_host)
-			{
-			curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, 0);
-			}
-		if (!$this->verify_peer)
-			{
-			curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
-			}
+        curl_setopt($this->curl, CURLOPT_URL, $url);
+        curl_setopt($this->curl, CURLOPT_POST, false);
+        if ($this->is_put) {
+            curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        } elseif ($this->is_delete) {
+            curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        }
 
-		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($this->curl);
 
-		$this->set_custom_headers();
-		}
+        if (!curl_error($this->curl) && $response && is_string($response)) {
+            $this->close();
 
-	private function set_custom_headers(): void
-		{
-		if (count($this->headers) > 0)
-			{
-			$curl_headers = [];
-			foreach ($this->headers as $hname=>$hvalue)
-				{
-				$curl_headers[] = $hname.":".$hvalue;
-				}
+            return $response;
+        }
 
-			curl_setopt($this->curl, CURLOPT_HTTPHEADER, $curl_headers);
-			}
-		}
+        $this->set_error(curl_error($this->curl));
+        $this->close();
 
-	private function close(): void
-		{
-		curl_close($this->curl);
-		// reset put/delete requests
-		$this->is_put = false;
-		$this->is_delete = false;
-		}
+        return false;
+    }
 
-	public function get(string $url): string|false
-		{
-		if ($url === '')
-			{
-			throw new \InvalidArgumentException('URL must not be empty');
-			}
-		$this->init();
-		
-		curl_setopt($this->curl, CURLOPT_URL, $url);
-		curl_setopt($this->curl, CURLOPT_POST, false);
-		if ($this->is_put)
-			{
-			curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "PUT");
-			}
-		elseif ($this->is_delete)
-			{
-			curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-			}
+    /*
+    Use this static function to prepare a file for posting it using cURL
+    Pass the resulting object of this function inside the $data array of the post function
+    */
+    public static function prepare_file(string $file): \CURLFile
+    {
+        $mime = mime_content_type($file) ?: 'application/octet-stream';
+        $info = pathinfo($file);
+        $name = $info['basename'];
 
-		$response = curl_exec($this->curl);
-
-		if (!curl_error($this->curl) && $response && is_string($response))
-			{
-			$this->close();
-			return $response;
-			}
-
-		$this->set_error(curl_error($this->curl));
-		$this->close();
-		return false;
-		}
-
-	/*
-	Use this static function to prepare a file for posting it using cURL
-	Pass the resulting object of this function inside the $data array of the post function
-	*/
-	public static function prepare_file(string $file): \CURLFile
-		{
-		$mime = mime_content_type($file) ?: 'application/octet-stream';
-		$info = pathinfo($file);
-		$name = $info['basename'];
-		return new \CURLFile($file, $mime, $name);
-		}
+        return new \CURLFile($file, $mime, $name);
+    }
 
 
-	/*
-	Use this static function to prepare a string for posting it using cURL to a file field
-	Pass the resulting object of this function inside the $data array of the post function
-	*/
-	public static function prepare_file_string(string $data, string $postname, string $mime = 'text/plain'): \CURLStringFile
-		{
-		return new \CURLStringFile($data, $postname, $mime);
-		}
+    /*
+    Use this static function to prepare a string for posting it using cURL to a file field
+    Pass the resulting object of this function inside the $data array of the post function
+    */
+    public static function prepare_file_string(string $data, string $postname, string $mime = 'text/plain'): \CURLStringFile
+    {
+        return new \CURLStringFile($data, $postname, $mime);
+    }
 
 
-	/** @param array<string, mixed> $data */
-	public function post(string $url, array $data): string|false
-		{
-		if ($url === '')
-			{
-			throw new \InvalidArgumentException('URL must not be empty');
-			}
-		$this->init();
+    /** @param array<string, mixed> $data */
+    public function post(string $url, array $data): string|false
+    {
+        if ($url === '') {
+            throw new \InvalidArgumentException('URL must not be empty');
+        }
+        $this->init();
 
-		curl_setopt($this->curl, CURLOPT_URL, $url);
+        curl_setopt($this->curl, CURLOPT_URL, $url);
 
-		curl_setopt($this->curl, CURLOPT_POST, true);
-		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
-		if ($this->is_put)
-			{
-			curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "PUT");
-			}
-		elseif ($this->is_delete)
-			{
-			curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-			}
+        curl_setopt($this->curl, CURLOPT_POST, true);
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
+        if ($this->is_put) {
+            curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        } elseif ($this->is_delete) {
+            curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        }
 
-		$response = curl_exec($this->curl);
+        $response = curl_exec($this->curl);
 
-		return $this->complete_transfer(is_string($response) ? $response : false);
-		}
-	
-	// curl doesn't like multilevel arrays in CURLOPT_POSTFIELDS, so we have to manually build the data with http_build_query
-	/** @param array<string, mixed> $data */
-	public function postMultiArray(string $url, array $data): string|false
-		{
-		if ($url === '')
-			{
-			throw new \InvalidArgumentException('URL must not be empty');
-			}
-		$this->init();
+        return $this->complete_transfer(is_string($response) ? $response : false);
+    }
 
-		$datastr = http_build_query($data, '', '&');
-		$datastr = str_replace(["%5B", "%5D"], ["[", "]"], $datastr);
-		curl_setopt($this->curl, CURLOPT_URL, $url);
+    // curl doesn't like multilevel arrays in CURLOPT_POSTFIELDS, so we have to manually build the data with http_build_query
+    /** @param array<string, mixed> $data */
+    public function postMultiArray(string $url, array $data): string|false
+    {
+        if ($url === '') {
+            throw new \InvalidArgumentException('URL must not be empty');
+        }
+        $this->init();
 
-		curl_setopt($this->curl, CURLOPT_POST, true);
-		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $datastr);
-		if ($this->is_put)
-			{
-			curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "PUT");
-			}
-		elseif ($this->is_delete)
-			{
-			curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-			}
+        $datastr = http_build_query($data, '', '&');
+        $datastr = str_replace(["%5B", "%5D"], ["[", "]"], $datastr);
+        curl_setopt($this->curl, CURLOPT_URL, $url);
 
-		$response = curl_exec($this->curl);
+        curl_setopt($this->curl, CURLOPT_POST, true);
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $datastr);
+        if ($this->is_put) {
+            curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        } elseif ($this->is_delete) {
+            curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        }
 
-		return $this->complete_transfer(is_string($response) ? $response : false);
-		}
-	
-	/** @param array<string, mixed> $data */
-	public function postJson(string $url, array $data): string|false
-		{
-		if ($url === '')
-			{
-			throw new \InvalidArgumentException('URL must not be empty');
-			}
-		$this->addHeader('Content-Type', 'application/json'); // add content-type to headers
-		$this->init();
+        $response = curl_exec($this->curl);
 
-		curl_setopt($this->curl, CURLOPT_URL, $url);
+        return $this->complete_transfer(is_string($response) ? $response : false);
+    }
 
-		$jsondata = json_encode($data);
-		if ($jsondata === false)
-			{
-			$this->deleteHeader('Content-Type');
-			$this->set_error('Failed to encode request payload as JSON');
-			$this->close();
-			return false;
-			}
-		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $jsondata);
-		if ($this->is_put)
-			{
-			curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "PUT");
-			}
-		elseif ($this->is_delete)
-			{
-			curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-			}
-		
-		$this->deleteHeader('Content-Type'); // remove the custom content-type to not interfere with other requests
+    /** @param array<string, mixed> $data */
+    public function postJson(string $url, array $data): string|false
+    {
+        if ($url === '') {
+            throw new \InvalidArgumentException('URL must not be empty');
+        }
+        $this->addHeader('Content-Type', 'application/json'); // add content-type to headers
+        $this->init();
 
-		$response = curl_exec($this->curl);
+        curl_setopt($this->curl, CURLOPT_URL, $url);
 
-		return $this->complete_transfer(is_string($response) ? $response : false);
-		}
+        $jsondata = json_encode($data);
+        if ($jsondata === false) {
+            $this->deleteHeader('Content-Type');
+            $this->set_error('Failed to encode request payload as JSON');
+            $this->close();
 
-	/*
-	* Resolve the result of a completed cURL transfer.
-	*
-	* A transport (cURL) error is the only failure that carries the real error
-	* message. A successful transfer with a zero-length body is treated as a
-	* failure too (defect #11): the API always answers with a JSON body, so an
-	* empty body means something went wrong, and reporting it as a success would
-	* show `isOk() === true` for a broken request.
-	*
-	* @return string|false
-	*/
-	private function complete_transfer(string|false $response): string|false
-		{
-		$curl_error = curl_error($this->curl);
+            return false;
+        }
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $jsondata);
+        if ($this->is_put) {
+            curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        } elseif ($this->is_delete) {
+            curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        }
 
-		if ($curl_error !== '')
-			{
-			$this->set_error($curl_error);
-			$this->close();
-			return false;
-			}
+        $this->deleteHeader('Content-Type'); // remove the custom content-type to not interfere with other requests
 
-		if ($response === '')
-			{
-			$this->set_error('FAN Courier returned an empty response');
-			$this->close();
-			return false;
-			}
+        $response = curl_exec($this->curl);
 
-		$this->close();
-		return $response;
-		}
+        return $this->complete_transfer(is_string($response) ? $response : false);
+    }
 
-	private function set_error(string $error): static
-		{
-		$this->error = $error;
-		return $this;
-		}
+    public function getError(): string
+    {
+        return $this->error;
+    }
 
-	public function getError(): string
-		{
-		return $this->error;
-		}
+    /*
+    * Add a custom header to curl
+    */
+    public function addHeader(string $name, string $value): static
+    {
+        $this->headers[ $name ] = $value;
 
-	/*
-	* Add a custom header to curl
-	*/
-	public function addHeader(string $name, string $value): static
-		{
-		$this->headers[ $name ] = $value;
-		return $this;
-		}
+        return $this;
+    }
 
-	/*
-	* Remove a custom header from curl requests
-	*/
-	public function deleteHeader(string $name): static
-		{
-		if (array_key_exists($name, $this->headers))
-			{
-			unset($this->headers[ $name ]);
-			}
-		return $this;
-		}
-	
-	/* set put request (automatically disables delete request) */
-	public function setPutRequest(bool $enabled = false): static
-		{
-		$this->is_put = $enabled;
-		$this->is_delete = false;
-		return $this;
-		}
-	
-	/* set delete request (automatically disables put request) */
-	public function setDeleteRequest(bool $enabled = false): static
-		{
-		$this->is_delete = $enabled;
-		$this->is_put = false;
-		return $this;
-		}
+    /*
+    * Remove a custom header from curl requests
+    */
+    public function deleteHeader(string $name): static
+    {
+        if (array_key_exists($name, $this->headers)) {
+            unset($this->headers[ $name ]);
+        }
 
-	/* if you need to skip host/peer validation */
-	public function setVerify(bool $host = true, bool $peer = true): static
-		{
-		$this->verify_host = $host;
-		$this->verify_peer = $peer;
-		return $this;
-		}
+        return $this;
+    }
 
-	/* if you need a custom request timeout */
-	public function setTimeout(int $con_timeout = 3, int $timeout = 6): static
-		{
-		$this->con_timeout = $con_timeout;
-		$this->timeout = $timeout;
-		return $this;
-		}
+    /* set put request (automatically disables delete request) */
+    public function setPutRequest(bool $enabled = false): static
+    {
+        $this->is_put = $enabled;
+        $this->is_delete = false;
+
+        return $this;
+    }
+
+    /* set delete request (automatically disables put request) */
+    public function setDeleteRequest(bool $enabled = false): static
+    {
+        $this->is_delete = $enabled;
+        $this->is_put = false;
+
+        return $this;
+    }
+
+    /* if you need to skip host/peer validation */
+    public function setVerify(bool $host = true, bool $peer = true): static
+    {
+        $this->verify_host = $host;
+        $this->verify_peer = $peer;
+
+        return $this;
+    }
+
+    /* if you need a custom request timeout */
+    public function setTimeout(int $con_timeout = 3, int $timeout = 6): static
+    {
+        $this->con_timeout = $con_timeout;
+        $this->timeout = $timeout;
+
+        return $this;
+    }
+
+    /*
+    * Init curl and set common options. Called by get/post functions
+    */
+    private function init(): void
+    {
+        $curl = curl_init();
+        if ($curl === false) {
+            throw new \RuntimeException('Failed to initialise cURL');
+        }
+        $this->curl = $curl;
+        // init default data
+        curl_setopt($this->curl, CURLOPT_USERAGENT, $this->useragent);
+
+        curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, $this->con_timeout);
+        curl_setopt($this->curl, CURLOPT_TIMEOUT, $this->timeout);
+
+        if (!$this->verify_host) {
+            curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, 0);
+        }
+        if (!$this->verify_peer) {
+            curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
+        }
+
+        curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+
+        $this->set_custom_headers();
+    }
+
+    private function set_custom_headers(): void
+    {
+        if (count($this->headers) > 0) {
+            $curl_headers = [];
+            foreach ($this->headers as $hname => $hvalue) {
+                $curl_headers[] = $hname . ":" . $hvalue;
+            }
+
+            curl_setopt($this->curl, CURLOPT_HTTPHEADER, $curl_headers);
+        }
+    }
+
+    private function close(): void
+    {
+        curl_close($this->curl);
+        // reset put/delete requests
+        $this->is_put = false;
+        $this->is_delete = false;
+    }
+
+    /*
+    * Resolve the result of a completed cURL transfer.
+    *
+    * A transport (cURL) error is the only failure that carries the real error
+    * message. A successful transfer with a zero-length body is treated as a
+    * failure too (defect #11): the API always answers with a JSON body, so an
+    * empty body means something went wrong, and reporting it as a success would
+    * show `isOk() === true` for a broken request.
+    *
+    * @return string|false
+    */
+    private function complete_transfer(string|false $response): string|false
+    {
+        $curl_error = curl_error($this->curl);
+
+        if ($curl_error !== '') {
+            $this->set_error($curl_error);
+            $this->close();
+
+            return false;
+        }
+
+        if ($response === '') {
+            $this->set_error('FAN Courier returned an empty response');
+            $this->close();
+
+            return false;
+        }
+
+        $this->close();
+
+        return $response;
+    }
+
+    private function set_error(string $error): static
+    {
+        $this->error = $error;
+
+        return $this;
+    }
 }

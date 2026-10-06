@@ -9,7 +9,7 @@ use Fancourier\Response\GetServiceOptions as GetServiceOptionsResponse;
 class GetServiceOptions extends AbstractRequest implements RequestInterface
 {
     protected string $gateway = 'reports/service-options';
-	protected string $method = 'GET';
+    protected string $method = 'GET';
 
     private string $service = 'Standard';
 
@@ -24,12 +24,12 @@ class GetServiceOptions extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
         $arr = [
-			'clientId'	=> $this->auth()->getClientId(),
-			'service'	=>	$this->service,
-			];
-		
+            'clientId' => $this->auth()->getClientId(),
+            'service' => $this->service,
+        ];
 
-		return $arr;
+
+        return $arr;
     }
 
     /**
@@ -47,6 +47,7 @@ class GetServiceOptions extends AbstractRequest implements RequestInterface
     public function setService(string $service): static
     {
         $this->service = $service;
+
         return $this;
     }
 }

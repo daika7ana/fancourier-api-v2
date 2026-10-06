@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 // create a new request object
 $request = new Fancourier\Request\GetAwbConfirmations();
 $request
-	->addAwb('7000011994717')
-	->addAwb('7000012005411');
+    ->addAwb('7000011994717')
+    ->addAwb('7000012005411');
 
 // please note that test awb's will always return error as they are not delivered by fan courier so you will need to test it will actual awb numbers
 
@@ -32,16 +32,13 @@ Functions in GetAwbConfirmations RESPONSE (only get* functions are available)
 */
 
 if ($response->isOk()) {
-	echo 'ZIP size in bytes: '.$response->getLength().'<br />';
-	if ($response->saveToFile('./example.zip'))
-		{
-		echo 'Saved to example.zip';
-		}
-	else
-		{
-		echo 'Failed saving file';
-		}
-//    var_dump($response->getRAWbytes());
+    echo 'ZIP size in bytes: ' . $response->getLength() . '<br />';
+    if ($response->saveToFile('./example.zip')) {
+        echo 'Saved to example.zip';
+    } else {
+        echo 'Failed saving file';
+    }
+    //    var_dump($response->getRAWbytes());
 } else {
     var_dump($response->getErrorMessage());
 }

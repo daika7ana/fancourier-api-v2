@@ -17,41 +17,6 @@ use PHPUnit\Framework\TestCase;
  */
 final class AbstractRequestSendTest extends TestCase
 {
-    private function makeRequest(string $method, array $payload, string $gateway = 'test/gateway'): AbstractRequest
-    {
-        $request = new class($gateway, $method, $payload) extends AbstractRequest {
-            /** @var array<string, mixed> */
-            public array $payload;
-
-            public function __construct(string $gateway, string $method, array $payload)
-            {
-                parent::__construct();
-                $this->gateway = $gateway;
-                $this->method = $method;
-                $this->payload = $payload;
-            }
-
-            public function pack(): array
-            {
-                return $this->payload;
-            }
-
-            public function injectClient(Client $client): static
-            {
-                $this->client = $client;
-
-                return $this;
-            }
-        };
-
-        return $request;
-    }
-
-    private function auth(): Auth
-    {
-        return new Auth(12345, 'user', 'pass', 'test-token');
-    }
-
     #[Test]
     public function it_sends_a_get_request_as_a_query_string(): void
     {
@@ -64,7 +29,7 @@ final class AbstractRequestSendTest extends TestCase
         $this->assertSame('get', $client->lastCall);
         $this->assertFalse($client->isPut);
         $this->assertFalse($client->isDelete);
-        $this->assertSame(Fancourier::API_URL.'test/gateway?foo=bar', $client->lastUrl);
+        $this->assertSame(Fancourier::API_URL . 'test/gateway?foo=bar', $client->lastUrl);
         $this->assertSame('Bearer test-token', $client->lastAuthorization);
         $this->assertTrue($response->isOk());
         $this->assertSame('{"ok":true}', $response->getData());
@@ -80,7 +45,7 @@ final class AbstractRequestSendTest extends TestCase
         $response = $request->send();
 
         $this->assertSame('post_json', $client->lastCall);
-        $this->assertSame(Fancourier::API_URL.'test/gateway', $client->lastUrl);
+        $this->assertSame(Fancourier::API_URL . 'test/gateway', $client->lastUrl);
         $this->assertSame(['foo' => 'bar'], $client->lastData);
         $this->assertTrue($response->isOk());
     }
@@ -97,7 +62,7 @@ final class AbstractRequestSendTest extends TestCase
         $this->assertSame('get', $client->lastCall);
         $this->assertTrue($client->isPut);
         $this->assertFalse($client->isDelete);
-        $this->assertSame(Fancourier::API_URL.'test/gateway?foo=bar', $client->lastUrl);
+        $this->assertSame(Fancourier::API_URL . 'test/gateway?foo=bar', $client->lastUrl);
     }
 
     #[Test]
@@ -113,7 +78,7 @@ final class AbstractRequestSendTest extends TestCase
         $this->assertSame('post_ma', $client->lastCall);
         $this->assertTrue($client->isPut);
         $this->assertFalse($client->isDelete);
-        $this->assertSame(Fancourier::API_URL.'test/gateway', $client->lastUrl);
+        $this->assertSame(Fancourier::API_URL . 'test/gateway', $client->lastUrl);
         $this->assertSame($payload, $client->lastData);
     }
 
@@ -129,7 +94,7 @@ final class AbstractRequestSendTest extends TestCase
         $this->assertSame('get', $client->lastCall);
         $this->assertFalse($client->isPut);
         $this->assertTrue($client->isDelete);
-        $this->assertSame(Fancourier::API_URL.'test/gateway?id=5', $client->lastUrl);
+        $this->assertSame(Fancourier::API_URL . 'test/gateway?id=5', $client->lastUrl);
     }
 
     #[Test]
@@ -144,7 +109,7 @@ final class AbstractRequestSendTest extends TestCase
         $this->assertSame('post_ma', $client->lastCall);
         $this->assertFalse($client->isPut);
         $this->assertTrue($client->isDelete);
-        $this->assertSame(Fancourier::API_URL.'test/gateway', $client->lastUrl);
+        $this->assertSame(Fancourier::API_URL . 'test/gateway', $client->lastUrl);
     }
 
     #[Test]
@@ -187,7 +152,7 @@ final class AbstractRequestSendTest extends TestCase
     #[Test]
     public function it_refreshes_an_expired_token_and_retries_exactly_once(): void
     {
-        $auth = new class(1, 'u', 'p') extends Auth {
+        $auth = new class (1, 'u', 'p') extends Auth {
             public int $refreshCalls = 0;
 
             public function getToken(bool $refresh = false): string|false
@@ -254,7 +219,7 @@ final class AbstractRequestSendTest extends TestCase
     #[Test]
     public function it_does_not_retry_more_than_once_when_the_retry_also_fails(): void
     {
-        $auth = new class(1, 'u', 'p') extends Auth {
+        $auth = new class (1, 'u', 'p') extends Auth {
             public int $refreshCalls = 0;
 
             public function getToken(bool $refresh = false): string|false
@@ -313,7 +278,7 @@ final class AbstractRequestSendTest extends TestCase
     #[Test]
     public function it_does_not_retry_when_the_token_is_not_expired(): void
     {
-        $auth = new class(1, 'u', 'p', 'fresh-token') extends Auth {
+        $auth = new class (1, 'u', 'p', 'fresh-token') extends Auth {
             public int $refreshCalls = 0;
 
             public function getToken(bool $refresh = false): string|false
@@ -361,5 +326,39 @@ final class AbstractRequestSendTest extends TestCase
         $this->assertSame(0, $auth->refreshCalls);
         $this->assertFalse($response->isOk());
         $this->assertSame('curl boom', $response->getErrorMessage());
+    }
+    private function makeRequest(string $method, array $payload, string $gateway = 'test/gateway'): AbstractRequest
+    {
+        $request = new class ($gateway, $method, $payload) extends AbstractRequest {
+            /** @var array<string, mixed> */
+            public array $payload;
+
+            public function __construct(string $gateway, string $method, array $payload)
+            {
+                parent::__construct();
+                $this->gateway = $gateway;
+                $this->method = $method;
+                $this->payload = $payload;
+            }
+
+            public function pack(): array
+            {
+                return $this->payload;
+            }
+
+            public function injectClient(Client $client): static
+            {
+                $this->client = $client;
+
+                return $this;
+            }
+        };
+
+        return $request;
+    }
+
+    private function auth(): Auth
+    {
+        return new Auth(12345, 'user', 'pass', 'test-token');
     }
 }

@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class GetBranchesTest extends TestCase
 {
-    private function request(): GetBranches
-    {
-        return (new GetBranches())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_an_empty_query_by_default(): void
     {
@@ -28,5 +23,9 @@ final class GetBranchesTest extends TestCase
         $packed = $this->request()->setCounty('Cluj')->setCity('Cluj-Napoca')->pack();
 
         $this->assertSame(['county' => 'Cluj', 'locality' => 'Cluj-Napoca'], $packed);
+    }
+    private function request(): GetBranches
+    {
+        return (new GetBranches())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

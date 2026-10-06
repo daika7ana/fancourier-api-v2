@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 // create a new request object
 $request = new Fancourier\Request\GetBranches();
@@ -12,7 +12,7 @@ $request
     ->setCounty('Braila');
 /*
 Functions in GetBranches REQUEST (only the set* functions are shown, the get* functions simply return the set values)
-->setCity($city) 
+->setCity($city)
 ->setCounty($county)
 */
 
@@ -32,13 +32,13 @@ Functions in GetBranches RESPONSE (only get* functions are available)
 
 
 if ($response->isOk()) {
-	echo "Total: ".count($response->getData()['data']);
+    echo "Total: " . count($response->getData()['data']);
     echo '<pre>';
-	print_r($response->getAll()) ;
-	echo "<hr />";
+    print_r($response->getAll()) ;
+    echo "<hr />";
     print_r($response->getData());
 
-	echo '</pre>';
+    echo '</pre>';
 } else {
     var_dump($response->getErrorMessage());
 }

@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class GetShippingSlipTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_parses_a_success_body(): void
     {
@@ -62,5 +57,9 @@ class GetShippingSlipTest extends TestCase
         $this->assertSame(0.0, $response->get(0)->getHeight());
         $this->assertSame('', $response->get(0)->getNotes());
         $this->assertSame(0.0, $response->get(0)->getCost());
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

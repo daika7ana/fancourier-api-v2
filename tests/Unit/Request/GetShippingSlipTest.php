@@ -11,17 +11,12 @@ use PHPUnit\Framework\TestCase;
 
 final class GetShippingSlipTest extends TestCase
 {
-    private function request(): GetShippingSlip
-    {
-        return (new GetShippingSlip())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_todays_date_and_the_default_page_size(): void
     {
         $this->assertSame(
             ['clientId' => 12345, 'date' => date('Y-m-d'), 'perPage' => 100],
-            $this->request()->pack()
+            $this->request()->pack(),
         );
     }
 
@@ -41,7 +36,11 @@ final class GetShippingSlipTest extends TestCase
 
         $this->assertSame(
             ['clientId' => 12345, 'date' => '2024-01-02', 'page' => 1, 'perPage' => 10],
-            $packed
+            $packed,
         );
+    }
+    private function request(): GetShippingSlip
+    {
+        return (new GetShippingSlip())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

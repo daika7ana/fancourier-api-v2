@@ -12,9 +12,9 @@ use Rector\Renaming\ValueObject\MethodCallRename;
  */
 return RectorConfig::configure()
     ->withPaths([
-        __DIR__.'/src',
-        __DIR__.'/tests',
-        __DIR__.'/examples',
+        __DIR__ . '/src',
+        __DIR__ . '/tests',
+        __DIR__ . '/examples',
     ])
     ->withConfiguredRule(RenameMethodRector::class, [
         new MethodCallRename('Fancourier\Client', 'set_verify', 'setVerify'),

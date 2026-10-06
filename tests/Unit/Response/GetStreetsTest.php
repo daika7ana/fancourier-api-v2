@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class GetStreetsTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_parses_a_success_body(): void
     {
@@ -52,5 +47,9 @@ class GetStreetsTest extends TestCase
         $this->assertSame([], $response->getAll());
         $this->assertSame(0, $response->getTotal());
         $this->assertSame(0, $response->getTotalPages());
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

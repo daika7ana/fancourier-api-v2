@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class TrackAwbTest extends TestCase
 {
-    private function request(): TrackAwb
-    {
-        return (new TrackAwb())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_an_empty_awb_list_by_default(): void
     {
@@ -29,7 +24,7 @@ final class TrackAwbTest extends TestCase
 
         $this->assertSame(
             ['clientId' => 12345, 'awb' => ['A1', 'A2'], 'language' => 'en'],
-            $request->pack()
+            $request->pack(),
         );
     }
 
@@ -39,5 +34,9 @@ final class TrackAwbTest extends TestCase
         $request = $this->request()->addAwb('A1');
 
         $this->assertSame(['clientId' => 12345, 'awb' => []], $request->resetAwbs()->pack());
+    }
+    private function request(): TrackAwb
+    {
+        return (new TrackAwb())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

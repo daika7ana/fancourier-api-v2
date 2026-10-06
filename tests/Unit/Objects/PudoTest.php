@@ -10,25 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class PudoTest extends TestCase
 {
-    private function data(): array
-    {
-        return [
-            'id' => 'PUDO-1',
-            'name' => 'FANbox Bucuresti',
-            'routingLocation' => 'BUC',
-            'description' => 'Lockers',
-            'latitude' => '44.5',
-            'longitude' => '26.1',
-            'address' => ['locality' => 'Bucuresti', 'street' => 'Fabrica de Glucoza'],
-            'schedule' => ['Mon-Fri' => '08:00-20:00'],
-            'drawer' => ['small' => true],
-            'phones' => ['0700000000'],
-            'email' => 'pudo@example.com',
-            'highDemand' => true,
-            'paymentMethods' => ['card', 'cash'],
-        ];
-    }
-
     #[Test]
     public function it_exposes_the_constructor_values(): void
     {
@@ -70,5 +51,23 @@ class PudoTest extends TestCase
         // UPGRADE_PLAN §7 #10 — getAddress() must fall back to [], not ''.
         $this->assertSame([], $pudo->getAddress());
         $this->assertFalse($pudo->getHighDemand());
+    }
+    private function data(): array
+    {
+        return [
+            'id' => 'PUDO-1',
+            'name' => 'FANbox Bucuresti',
+            'routingLocation' => 'BUC',
+            'description' => 'Lockers',
+            'latitude' => '44.5',
+            'longitude' => '26.1',
+            'address' => ['locality' => 'Bucuresti', 'street' => 'Fabrica de Glucoza'],
+            'schedule' => ['Mon-Fri' => '08:00-20:00'],
+            'drawer' => ['small' => true],
+            'phones' => ['0700000000'],
+            'email' => 'pudo@example.com',
+            'highDemand' => true,
+            'paymentMethods' => ['card', 'cash'],
+        ];
     }
 }

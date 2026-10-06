@@ -20,6 +20,7 @@ class Generic implements ResponseInterface
     public function setErrorCode(int|string|null $errorCode): static
     {
         $this->errorCode = $errorCode;
+
         return $this;
     }
 
@@ -33,6 +34,7 @@ class Generic implements ResponseInterface
     public function setErrorMessage(?string $errorMessage): static
     {
         $this->errorMessage = $errorMessage;
+
         return $this;
     }
 
@@ -46,7 +48,13 @@ class Generic implements ResponseInterface
     public function setData(mixed $data): static
     {
         $this->data = $data;
+
         return $this;
+    }
+
+    public function isOk(): bool
+    {
+        return empty($this->getErrorCode()) && empty($this->getErrorMessage());
     }
 
     /**
@@ -65,30 +73,20 @@ class Generic implements ResponseInterface
     {
         $message = null;
 
-        if (is_array($body))
-            {
+        if (is_array($body)) {
             $message = $body['message'] ?? $body['error'] ?? $body['errors'] ?? null;
-            }
-        elseif (is_string($body))
-            {
+        } elseif (is_string($body)) {
             $message = $body;
-            }
+        }
 
-        if (is_array($message))
-            {
+        if (is_array($message)) {
             $message = json_encode($message);
-            }
+        }
 
-        if (!is_string($message) || $message === '')
-            {
+        if (!is_string($message) || $message === '') {
             $message = $fallback;
-            }
+        }
 
         return $this->setErrorMessage($message)->setErrorCode($code);
-    }
-
-    public function isOk(): bool
-    {
-        return empty($this->getErrorCode()) && empty($this->getErrorMessage());
     }
 }

@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class GetCitiesExternalTest extends TestCase
 {
-    private function request(): GetCitiesExternal
-    {
-        return (new GetCitiesExternal())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_the_default_page_size(): void
     {
@@ -43,7 +38,7 @@ final class GetCitiesExternalTest extends TestCase
 
         $this->assertSame(
             ['country' => 'RO', 'county' => 'Cluj', 'page' => 2, 'perPage' => 50],
-            $packed
+            $packed,
         );
     }
 
@@ -51,5 +46,9 @@ final class GetCitiesExternalTest extends TestCase
     public function it_caps_the_page_size_at_one_hundred(): void
     {
         $this->assertSame(['perPage' => 100], $this->request()->setPerPage(500)->pack());
+    }
+    private function request(): GetCitiesExternal
+    {
+        return (new GetCitiesExternal())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

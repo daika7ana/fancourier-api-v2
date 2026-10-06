@@ -13,10 +13,10 @@ use Fancourier\Response\GetAwbConfirmations as GetAwbConfirmationsResponse;
  */
 class GetAwbConfirmations extends AbstractRequest implements RequestInterface
 {
-	use AwbStringListTrait;
+    use AwbStringListTrait;
 
-	protected string $gateway = 'reports/get-awb-confirmations';
-	protected string $method = 'GET';
+    protected string $gateway = 'reports/get-awb-confirmations';
+    protected string $method = 'GET';
 
     public function __construct()
     {
@@ -28,19 +28,18 @@ class GetAwbConfirmations extends AbstractRequest implements RequestInterface
     #[\Override]
     public function pack(): array
     {
-		$arr = [
-				"clientId" => $this->auth()->getClientId(), //obligatoriu 
-				"awb" => [] // shipments
-				
-			];
-		
-		foreach ($this->awbList as $awb)
-			{
-			$arr['awb'][] = $awb;
-			}
-		
-		return $arr;
-	
+        $arr = [
+            "clientId" => $this->auth()->getClientId(), //obligatoriu
+            "awb" => [], // shipments
+
+        ];
+
+        foreach ($this->awbList as $awb) {
+            $arr['awb'][] = $awb;
+        }
+
+        return $arr;
+
     }
 
 }

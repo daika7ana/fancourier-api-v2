@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class GetCostsTest extends TestCase
 {
-    private function request(): GetCosts
-    {
-        return (new GetCosts())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_a_minimal_internal_tariff_request(): void
     {
@@ -33,7 +28,7 @@ final class GetCostsTest extends TestCase
                     'county' => null,
                 ],
             ],
-            $this->request()->pack()
+            $this->request()->pack(),
         );
     }
 
@@ -73,7 +68,7 @@ final class GetCostsTest extends TestCase
                 'recipient' => ['locality' => 'Cluj', 'county' => 'Cluj'],
                 'sender' => ['locality' => 'Bucuresti', 'county' => 'Ilfov'],
             ],
-            $packed
+            $packed,
         );
     }
 
@@ -83,5 +78,9 @@ final class GetCostsTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $this->request()->setPaymentType('bogus');
+    }
+    private function request(): GetCosts
+    {
+        return (new GetCosts())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

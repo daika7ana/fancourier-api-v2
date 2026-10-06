@@ -3,30 +3,30 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 // create a new request object
 $request = new Fancourier\Request\CreateCourierOrder();
 $request
-	->setOrderType('Standard')		// Standard sau "Express Loco ..."
+    ->setOrderType('Standard')		// Standard sau "Express Loco ..."
 
-	->setParcels(1)
-	->setEnvelopes(1)
-	->setWeight(1)	// in kg
-	->setSizes(10,5,1) // in cm // or use setLength(), setHeight(), setWidth()
-	->setNotes('testing notes')
+    ->setParcels(1)
+    ->setEnvelopes(1)
+    ->setWeight(1)	// in kg
+    ->setSizes(10, 5, 1) // in cm // or use setLength(), setHeight(), setWidth()
+    ->setNotes('testing notes')
 
-	->setPickupDate(date("Y-m-d", time()+86400))
-	->setPickupHours("09:00", "16:30")
+    ->setPickupDate(date("Y-m-d", time() + 86400))
+    ->setPickupHours("09:00", "16:30")
 /*
-	->setRecipientName("John Ivy")
-	->setPhone('0723000000')
-	->setCounty('Arad')
-	->setCity('Aciuta')
-	->setStreet('Str Lunga')
-	->setNumber(1)
-	*/
-	;
+    ->setRecipientName("John Ivy")
+    ->setPhone('0723000000')
+    ->setCounty('Arad')
+    ->setCity('Aciuta')
+    ->setStreet('Str Lunga')
+    ->setNumber(1)
+    */
+;
 
 /*
 Functions in CreateCourierOrder REQUEST (only the set* functions are shown, the get* functions simply return the set values)
@@ -67,9 +67,9 @@ Functions in CreateCourierOrder RESPONSE (only get* functions are available)
 */
 
 if ($response->isOk()) {
-	var_dump($response->getData());
+    var_dump($response->getData());
 } else {
-	var_dump($response->getErrorMessage());
+    var_dump($response->getErrorMessage());
 }
 
 /*

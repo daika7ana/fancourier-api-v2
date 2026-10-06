@@ -10,11 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class PrintAwbTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_stores_a_non_json_binary_body(): void
     {
@@ -44,5 +39,9 @@ class PrintAwbTest extends TestCase
         $this->assertFalse($response->isOk());
         $this->assertSame(-1, $response->getErrorCode());
         $this->assertSame($fixture, $response->getErrorMessage());
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

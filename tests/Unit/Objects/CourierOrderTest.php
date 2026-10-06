@@ -10,28 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class CourierOrderTest extends TestCase
 {
-    private function data(): array
-    {
-        return [
-            'info' => [
-                'id' => '18601914',
-                'number' => 'SI329300184',
-                'status' => ['id' => 0, 'name' => 'In asteptare'],
-                'date' => '2023-11-25',
-                'hour' => '09:00',
-                'packages' => ['envelope' => 0, 'parcel' => 3],
-                'weight' => 3,
-                'dimensions' => ['height' => 0.1, 'length' => 0.2, 'width' => 0.3],
-                'pickupDate' => '2023-11-25',
-                'pickupHours' => ['firstHour' => '10:00', 'secondHour' => '13:00'],
-                'observation' => 'call before',
-                'type' => 'Standard',
-                'awbs' => ['123'],
-            ],
-            'sender' => ['name' => 'FAN COURIER - cont test'],
-        ];
-    }
-
     #[Test]
     public function it_exposes_the_constructor_values(): void
     {
@@ -73,5 +51,26 @@ class CourierOrderTest extends TestCase
         $this->assertSame(0.0, $order->getWidth());
         $this->assertSame([], $order->getDimensions());
         $this->assertSame([], $order->getPickupHours());
+    }
+    private function data(): array
+    {
+        return [
+            'info' => [
+                'id' => '18601914',
+                'number' => 'SI329300184',
+                'status' => ['id' => 0, 'name' => 'In asteptare'],
+                'date' => '2023-11-25',
+                'hour' => '09:00',
+                'packages' => ['envelope' => 0, 'parcel' => 3],
+                'weight' => 3,
+                'dimensions' => ['height' => 0.1, 'length' => 0.2, 'width' => 0.3],
+                'pickupDate' => '2023-11-25',
+                'pickupHours' => ['firstHour' => '10:00', 'secondHour' => '13:00'],
+                'observation' => 'call before',
+                'type' => 'Standard',
+                'awbs' => ['123'],
+            ],
+            'sender' => ['name' => 'FAN COURIER - cont test'],
+        ];
     }
 }

@@ -10,7 +10,7 @@ use Fancourier\Response\GetCostsExternal as GetCostsExternalResponse;
 class GetCostsExternal extends AbstractRequest implements RequestInterface
 {
     protected string $gateway = 'reports/awb/external-tariff';
-	protected string $method = 'GET';
+    protected string $method = 'GET';
 
     private ?string $senderCity = null;		// sender.locality
     private ?string $senderCounty = null;	// sender.county
@@ -21,10 +21,10 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     private int|float $length = 0;
     private int|float $width = 0;
     private int|float $height = 0;
-	
+
     private string $service = 'Export';
-	private string $deliveryMode = 'rutier';		// "rutier" sau "aerian" (metodele disponibile se pot afla prin GetCountries)
-	private string $documentType = 'document';		// "document" sau "non document"
+    private string $deliveryMode = 'rutier';		// "rutier" sau "aerian" (metodele disponibile se pot afla prin GetCountries)
+    private string $documentType = 'document';		// "document" sau "non document"
 
     public function __construct()
     {
@@ -37,43 +37,40 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
         $arr = [
-			'clientId'	=> $this->auth()->getClientId(),
-			'info'		=> [
-							'service'		=>	$this->service,
-							'deliveryMode'	=> $this->deliveryMode,
-							'documentType'	=> $this->documentType,
-							'weight'		=>	$this->weight,
-							'dimensions'	=> [
-												'height'	=> $this->height,
-												'width'		=> $this->width,
-												'length'	=> $this->length,
-												],
-							'packages'		=>	[
-												'envelope'	=> $this->envelopes,
-												'parcel'	=> $this->parcels,
-												],
-						],
-			'recipient'	=> [
-						'country'	=> $this->country,
-						],
-			];
-		
-		if ( ($this->senderCity != '') || ($this->senderCounty != '') )
-			{
-			$arr['sender'] = [];
-			
-			if ($this->senderCity != '')
-				{
-				$arr['sender']['locality'] = $this->senderCity;
-				}
-			
-			if ($this->senderCounty != '')
-				{
-				$arr['sender']['county'] = $this->senderCounty;
-				}
-			}
-		
-		return $arr;
+            'clientId' => $this->auth()->getClientId(),
+            'info' => [
+                'service' => $this->service,
+                'deliveryMode' => $this->deliveryMode,
+                'documentType' => $this->documentType,
+                'weight' => $this->weight,
+                'dimensions' => [
+                    'height' => $this->height,
+                    'width' => $this->width,
+                    'length' => $this->length,
+                ],
+                'packages' => [
+                    'envelope' => $this->envelopes,
+                    'parcel' => $this->parcels,
+                ],
+            ],
+            'recipient' => [
+                'country' => $this->country,
+            ],
+        ];
+
+        if (($this->senderCity != '') || ($this->senderCounty != '')) {
+            $arr['sender'] = [];
+
+            if ($this->senderCity != '') {
+                $arr['sender']['locality'] = $this->senderCity;
+            }
+
+            if ($this->senderCounty != '') {
+                $arr['sender']['county'] = $this->senderCounty;
+            }
+        }
+
+        return $arr;
     }
 
     /**
@@ -90,12 +87,12 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
      */
     public function setDeliveryMode(string|DeliveryMode $deliveryMode): static
     {
-	    $deliveryMode = $deliveryMode instanceof DeliveryMode ? $deliveryMode->value : $deliveryMode;
-	    $deliveryMode = strtolower($deliveryMode);
-		if ( ($deliveryMode == 'rutier') || ($deliveryMode == 'aerian') )
-		{
+        $deliveryMode = $deliveryMode instanceof DeliveryMode ? $deliveryMode->value : $deliveryMode;
+        $deliveryMode = strtolower($deliveryMode);
+        if (($deliveryMode == 'rutier') || ($deliveryMode == 'aerian')) {
             $this->deliveryMode = $deliveryMode;
-		}
+        }
+
         return $this;
     }
 
@@ -113,11 +110,11 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
      */
     public function setDocumentType(string $documentType): static
     {
-	    $documentType = strtolower($documentType);
-		if ( ($documentType == 'document') || ($documentType == 'non document') )
-		{
+        $documentType = strtolower($documentType);
+        if (($documentType == 'document') || ($documentType == 'non document')) {
             $this->documentType = $documentType;
-		}
+        }
+
         return $this;
     }
 
@@ -137,6 +134,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     public function setSenderCity(string $city): static
     {
         $this->senderCity = $city;
+
         return $this;
     }
 
@@ -155,6 +153,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     public function setSenderCounty(string $county): static
     {
         $this->senderCounty = $county;
+
         return $this;
     }
 
@@ -173,6 +172,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     public function setCountry(string $country): static
     {
         $this->country = $country;
+
         return $this;
     }
 
@@ -193,6 +193,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     public function setEnvelopes(int $envelopes): static
     {
         $this->envelopes = $envelopes;
+
         return $this;
     }
 
@@ -211,6 +212,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     public function setParcels(int $parcels): static
     {
         $this->parcels = $parcels;
+
         return $this;
     }
 
@@ -229,6 +231,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     public function setWeight(int|float $weight): static
     {
         $this->weight = $weight;
+
         return $this;
     }
 
@@ -247,6 +250,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     public function setLength(int|float $length): static
     {
         $this->length = $length;
+
         return $this;
     }
 
@@ -265,6 +269,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     public function setWidth(int|float $width): static
     {
         $this->width = $width;
+
         return $this;
     }
 
@@ -283,6 +288,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     public function setHeight(int|float $height): static
     {
         $this->height = $height;
+
         return $this;
     }
 
@@ -301,6 +307,7 @@ class GetCostsExternal extends AbstractRequest implements RequestInterface
     public function setService(string $service): static
     {
         $this->service = $service;
+
         return $this;
     }
 }

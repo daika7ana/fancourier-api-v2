@@ -11,7 +11,7 @@ class GetStreets extends AbstractRequest implements RequestInterface
     use PaginationTrait;
 
     protected string $gateway = 'reports/streets';
-	protected string $method = 'GET';
+    protected string $method = 'GET';
 
     private string $county = '';
     private string $city = '';
@@ -23,28 +23,20 @@ class GetStreets extends AbstractRequest implements RequestInterface
         $this->perPage = 1000;
     }
 
-    // Overrides PaginationTrait::maxPerPage(); #[\Override] cannot see trait methods.
-    protected function maxPerPage(): int
-    {
-        return 1000;
-    }
-
     /** @return array<string, mixed> */
     #[\Override]
     public function pack(): array
     {
         $arr = [];
-		if ($this->county != '')
-			{
-			$arr['county'] = $this->county;
-			}
-		
-		if ($this->city != '')
-			{
-			$arr['locality'] = $this->city;
-			}
-		
-		return $this->withPagination($arr);
+        if ($this->county != '') {
+            $arr['county'] = $this->county;
+        }
+
+        if ($this->city != '') {
+            $arr['locality'] = $this->city;
+        }
+
+        return $this->withPagination($arr);
     }
 
     /**
@@ -62,6 +54,7 @@ class GetStreets extends AbstractRequest implements RequestInterface
     public function setCity(string $city): static
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -80,7 +73,14 @@ class GetStreets extends AbstractRequest implements RequestInterface
     public function setCounty(string $county): static
     {
         $this->county = $county;
+
         return $this;
+    }
+
+    // Overrides PaginationTrait::maxPerPage(); #[\Override] cannot see trait methods.
+    protected function maxPerPage(): int
+    {
+        return 1000;
     }
 
 

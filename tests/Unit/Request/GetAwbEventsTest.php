@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class GetAwbEventsTest extends TestCase
 {
-    private function request(): GetAwbEvents
-    {
-        return (new GetAwbEvents())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_an_empty_query_by_default(): void
     {
@@ -32,5 +27,9 @@ final class GetAwbEventsTest extends TestCase
     public function it_ignores_an_unsupported_language(): void
     {
         $this->assertSame([], $this->request()->setLanguage('fr')->pack());
+    }
+    private function request(): GetAwbEvents
+    {
+        return (new GetAwbEvents())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

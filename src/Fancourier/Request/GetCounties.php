@@ -9,7 +9,7 @@ use Fancourier\Response\GetCounties as GetCountiesResponse;
 class GetCounties extends AbstractRequest implements RequestInterface
 {
     protected string $gateway = 'reports/counties';
-	protected string $method = 'GET';
+    protected string $method = 'GET';
 
     public function __construct()
     {
@@ -21,7 +21,7 @@ class GetCounties extends AbstractRequest implements RequestInterface
     #[\Override]
     public function pack(): array
     {
-		return [];
+        return [];
     }
 
 }

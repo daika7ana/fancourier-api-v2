@@ -13,20 +13,6 @@ use PHPUnit\Framework\TestCase;
  */
 final class RequestConstantsTest extends TestCase
 {
-    /**
-     * @param array<string, string|int> $expected
-     */
-    private function assertConstants(array $expected): void
-    {
-        foreach ($expected as $name => $value) {
-            $this->assertTrue(
-                defined(AbstractRequest::class.'::'.$name),
-                'Missing constant AbstractRequest::'.$name
-            );
-            $this->assertSame($value, constant(AbstractRequest::class.'::'.$name), $name);
-        }
-    }
-
     #[Test]
     public function payment_type_constants_match_the_spec(): void
     {
@@ -169,5 +155,18 @@ final class RequestConstantsTest extends TestCase
             'ORDER_EVENT_PICKED_UP_BORDEROU' => 12,
             'ORDER_EVENT_CANCELLATION_IN_PROGRESS' => 99,
         ]);
+    }
+    /**
+     * @param array<string, string|int> $expected
+     */
+    private function assertConstants(array $expected): void
+    {
+        foreach ($expected as $name => $value) {
+            $this->assertTrue(
+                defined(AbstractRequest::class . '::' . $name),
+                'Missing constant AbstractRequest::' . $name,
+            );
+            $this->assertSame($value, constant(AbstractRequest::class . '::' . $name), $name);
+        }
     }
 }

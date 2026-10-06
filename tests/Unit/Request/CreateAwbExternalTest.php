@@ -12,11 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 final class CreateAwbExternalTest extends TestCase
 {
-    private function request(): CreateAwbExternal
-    {
-        return (new CreateAwbExternal())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_an_empty_shipment_list_by_default(): void
     {
@@ -33,5 +28,9 @@ final class CreateAwbExternalTest extends TestCase
         $this->assertSame('PLATFORM-2', $packed['platformId']);
         $this->assertCount(1, $packed['shipments']);
         $this->assertSame($awb->pack(), $packed['shipments'][0]);
+    }
+    private function request(): CreateAwbExternal
+    {
+        return (new CreateAwbExternal())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 // create a new request object
 $request = new Fancourier\Request\TrackCourierOrder();
 $request
-	->addOrder('18650990')
+    ->addOrder('18650990')
     ->setLanguage('ro');
 
 /*
@@ -30,10 +30,10 @@ Functions in TrackCourierOrder RESPONSE (only get* functions are available)
 
 if ($response->isOk()) {
     print_r($response->getData());
-    echo '<pre>'. print_r($response->getAll(), 1) . '</pre>';
-	echo '<hr />';
-	$order = $response->getOrder('18650990');
-	echo "Status: ".$order->getStatus()['date'].": ".$order->getStatus()['name'].'<br />';
+    echo '<pre>' . print_r($response->getAll(), 1) . '</pre>';
+    echo '<hr />';
+    $order = $response->getOrder('18650990');
+    echo "Status: " . $order->getStatus()['date'] . ": " . $order->getStatus()['name'] . '<br />';
 } else {
     var_dump($response->getErrorMessage());
 }

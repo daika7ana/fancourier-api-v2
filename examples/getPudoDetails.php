@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // initialize examples instance and autoloader
-require __DIR__.'/_init.php';
+require __DIR__ . '/_init.php';
 
 // create a new request object
 $request = new Fancourier\Request\GetPudo();
@@ -27,7 +27,7 @@ Functions in GetPudo RESPONSE (only get* functions are available)
 
 if ($response->isOk()) {
     print_r($response->getData());
-    echo '<pre>'. print_r($response->get(), 1) . '</pre>';
+    echo '<pre>' . print_r($response->get(), 1) . '</pre>';
 } else {
     var_dump($response->getErrorMessage());
 }

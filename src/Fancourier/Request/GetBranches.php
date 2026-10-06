@@ -9,7 +9,7 @@ use Fancourier\Response\GetBranches as GetBranchesResponse;
 class GetBranches extends AbstractRequest implements RequestInterface
 {
     protected string $gateway = 'reports/branches';
-	protected string $method = 'GET';
+    protected string $method = 'GET';
 
     private string $county = '';
     private string $city = '';
@@ -25,17 +25,15 @@ class GetBranches extends AbstractRequest implements RequestInterface
     public function pack(): array
     {
         $arr = [];
-		if ($this->county != '')
-			{
-			$arr['county'] = $this->county;
-			}
-		
-		if ($this->city != '')
-			{
-			$arr['locality'] = $this->city;
-			}		
+        if ($this->county != '') {
+            $arr['county'] = $this->county;
+        }
 
-		return $arr;
+        if ($this->city != '') {
+            $arr['locality'] = $this->city;
+        }
+
+        return $arr;
     }
 
     /**
@@ -53,6 +51,7 @@ class GetBranches extends AbstractRequest implements RequestInterface
     public function setCity(string $city): static
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -71,6 +70,7 @@ class GetBranches extends AbstractRequest implements RequestInterface
     public function setCounty(string $county): static
     {
         $this->county = $county;
+
         return $this;
     }
 

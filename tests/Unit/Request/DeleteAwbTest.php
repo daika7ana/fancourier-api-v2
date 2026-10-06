@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class DeleteAwbTest extends TestCase
 {
-    private function request(): DeleteAwb
-    {
-        return (new DeleteAwb())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
-    }
-
     #[Test]
     public function it_packs_a_null_awb_by_default(): void
     {
@@ -27,7 +22,11 @@ final class DeleteAwbTest extends TestCase
     {
         $this->assertSame(
             ['clientId' => 12345, 'awb' => '2347300120337'],
-            $this->request()->setAwb('2347300120337')->pack()
+            $this->request()->setAwb('2347300120337')->pack(),
         );
+    }
+    private function request(): DeleteAwb
+    {
+        return (new DeleteAwb())->authenticate(new Auth(12345, 'user', 'pass', 'test-token'));
     }
 }

@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class GetCourierOrdersTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_parses_a_success_body(): void
     {
@@ -56,5 +51,9 @@ class GetCourierOrdersTest extends TestCase
         $this->assertSame('', $response->get(99)->getDate());
         $this->assertSame(0.0, $response->get(99)->getWeight());
         $this->assertSame([], $response->get(99)->getAwbs());
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

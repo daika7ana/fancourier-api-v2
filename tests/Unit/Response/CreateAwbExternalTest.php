@@ -11,11 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class CreateAwbExternalTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_parses_a_success_body(): void
     {
@@ -70,5 +65,9 @@ class CreateAwbExternalTest extends TestCase
         $this->assertCount(1, $response->getAll());
         $this->assertSame('2347300120340', $response->getAll()[0]->getAwb());
         $this->assertFalse($response->getAll()[0]->hasErrors());
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

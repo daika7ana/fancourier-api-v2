@@ -6,66 +6,63 @@ namespace Fancourier\Objects;
 
 class Country
 {
-	protected string $id = '';
-	protected string $name = '';
-	/** @var array<int, string> */
-	protected array $deliveryMode = [];
-	protected string $code = '';
+    protected string $id = '';
+    protected string $name = '';
+    /** @var array<int, string> */
+    protected array $deliveryMode = [];
+    protected string $code = '';
 
-	/**
-	 * @param array<string, mixed> $data
-	 */
-	public function __construct(array $data)
-		{
-		$this->id = (string) ($data['id'] ?? '');
-		$this->name = (string) ($data['name'] ?? '');
-		$this->deliveryMode = [];
-		// deliveryMode is optional and, when present, must be a list.
-		$deliveryModes = $data['deliveryMode'] ?? null;
-		if (is_array($deliveryModes))
-			{
-			foreach ($deliveryModes as $dm)
-				{
-				if (!is_array($dm))
-					{
-					continue;
-					}
-				$this->deliveryMode[ intval($dm['id'] ?? 0) ] = (string) ($dm['name'] ?? '');
-				}
-			}
-		$this->code = (string) ($data['code'] ?? '');
-		}
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function __construct(array $data)
+    {
+        $this->id = (string) ($data['id'] ?? '');
+        $this->name = (string) ($data['name'] ?? '');
+        $this->deliveryMode = [];
+        // deliveryMode is optional and, when present, must be a list.
+        $deliveryModes = $data['deliveryMode'] ?? null;
+        if (is_array($deliveryModes)) {
+            foreach ($deliveryModes as $dm) {
+                if (!is_array($dm)) {
+                    continue;
+                }
+                $this->deliveryMode[ intval($dm['id'] ?? 0) ] = (string) ($dm['name'] ?? '');
+            }
+        }
+        $this->code = (string) ($data['code'] ?? '');
+    }
 
-	public function getId(): string
-		{
-		return $this->id;
-		}
+    public function getId(): string
+    {
+        return $this->id;
+    }
 
-	public function getName(): string
-		{
-		return $this->name;
-		}
+    public function getName(): string
+    {
+        return $this->name;
+    }
 
-	public function getCode(): string
-		{
-		return $this->code;
-		}
+    public function getCode(): string
+    {
+        return $this->code;
+    }
 
-	public function hasAirShipping(): bool
-		{
-		return isset($this->deliveryMode[2]);
-		}
+    public function hasAirShipping(): bool
+    {
+        return isset($this->deliveryMode[2]);
+    }
 
-	public function hasLandShipping(): bool
-		{
-		return isset($this->deliveryMode[1]);
-		}
+    public function hasLandShipping(): bool
+    {
+        return isset($this->deliveryMode[1]);
+    }
 
-	/** @return array<int, string> */
-	public function getShipping(): array
-		{
-		return $this->deliveryMode;
-		}
+    /** @return array<int, string> */
+    public function getShipping(): array
+    {
+        return $this->deliveryMode;
+    }
 }
 
 /*

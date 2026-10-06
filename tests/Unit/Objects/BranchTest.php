@@ -10,33 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class BranchTest extends TestCase
 {
-    private function data(): array
-    {
-        return [
-            'id' => '10',
-            'name' => 'Bucuresti',
-            'bank' => 'BCR',
-            'bankAccount' => 'RO00BCR0000000000000000',
-            'email' => 'branch@example.com',
-            'phone' => '0210000000',
-            'secondaryPhone' => '0210000001',
-            'contactPerson' => 'Ion Popescu',
-            'address' => [
-                'county' => 'Bucuresti',
-                'locality' => 'Bucuresti',
-                'countyId' => '10',
-                'localityId' => '11',
-                'street' => 'Fabrica de Glucoza',
-                'streetNo' => '11C',
-                'zipCode' => '020331',
-                'building' => 'B1',
-                'entrance' => 'A',
-                'floor' => '2',
-                'apartment' => '4',
-            ],
-        ];
-    }
-
     #[Test]
     public function it_exposes_the_constructor_values(): void
     {
@@ -91,5 +64,31 @@ class BranchTest extends TestCase
         unset($data['address']['zipCode']);
 
         $this->assertSame('', (new Branch($data))->getPostalCode());
+    }
+    private function data(): array
+    {
+        return [
+            'id' => '10',
+            'name' => 'Bucuresti',
+            'bank' => 'BCR',
+            'bankAccount' => 'RO00BCR0000000000000000',
+            'email' => 'branch@example.com',
+            'phone' => '0210000000',
+            'secondaryPhone' => '0210000001',
+            'contactPerson' => 'Ion Popescu',
+            'address' => [
+                'county' => 'Bucuresti',
+                'locality' => 'Bucuresti',
+                'countyId' => '10',
+                'localityId' => '11',
+                'street' => 'Fabrica de Glucoza',
+                'streetNo' => '11C',
+                'zipCode' => '020331',
+                'building' => 'B1',
+                'entrance' => 'A',
+                'floor' => '2',
+                'apartment' => '4',
+            ],
+        ];
     }
 }

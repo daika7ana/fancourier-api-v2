@@ -10,11 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class DeleteCourierOrderTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_reports_success_as_true(): void
     {
@@ -44,5 +39,9 @@ class DeleteCourierOrderTest extends TestCase
         $this->assertSame(-1, $response->getErrorCode());
         $this->assertSame('Missing status', $response->getErrorMessage());
         $this->assertFalse($response->getData());
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

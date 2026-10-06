@@ -10,11 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class GetAwbConfirmationsTest extends TestCase
 {
-    private function fixture(string $name): string
-    {
-        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
-    }
-
     #[Test]
     public function it_accepts_a_success_body_without_payload(): void
     {
@@ -68,5 +63,9 @@ class GetAwbConfirmationsTest extends TestCase
         $this->assertTrue($response->isOk());
         $this->assertNull($response->getData());
         $this->assertNull($response->getRAWbytes());
+    }
+    private function fixture(string $name): string
+    {
+        return (string) file_get_contents(__DIR__ . '/../../fixtures/' . $name . '.json');
     }
 }

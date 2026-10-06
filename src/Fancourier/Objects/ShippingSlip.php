@@ -6,23 +6,23 @@ namespace Fancourier\Objects;
 
 class ShippingSlip
 {
-	protected string $awbNumber = '';
+    protected string $awbNumber = '';
 
-	protected string $service = '';
-	protected string $serviceId = '';
+    protected string $service = '';
+    protected string $serviceId = '';
 
-	protected string $weight = '';
-	protected float $height = 0.0;
-	protected float $width = 0.0;
-	protected float $length = 0.0;
+    protected string $weight = '';
+    protected float $height = 0.0;
+    protected float $width = 0.0;
+    protected float $length = 0.0;
 
-	protected string $payment = '';
-	protected string $returnPayment = '';
-	protected float $cod = 0.0;
-	protected float $declaredValue = 0.0;
+    protected string $payment = '';
+    protected string $returnPayment = '';
+    protected float $cod = 0.0;
+    protected float $declaredValue = 0.0;
 
-	protected string $notes = '';
-	protected string $contents = '';
+    protected string $notes = '';
+    protected string $contents = '';
 
     protected int $envelopes = 0;
     protected int $parcels = 0;
@@ -33,171 +33,171 @@ class ShippingSlip
     protected string $refund = '';
     protected string $currency = '';
 
-	/** @var array<string, mixed> */
-	protected array $recipient = [];
-	/** @var array<string, mixed> */
-	protected array $sender = [];
+    /** @var array<string, mixed> */
+    protected array $recipient = [];
+    /** @var array<string, mixed> */
+    protected array $sender = [];
 
-	/**
-	 * @param array<string, mixed> $data
-	 */
-	public function __construct(array $data)
-		{
-		$this->awbNumber	= (string) ($data['info']['awbNumber'] ?? '');
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function __construct(array $data)
+    {
+        $this->awbNumber = (string) ($data['info']['awbNumber'] ?? '');
 
-		$this->service		= (string) ($data['info']['service'] ?? '');
-		$this->serviceId	= (string) ($data['info']['serviceId'] ?? '');
+        $this->service = (string) ($data['info']['service'] ?? '');
+        $this->serviceId = (string) ($data['info']['serviceId'] ?? '');
 
-		// weight is exposed as a string by the getter; keep the numeric default "0".
-		$this->weight		= (string) ($data['info']['weight'] ?? 0);
-		$this->height		= self::toFloat($data['info']['dimensions']['height'] ?? null);
-		$this->width		= self::toFloat($data['info']['dimensions']['width'] ?? null);
-		$this->length		= self::toFloat($data['info']['dimensions']['length'] ?? null);
+        // weight is exposed as a string by the getter; keep the numeric default "0".
+        $this->weight = (string) ($data['info']['weight'] ?? 0);
+        $this->height = self::toFloat($data['info']['dimensions']['height'] ?? null);
+        $this->width = self::toFloat($data['info']['dimensions']['width'] ?? null);
+        $this->length = self::toFloat($data['info']['dimensions']['length'] ?? null);
 
-		$this->payment		= (string) ($data['info']['payment'] ?? '');
-		$this->returnPayment	= (string) ($data['info']['returnPayment'] ?? '');
-		$this->cod			= self::toFloat($data['info']['cod'] ?? null);
-		$this->declaredValue	= self::toFloat($data['info']['declaredValue'] ?? null);
-		$this->notes		= (string) ($data['info']['observations'] ?? '');
-		$this->contents		= (string) ($data['info']['content'] ?? '');
+        $this->payment = (string) ($data['info']['payment'] ?? '');
+        $this->returnPayment = (string) ($data['info']['returnPayment'] ?? '');
+        $this->cod = self::toFloat($data['info']['cod'] ?? null);
+        $this->declaredValue = self::toFloat($data['info']['declaredValue'] ?? null);
+        $this->notes = (string) ($data['info']['observations'] ?? '');
+        $this->contents = (string) ($data['info']['content'] ?? '');
 
-		$this->envelopes	= (int) ($data['info']['packages']['envelope'] ?? 0);
-		$this->parcels		= (int) ($data['info']['packages']['parcel'] ?? 0);
+        $this->envelopes = (int) ($data['info']['packages']['envelope'] ?? 0);
+        $this->parcels = (int) ($data['info']['packages']['parcel'] ?? 0);
 
-		$this->dateTime		= (string) ($data['info']['date'] ?? '');
+        $this->dateTime = (string) ($data['info']['date'] ?? '');
 
-		$this->cost			= self::toFloat($data['info']['cost'] ?? null);
-		$this->costCenter	= (string) ($data['info']['costCenter'] ?? '');
+        $this->cost = self::toFloat($data['info']['cost'] ?? null);
+        $this->costCenter = (string) ($data['info']['costCenter'] ?? '');
 
-		$this->refund		= (string) ($data['info']['refund'] ?? '');
+        $this->refund = (string) ($data['info']['refund'] ?? '');
 
-		$this->currency		= (string) ($data['info']['currency'] ?? '');
+        $this->currency = (string) ($data['info']['currency'] ?? '');
 
-		$recipient = $data['recipient'] ?? null;
- 		$this->recipient	= is_array($recipient) ? $recipient : [];
-		$sender = $data['sender'] ?? null;
- 		$this->sender		= is_array($sender) ? $sender : [];
-		}
+        $recipient = $data['recipient'] ?? null;
+        $this->recipient = is_array($recipient) ? $recipient : [];
+        $sender = $data['sender'] ?? null;
+        $this->sender = is_array($sender) ? $sender : [];
+    }
 
-	/**
-	 * Normalize a JSON scalar that must become a float.
-	 */
-	private static function toFloat(mixed $value): float
-		{
-		return is_numeric($value) ? (float) $value : 0.0;
-		}
+    public function getAwbNumber(): string
+    {
+        return $this->awbNumber;
+    }
 
-	public function getAwbNumber(): string
-		{
-		return $this->awbNumber;
-		}
+    public function getService(): string
+    {
+        return $this->service;
+    }
 
-	public function getService(): string
-		{
-		return $this->service;
-		}
+    public function getServiceId(): string
+    {
+        return $this->serviceId;
+    }
 
-	public function getServiceId(): string
-		{
-		return $this->serviceId;
-		}
+    public function getWeight(): string
+    {
+        return $this->weight;
+    }
 
-	public function getWeight(): string
-		{
-		return $this->weight;
-		}
+    public function getHeight(): float
+    {
+        return $this->height;
+    }
 
-	public function getHeight(): float
-		{
-		return $this->height;
-		}
+    public function getWidth(): float
+    {
+        return $this->width;
+    }
 
-	public function getWidth(): float
-		{
-		return $this->width;
-		}
+    public function getLength(): float
+    {
+        return $this->length;
+    }
 
-	public function getLength(): float
-		{
-		return $this->length;
-		}
+    public function getPayment(): string
+    {
+        return $this->payment;
+    }
 
-	public function getPayment(): string
-		{
-		return $this->payment;
-		}
+    public function getReturnPayment(): string
+    {
+        return $this->returnPayment;
+    }
 
-	public function getReturnPayment(): string
-		{
-		return $this->returnPayment;
-		}
+    public function getReimbursement(): float
+    {
+        return $this->cod;
+    }
 
-	public function getReimbursement(): float
-		{
-		return $this->cod;
-		}
+    public function getDeclaredValue(): float
+    {
+        return $this->declaredValue;
+    }
 
-	public function getDeclaredValue(): float
-		{
-		return $this->declaredValue;
-		}
+    public function getNotes(): string
+    {
+        return $this->notes;
+    }
 
-	public function getNotes(): string
-		{
-		return $this->notes;
-		}
+    public function getContents(): string
+    {
+        return $this->contents;
+    }
 
-	public function getContents(): string
-		{
-		return $this->contents;
-		}
+    public function getEnvelopes(): int
+    {
+        return $this->envelopes;
+    }
 
-	public function getEnvelopes(): int
-		{
-		return $this->envelopes;
-		}
+    public function getParcels(): int
+    {
+        return $this->parcels;
+    }
 
-	public function getParcels(): int
-		{
-		return $this->parcels;
-		}
+    public function getDateTime(): string
+    {
+        return $this->dateTime;
+    }
 
-	public function getDateTime(): string
-		{
-		return $this->dateTime;
-		}
+    public function getCost(): float
+    {
+        return $this->cost;
+    }
 
-	public function getCost(): float
-		{
-		return $this->cost;
-		}
+    public function getCostCenter(): string
+    {
+        return $this->costCenter;
+    }
 
-	public function getCostCenter(): string
-		{
-		return $this->costCenter;
-		}
+    public function getRefund(): string
+    {
+        return $this->refund;
+    }
 
-	public function getRefund(): string
-		{
-		return $this->refund;
-		}
+    public function getCurrency(): string
+    {
+        return $this->currency;
+    }
 
-	public function getCurrency(): string
-		{
-		return $this->currency;
-		}
+    /** @return array<string, mixed> */
+    public function getRecipient(): array
+    {
+        return $this->recipient;
+    }
 
-	/** @return array<string, mixed> */
-	public function getRecipient(): array
-		{
-		return $this->recipient;
-		}
+    /** @return array<string, mixed> */
+    public function getSender(): array
+    {
+        return $this->sender;
+    }
 
-	/** @return array<string, mixed> */
-	public function getSender(): array
-		{
-		return $this->sender;
-		}
+    /**
+     * Normalize a JSON scalar that must become a float.
+     */
+    private static function toFloat(mixed $value): float
+    {
+        return is_numeric($value) ? (float) $value : 0.0;
+    }
 
 
 }
@@ -231,8 +231,8 @@ class ShippingSlip
                             [parcel] => 1
                         )
 
-                    [costCenter] => 
-                    [refund] => 
+                    [costCenter] =>
+                    [refund] =>
                     [currency] => LEI
                 )
 
@@ -241,7 +241,7 @@ class ShippingSlip
                     [name] => COM S.R.L.
                     [contactPerson] => COM S.R.L.
                     [phone] => +40 720 000 000
-                    [secondaryPhone] => 
+                    [secondaryPhone] =>
                     [email] => email@example.com
                     [address] => Array
                         (
@@ -251,12 +251,12 @@ class ShippingSlip
                             [county] => Ialomita
                             [agency] => Ialomita
                             [street] => Str. Grausor, bl. 0, sc. 0, et. 0, ap. 0
-                            [streetNo] => 
+                            [streetNo] =>
                             [zipCode] => 000000
-                            [building] => 
-                            [entrance] => 
-                            [floor] => 
-                            [apartment] => 
+                            [building] =>
+                            [entrance] =>
+                            [floor] =>
+                            [apartment] =>
                             [country] => Romania
                         )
 
@@ -265,9 +265,9 @@ class ShippingSlip
             [sender] => Array
                 (
                     [name] => NETWORK SRL
-                    [contactPerson] => 
+                    [contactPerson] =>
                     [phone] => 0720000000
-                    [secondaryPhone] => 
+                    [secondaryPhone] =>
                     [email] => email@example.com
                     [address] => Array
                         (
@@ -277,12 +277,12 @@ class ShippingSlip
                             [county] => Bucuresti
                             [agency] => Bucuresti
                             [street] => Ridicare din sediul FAN Otopeni (Sediu)
-                            [streetNo] => 
+                            [streetNo] =>
                             [zipCode] => 000000
-                            [building] => 
-                            [entrance] => 
-                            [floor] => 
-                            [apartment] => 
+                            [building] =>
+                            [entrance] =>
+                            [floor] =>
+                            [apartment] =>
                             [country] => Romania
                         )
 

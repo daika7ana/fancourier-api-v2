@@ -10,32 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class BankTransferTest extends TestCase
 {
-    private function data(): array
-    {
-        return [
-            'info' => [
-                'awbNumber' => '6000000000001',
-                'awbDate' => '16.11.2023',
-                'returnAwbNumber' => '',
-                'reimbursementAwbNumber' => '',
-                'amountCollected' => 670.33,
-                'content' => 'order #6783',
-                'transferDate' => '20.11.2023',
-                'transactionType' => 'cash',
-                'transactionDate' => '17.11.2023',
-            ],
-            'recipient' => [
-                'name' => 'M. INTREPRINDERE FAMILIALA',
-                'contactPerson' => 'M. - Adjud',
-                'address' => ['locality' => 'Adjud'],
-            ],
-            'sender' => [
-                'name' => 'NETWORK SRL',
-                'contactPerson' => '',
-            ],
-        ];
-    }
-
     #[Test]
     public function it_exposes_the_constructor_values(): void
     {
@@ -66,5 +40,30 @@ class BankTransferTest extends TestCase
         $this->assertSame(0.0, $transfer->getAmountCollected());
         $this->assertSame('', $transfer->getContent());
         $this->assertSame('', $transfer->getRecipientCity());
+    }
+    private function data(): array
+    {
+        return [
+            'info' => [
+                'awbNumber' => '6000000000001',
+                'awbDate' => '16.11.2023',
+                'returnAwbNumber' => '',
+                'reimbursementAwbNumber' => '',
+                'amountCollected' => 670.33,
+                'content' => 'order #6783',
+                'transferDate' => '20.11.2023',
+                'transactionType' => 'cash',
+                'transactionDate' => '17.11.2023',
+            ],
+            'recipient' => [
+                'name' => 'M. INTREPRINDERE FAMILIALA',
+                'contactPerson' => 'M. - Adjud',
+                'address' => ['locality' => 'Adjud'],
+            ],
+            'sender' => [
+                'name' => 'NETWORK SRL',
+                'contactPerson' => '',
+            ],
+        ];
     }
 }

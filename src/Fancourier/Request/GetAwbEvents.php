@@ -11,7 +11,7 @@ class GetAwbEvents extends AbstractRequest implements RequestInterface
     use LanguageTrait;
 
     protected string $gateway = 'reports/awb-events';
-	protected string $method = 'GET';
+    protected string $method = 'GET';
 
     public function __construct()
     {
@@ -23,13 +23,12 @@ class GetAwbEvents extends AbstractRequest implements RequestInterface
     #[\Override]
     public function pack(): array
     {
-		$arr = [];
-		if ($this->language != '')
-			{
-			$arr['language'] = $this->language;
-			}
+        $arr = [];
+        if ($this->language != '') {
+            $arr['language'] = $this->language;
+        }
 
-		return $arr;
+        return $arr;
     }
 
 }

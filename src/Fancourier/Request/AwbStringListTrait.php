@@ -17,6 +17,7 @@ trait AwbStringListTrait
     public function addAwb(string $awb): static
     {
         $this->awbList[] = $awb;
+
         return $this;
     }
 
@@ -28,6 +29,7 @@ trait AwbStringListTrait
     public function resetAwbs(): static
     {
         $this->awbList = [];
+
         return $this;
     }
 }
