@@ -44,6 +44,12 @@ If used without composer, you will need to manually require the `autoload.php` f
 require_once '/path/to/fancourier-api/src/autoload.php';
 ```
 
+The bundled examples follow the same rule: `examples/_init.php` requires `vendor/autoload.php`
+when Composer has installed the dependencies, and falls back to `src/autoload.php` otherwise.
+Every path is resolved from the file's own location, so the examples can be run from any
+working directory — for example `php examples/getPudo.php` from the repository root or
+`php getPudo.php` from inside `examples/`.
+
 ### Upgrading to 2.0
 2.0 is a breaking major (native types, `Client` camelCase renames, removed dead methods).
 See [`MIGRATION.md`](./MIGRATION.md) for the full break list, then run the Rector codemod to update

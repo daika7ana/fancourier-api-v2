@@ -2,16 +2,21 @@
 
 declare(strict_types=1);
 
-// load the class autoloader. If you're using Composer, you don't need to use this autoloader
-require '../src/autoload.php';
+// load the class autoloader. Prefer Composer when it is present, otherwise fall back to the
+// bundled autoloader. Everything is resolved from this file, so the examples can be run from
+// any working directory (repo root, examples/, etc.).
+$composerAutoload = __DIR__ . '/../vendor/autoload.php';
+require is_file($composerAutoload) ? $composerAutoload : __DIR__ . '/../src/autoload.php';
+
+$tokenFile = __DIR__ . '/examples_token.txt';
 
 // the bearer token has a life time of 24 hours so we delete it if it's too old to get a new one
-if (is_file('./examples_token.txt') && (filemtime('./examples_token.txt') < time() - 86000)) {
-    unlink('./examples_token.txt');
+if (is_file($tokenFile) && (filemtime($tokenFile) < time() - 86000)) {
+    unlink($tokenFile);
 }
 
 // load the token if we have it, if not, we use an empty string to signify we don't have one
-$token = is_file('./examples_token.txt') ? file_get_contents('./examples_token.txt') : '';
+$token = is_file($tokenFile) ? file_get_contents($tokenFile) : '';
 
 // read the account credentials from the environment; never hardcode them
 $clientId = getenv('FANCOURIER_TEST_CLIENT_ID');
@@ -34,7 +39,7 @@ if ($token == '') {
     $token = $fan->getToken(true);	// force refresh of token (if the param is not set or false, it will just return the existing token or empty string)
     if ($token) {
         // save the token
-        file_put_contents('./examples_token.txt', $token);
+        file_put_contents($tokenFile, $token);
     } else {
         // error when getting token, show error
         echo $fan->getTokenMessage();

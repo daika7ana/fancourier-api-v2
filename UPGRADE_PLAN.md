@@ -422,7 +422,14 @@ Tasks:
 
 ### Phase 6 — Examples & docs polish
 
-**Status: NOT STARTED.**
+**Status: DONE.**
+
+- `src/autoload.php` is **kept**: non-Composer/manual usage remains supported, so the README
+  "Manual" section stays.
+- `examples/_init.php` is now **CWD-independent**: it resolves every path from `__DIR__`, prefers
+  `vendor/autoload.php` when Composer is present and falls back to `src/autoload.php`.
+- `examples/getPudo.php` and `examples/getPudoDetails.php` were **merged** into a single
+  `examples/getPudo.php` that demonstrates both `setType(...)` + `getAll()` and `setId(...)` + `get()`.
 
 **Goal:** the de-facto docs (examples) and README are correct and runnable.
 

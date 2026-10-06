@@ -5,7 +5,13 @@ declare(strict_types=1);
 // initialize examples instance and autoloader
 require __DIR__ . '/_init.php';
 
-// create a new request object
+/*
+This example shows both ways to query PUDO (pickup) points:
+1. list the pickup points of a given type with setType(...) and read them with getAll();
+2. fetch a single pickup point by its id with setId(...) and read it with get().
+*/
+
+// --- 1. list pickup points by type ---
 $request = new Fancourier\Request\GetPudo();
 $request
     ->setType(Fancourier\Request\GetPudo::PUDO_FANBOX);	// PUDO_OFFICE / PUDO_PAYPOINT
@@ -27,6 +33,20 @@ Functions in GetPudo RESPONSE (only get* functions are available)
 if ($response->isOk()) {
     print_r($response->getData());
     echo '<pre>' . print_r($response->getAll(), 1) . '</pre>';
+} else {
+    var_dump($response->getErrorMessage());
+}
+
+// --- 2. fetch a single pickup point by id ---
+$request = new Fancourier\Request\GetPudo();
+$request
+    ->setId('S125');	// when setId is used, pudoType is ignored
+
+$response = $fan->getPudo($request);
+
+if ($response->isOk()) {
+    print_r($response->getData());
+    echo '<pre>' . print_r($response->get(), 1) . '</pre>';
 } else {
     var_dump($response->getErrorMessage());
 }
