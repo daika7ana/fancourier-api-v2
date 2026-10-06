@@ -109,7 +109,6 @@ class AwbExtern
 					"declaredValue" => $this->declaredValue, //optional
 					
 					"cod" => $this->CoD,	// optional - daca se doreste trimiterea cu ramburs
-				//	"repayment" => $this->CoD, //optional - daca se doreste trimiterea cu ramburs - this was used in earlier versions of the 2.0 api - no longer used
 					// ponytail: default is 'RON', so "when set" is always true; emitted unconditionally to match AwbIntern. Add a nullable/unset state if the API ever needs currency suppressed.
 					"currency" => $this->currency, // optional
 					"payment" => $this->paymentType,
@@ -140,7 +139,6 @@ class AwbExtern
 								"entrance" => $this->senderEntrance, 
 								"floor" => $this->senderFloor, 
 								"apartment" => $this->senderApartment,
-								//"country" => "Romania" // optional
 								] 
 						],
 			"recipient" => [ //obligatoriu

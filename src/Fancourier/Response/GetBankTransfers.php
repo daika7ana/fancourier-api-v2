@@ -63,19 +63,4 @@ class GetBankTransfers extends PaginatedResponse
 		{
 		return $this->result[$position] ?? false;
 		}
-
-/*	public function getCity($cityname): City|false
-		{
-		$return = false;
-		foreach ($this->result as $cid=>$cv)
-			{
-			if ( strtolower($cv->getName()) == strtolower(trim($cityname)) )
-				{
-				$return = $this->result[ $cid ];
-				break;
-				}
-			}
-
-		return $return;
-		}*/
 }

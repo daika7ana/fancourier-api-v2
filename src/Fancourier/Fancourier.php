@@ -151,11 +151,6 @@ class Fancourier
         return $response;
     }
 
-//    public function requestCourier(RequestCourier $request)
-//    {
-//        todo implement return $this->send($request);
-//    }
-
     /**
      * @return \Fancourier\Response\GetServices
      */

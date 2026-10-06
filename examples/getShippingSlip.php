@@ -66,7 +66,6 @@ else
 /*
 The ShippingSlip object has the following functions:
 ->getAwbNumber()
-->getInfo()
 ->getService()
 ->getServiceId()
 ->getWeight()

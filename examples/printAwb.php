@@ -25,7 +25,7 @@ Functions in PrintAwb REQUEST (only the set* functions are shown, the get* funct
 Note that you can't enable PDF and ZPL at the same time
 */
 
-$response = $fan->PrintAwb($request);
+$response = $fan->printAwb($request);
 
 /*
 Functions in PrintAwb RESPONSE (only get* functions are available)
@@ -36,7 +36,6 @@ if ($response->isOk()) {
     echo($response->getData());
 } else {
     var_dump($response->getErrorMessage());
-	print_r($response->getAllErrors());
 }
 
 /*

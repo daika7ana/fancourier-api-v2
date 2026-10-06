@@ -91,11 +91,9 @@ class Client {
 			{
 			throw new \InvalidArgumentException('URL must not be empty');
 			}
-		//echo '<div style="font-family:monospace; padding: 5px; border: 1px solid red; margin: 5px">'.$url.'</div>';
 		$this->init();
 		
 		curl_setopt($this->curl, CURLOPT_URL, $url);
-		//curl_setopt($this->curl, CURLOPT_HEADER, 0);
 		curl_setopt($this->curl, CURLOPT_POST, false);
 		if ($this->is_put)
 			{
@@ -152,7 +150,6 @@ class Client {
 		$this->init();
 
 		curl_setopt($this->curl, CURLOPT_URL, $url);
-		//curl_setopt($this->curl, CURLOPT_HEADER, 0);
 
 		curl_setopt($this->curl, CURLOPT_POST, true);
 		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
@@ -182,14 +179,7 @@ class Client {
 
 		$datastr = http_build_query($data, '', '&');
 		$datastr = str_replace(["%5B", "%5D"], ["[", "]"], $datastr);
-/*
-		echo '<pre>';
-		print_r($data);
-		echo $datastr;
-		echo '</pre>';
-*/
 		curl_setopt($this->curl, CURLOPT_URL, $url);
-		//curl_setopt($this->curl, CURLOPT_HEADER, 0);
 
 		curl_setopt($this->curl, CURLOPT_POST, true);
 		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $datastr);
@@ -219,9 +209,6 @@ class Client {
 
 		curl_setopt($this->curl, CURLOPT_URL, $url);
 
-		//curl_setopt($this->curl, CURLOPT_HEADER, ['Content-Type: application/json'] );
-
-		//curl_setopt($this->curl, CURLOPT_POST, 1);
 		$jsondata = json_encode($data);
 		if ($jsondata === false)
 			{
@@ -342,10 +329,5 @@ class Client {
 		$this->con_timeout = $con_timeout;
 		$this->timeout = $timeout;
 		return $this;
-		}
-
-	public function __destruct()
-		{
-
 		}
 }

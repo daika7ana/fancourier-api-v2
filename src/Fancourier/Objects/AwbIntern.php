@@ -140,7 +140,6 @@ class AwbIntern
 								"entrance" => $this->entrance, 
 								"floor" => $this->floor, 
 								"apartment" => $this->apartment,
-								//"country" => "Romania" // optional
 								] 
                         ],
             "sender" => [
@@ -170,7 +169,6 @@ class AwbIntern
 								"entrance" => $this->senderEntrance, 
 								"floor" => $this->senderFloor, 
 								"apartment" => $this->senderApartment,
-								//"country" => "Romania" // optional
 								] 
                         ];
 			}

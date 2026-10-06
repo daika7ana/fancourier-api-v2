@@ -107,7 +107,6 @@ class CreateCourierOrder extends AbstractRequest implements RequestInterface
 								"entrance" => $this->entrance, 
 								"floor" => $this->floor, 
 								"apartment" => $this->apartment,
-								//"country" => "Romania" // optional
 								] 
 						];
 				}

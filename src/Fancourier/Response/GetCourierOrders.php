@@ -85,7 +85,7 @@ class GetCourierOrders extends Generic implements ResponseInterface
 	/*
 		reports/orders api apparently doesn't follow the same response format as the other api functions as such
 		the "total" field contains the total number of pages instead of total entries.
-		This function is kept as an alias to the getTotal() function for consistentcy only
+		This function is kept as an alias to the getTotal() function for consistency only
 	*/
 	public function getTotalPages(): int
 		{

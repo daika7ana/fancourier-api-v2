@@ -9,7 +9,7 @@ require __DIR__.'/_init.php';
 GetCountries REQUEST has no options that can be set. Just call the function without a request
 */
 
-$response = $fan->GetCountries();
+$response = $fan->getCountries();
 
 /*
 Functions in GetCountries RESPONSE (only get* functions are available)

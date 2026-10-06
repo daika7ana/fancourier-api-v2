@@ -127,7 +127,7 @@ All set* functions here have an equivalent get* function
 ->setSenderCity($city)
 ->setSenderStreet($street)
 ->setSenderNumber($number)
-->seDropOffLocation($pudoId)		// for PUDO deliveries (where sender leaves package for pickup)
+->setDropOffLocation($pudoId)		// for PUDO deliveries (where sender leaves package for pickup)
 ->setSenderPostalCode($postalCode)
 ->setSenderBuilding($building)
 ->setSenderEntrance($entrance)

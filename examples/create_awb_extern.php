@@ -9,7 +9,7 @@ require __DIR__.'/_init.php';
 Documentatia specifica ca se pot folosi servicii "Export" si "Export-Cont Colector"
 dar in realitate, serverul raspunde cu serviciu invalid in cazul "Export-Cont Colector"
 Asadar se poate specifica doar "Export" ca serviciu (cel putin la momentul actual).
-Aparent pentru cont colector la export, trebuie setat campul "repayment" (functia ->setCoD(valoare) )
+Aparent pentru cont colector la export, trebuie setat campul "repayment" (functia ->setReimbursement(valoare) )
 ->setCurrency() momentan nu influenteaza in nici un fel requestul. Aparent moneda e setata automat in functie de contul si contractul clientului
 *****************************************/
 

@@ -9,7 +9,7 @@ require __DIR__.'/_init.php';
 GetServices REQUEST has no options that can be set. Just call the function without a request
 */
 
-$response = $fan->GetServices();
+$response = $fan->getServices();
 
 /*
 Functions in GetServices RESPONSE (only get* functions are available)
