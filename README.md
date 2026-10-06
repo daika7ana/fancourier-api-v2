@@ -1,5 +1,9 @@
 # FANCourier API v2.0
 
+> **Full documentation:** see the [docs index](./docs/README.md) for the
+> [endpoint reference](./docs/endpoints.md), [objects reference](./docs/objects.md),
+> [enums and code lists](./docs/enums.md), and [error handling](./docs/errors.md).
+
 ## Table of contents
 - <a href="#information">Information</a>
 - <a href="#installation">Installation</a>
@@ -20,8 +24,8 @@
 - <a href="#license">License</a>
 
 ## Information
-This version of the library is designed for FANCourier API v2.0 (JSON based responses). The code works and there are examples for all API requests, however, the documentation is not yet ready.  
-  
+This version of the library is designed for FANCourier API v2.0 (JSON based responses). The code works and there are examples for all API requests. Complete reference documentation lives in [`docs/`](./docs/README.md).  
+   
 All requests have the method `getData()` that returns the unprocessed response of the API. Additional functions depend on the response object type to return processed data.  
 
 ## Installation
@@ -66,7 +70,7 @@ plain string arguments keep working in 2.0.
 
 ## Usage
 
-At the moment complete and proper documentation is not yet available. However, there are examples for every request type you can make.  
+See the [`docs/`](./docs/README.md) reference for the full API, and the examples for every request type you can make.  
 Inside them you will also find comments with complete function list for each `request`, `response` and `object`.
 
 

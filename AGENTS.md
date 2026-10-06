@@ -78,13 +78,14 @@ Non-obvious details:
 
 ## Reference material
 
-- `examples/*.php` are the **de-facto API docs** — the README calls docs incomplete.
-  Each example lists the available request/response methods in comments. Use
-  `examples/_init.php` for the shared bootstrap (manual autoloader + cached token).
-- Run examples **from the `examples/` directory** (`cd examples && php getCosts.php`):
-  `_init.php` uses CWD-relative paths (`../src/autoload.php`, `./examples_token.txt`),
-  so invoking `php examples/getCosts.php` from the repo root fails.
-- `docs/Classes overview.md` maps FAN Courier doc sections to PHP Request/Response/Object classes.
+- `examples/*.php` demonstrate every endpoint; `examples/README.md` indexes them.
+  Each example header lists its endpoint and Request/Response classes. The shared
+  bootstrap `examples/_init.php` is CWD-independent (prefers `vendor/autoload.php`,
+  falls back to `src/autoload.php`) and caches the token in
+  `examples/examples_token.txt` (gitignored). Credentials come from
+  `FANCOURIER_TEST_CLIENT_ID`/`FANCOURIER_TEST_USERNAME`/`FANCOURIER_TEST_PASSWORD`.
+- `docs/` holds the reference documentation (index: `docs/README.md`): endpoints,
+  objects, enums, errors and getting-started.
 - Auth: bearer token has a 24h lifetime; `getToken($refresh)` refreshes it. Examples
   cache it in `examples/examples_token.txt` (gitignored).
 - Non-Composer usage loads `src/autoload.php` (a hand-rolled autoloader), not vendor.
