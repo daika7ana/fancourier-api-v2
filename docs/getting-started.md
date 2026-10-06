@@ -97,6 +97,48 @@ $fan->setTimeout(3, 6);
 A request may also override verify/timeout itself via `RequestInterface::setVerify()` /
 `setTimeout()`; the facade sets them on each request before sending.
 
+### Base URL and custom transport
+
+```php
+// Point the library at a sandbox, proxy or mock server. Pass '' to reset to the default.
+$fan->setBaseUrl('https://sandbox.fancourier.ro/');
+
+// Inject a custom/fake transport, e.g. in tests. Verify/timeout settings are
+// re-applied to the replacement client.
+$fan->setClient(new Client());
+
+$response->getHttpStatusCode(); // int|null — null when no HTTP transfer happened
+```
+
+| Method | Notes |
+|---|---|
+| `Fancourier::setBaseUrl(string $baseUrl): static` | Overrides the API base URL (default `https://api.fancourier.ro/`); pass `''` to reset. Also available as `Auth::setBaseUrl()` and on request objects via `RequestInterface::setBaseUrl()`. |
+| `Fancourier::setClient(Client $client): static` | Injects a custom/fake transport (e.g. in tests). Also available as `RequestInterface::setClient()`; verify/timeout settings are re-applied to the injected client. |
+| `ResponseInterface::getHttpStatusCode(): ?int` | HTTP status of the transfer, `null` when unknown (e.g. transport failure). Set on every response. |
+
+### Resilience and observability
+
+Retries and logging are opt-in; without them behaviour is unchanged.
+
+```php
+use Fancourier\RetryPolicy;
+
+// Retry transient failures (transport errors and retryable HTTP statuses) with backoff.
+$fan->setRetryPolicy(new RetryPolicy(maxAttempts: 3, baseDelayMs: 200, maxDelayMs: 5000));
+
+// PSR-3 logging of request and token-lifecycle events.
+$fan->setLogger($logger);
+
+// PSR-16 token cache so the bearer survives across processes (keyed per account).
+$fan->setTokenCache($cache);
+```
+
+| Method | Notes |
+|---|---|
+| `Fancourier::setTokenCache(CacheInterface $cache, string $key = 'fancourier.token'): static` | Caches the bearer token in a PSR-16 cache and reuses it until it expires. The slot is scoped to the login credentials (`username`/`password` — `clientId` is not part of the token's identity), so rotating to another account always misses the cache and re-authenticates instead of reusing the previous account's token. Also available as `Auth::setTokenCache()`. |
+| `Fancourier::setRetryPolicy(?RetryPolicy $policy): static` | Opts in to bounded retry/backoff for transport failures and responses whose HTTP status is in `retryStatuses`. `null` (the default) disables retries. Bare `POST` requests are **not** retried unless the policy sets `retryNonIdempotent: true`; `POSTPUT`/`POSTDELETE` map to PUT/DELETE and stay retryable. Defaults: `maxAttempts: 3`, `baseDelayMs: 200`, `maxDelayMs: 5000`, `retryStatuses: [429, 500, 502, 503, 504]`. |
+| `Fancourier::setLogger(LoggerInterface $logger): static` | Attaches a PSR-3 logger. One record is emitted per request (`debug` on success, `error` on failure) and per token retrieval. Bearer tokens, passwords, the `Authorization` header and request bodies are **never** logged. |
+
 ## Execution flow
 
 ```

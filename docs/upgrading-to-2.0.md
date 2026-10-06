@@ -15,8 +15,8 @@ lives in [`../MIGRATION.md`](../MIGRATION.md). Start there.
 - Dead methods were removed: `Client::get_error_no()`, `Client::headers_reset()`,
   `Auth::getClientUsername()`, `Auth::getClientPassword()`, and `Fancourier::testInstance()`
   with the `Fancourier::TEST_*` constants.
-- Code lists ship as backed enums in `Fancourier\Enums\` and as constants on
-  `AbstractRequest`; adopting the enums is optional (string call sites keep working).
+- Code lists ship as backed enums in `Fancourier\Enums\`; adopting the enums is optional
+  (string call sites keep working, and setters accept `string|Enum`).
 
 ## Where to go next
 

@@ -45,8 +45,6 @@ library, no consumer action): `getUITCode`/`setUITCode` and
 
 - `Fancourier\Enums\` — string-backed enums `PaymentType`, `DeliveryMode`,
   `DocumentType`, `OrderType`, `PudoType`, `Language`, `LabelFormat`.
-- Code-list constants on `AbstractRequest` (payment/order-type/service/option/
-  PUDO/event codes), kept parallel to the enums.
 - Setters accept `string|Enum` where a code list applies; string call sites keep
   working and enum adoption is optional.
 - `Response\CreateCourierOrder::getId()`.

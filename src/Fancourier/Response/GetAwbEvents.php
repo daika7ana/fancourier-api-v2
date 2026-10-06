@@ -8,6 +8,8 @@ use Fancourier\Objects\AwbEvent;
 
 class GetAwbEvents extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var array<int|string, AwbEvent>|null */
     protected ?array $result = null;
 

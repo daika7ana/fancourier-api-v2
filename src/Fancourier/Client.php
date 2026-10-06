@@ -13,6 +13,8 @@ class Client
     private bool $is_put = false;
     private bool $is_delete = false;
 
+    private int $statusCode = 0;
+
     private bool $verify_host = true;
     private bool $verify_peer = true;
 
@@ -48,6 +50,7 @@ class Client
         }
 
         $response = curl_exec($this->curl);
+        $this->statusCode = (int) curl_getinfo($this->curl, CURLINFO_RESPONSE_CODE);
 
         if (!curl_error($this->curl) && $response && is_string($response)) {
             $this->close();
@@ -173,6 +176,14 @@ class Client
     }
 
     /*
+    * HTTP status code of the most recent transfer (0 when unknown).
+    */
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
+    }
+
+    /*
     * Add a custom header to curl
     */
     public function addHeader(string $name, string $value): static
@@ -240,6 +251,9 @@ class Client
             throw new \RuntimeException('Failed to initialise cURL');
         }
         $this->curl = $curl;
+        // reset per-request state so a stale status from a prior call can never
+        // influence the current one
+        $this->statusCode = 0;
         // init default data
         curl_setopt($this->curl, CURLOPT_USERAGENT, $this->useragent);
 
@@ -291,6 +305,7 @@ class Client
     */
     private function complete_transfer(string|false $response): string|false
     {
+        $this->statusCode = (int) curl_getinfo($this->curl, CURLINFO_RESPONSE_CODE);
         $curl_error = curl_error($this->curl);
 
         if ($curl_error !== '') {

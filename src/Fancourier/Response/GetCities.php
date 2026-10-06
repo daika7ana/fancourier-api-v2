@@ -8,6 +8,8 @@ use Fancourier\Objects\City;
 
 class GetCities extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var array<int|string, City>|null */
     protected ?array $result = null;
 

@@ -101,4 +101,5 @@ exact list is documented at the bottom of each example.
 
 | Example | Endpoint | Purpose |
 | --- | --- | --- |
+| `create_awb_bank_account.php` | `POST awb-bank-account` | Insert AWB bank account (IBAN) records |
 | `getBankTransfers.php` | `GET reports/bank-transfers` | Bank transfers for a day (paginated) |

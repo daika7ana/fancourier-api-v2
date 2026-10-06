@@ -9,6 +9,7 @@ class Generic implements ResponseInterface
     protected int|string|null $errorCode = null;
     protected ?string $errorMessage = null;
     protected mixed $data = null;
+    protected ?int $httpStatusCode = null;
 
     #[\Override]
     public function getErrorCode(): int|string|null
@@ -54,7 +55,37 @@ class Generic implements ResponseInterface
 
     public function isOk(): bool
     {
-        return empty($this->getErrorCode()) && empty($this->getErrorMessage());
+        return $this->getErrorCode() === null
+            && ($this->getErrorMessage() === null || $this->getErrorMessage() === '');
+    }
+
+    /**
+     * Clear the accumulated response state so the instance can be reused.
+     *
+     * Subclasses that keep parsed state (result lists, pagination, raw bodies)
+     * override this and clear their own properties before calling parent.
+     */
+    public function reset(): static
+    {
+        $this->errorCode = null;
+        $this->errorMessage = null;
+        $this->data = null;
+        $this->httpStatusCode = null;
+
+        return $this;
+    }
+
+    #[\Override]
+    public function getHttpStatusCode(): ?int
+    {
+        return $this->httpStatusCode;
+    }
+
+    public function setHttpStatusCode(?int $httpStatusCode): static
+    {
+        $this->httpStatusCode = $httpStatusCode;
+
+        return $this;
     }
 
     /**

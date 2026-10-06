@@ -1,7 +1,7 @@
 # Endpoint reference
 
 Every endpoint exposes one public method on `Fancourier\Fancourier` that takes a request
-object and returns a typed response object. This reference lists all 26 endpoints
+object and returns a typed response object. This reference lists all 27 endpoints
 grouped by area, with the exact gateway, HTTP method, request setters and response getters
 read from the shipped source.
 
@@ -30,6 +30,7 @@ Three endpoints take **no request argument** because they accept no parameters:
 | `createAwbExternal(CreateAwbExternal)` | `Request\CreateAwbExternal` | `POST extern-awb` | `Response\CreateAwbExternal` |
 | `printAwb(PrintAwb)` | `Request\PrintAwb` | `GET awb/label` | `Response\PrintAwb` |
 | `deleteAwb(DeleteAwb)` | `Request\DeleteAwb` | `DELETE awb` | `Response\DeleteAwb` |
+| `createAwbBankAccount(CreateAwbBankAccount)` | `Request\CreateAwbBankAccount` | `POST awb-bank-account` | `Response\CreateAwbBankAccount` |
 | `getCosts(GetCosts)` | `Request\GetCosts` | `GET reports/awb/internal-tariff` | `Response\GetCosts` |
 | `getCostsExternal(GetCostsExternal)` | `Request\GetCostsExternal` | `GET reports/awb/external-tariff` | `Response\GetCostsExternal` |
 | `getServices()` | `Request\GetServices` | `GET reports/services` | `Response\GetServices` |
@@ -70,6 +71,7 @@ equivalent PHP classes. All PHP names are relative to the `Fancourier\` namespac
 | Optiuni servicii | `[Request/Response]\GetServiceOptions` | `Objects\ServiceOption` | — |
 | Printare AWB | `[Request/Response]\PrintAwb` | — | `getData()` returns the HTML, PDF or ZPL payload. |
 | Stergere AWB | `[Request/Response]\DeleteAwb` | — | — |
+| Conturi bancare AWB | `[Request/Response]\CreateAwbBankAccount` | — | Insert bank account (IBAN) records for one or more AWBs. |
 | **AWB Intern** | | | |
 | Creare AWB Intern | `[Request/Response]\CreateAwb` | `Objects\AwbIntern` | Single and bulk creation: add `AwbIntern` objects to one request. |
 | Judete | `[Request/Response]\GetCounties` | `Objects\County` | Call `Fancourier::getCounties()` (no request object). |
@@ -185,6 +187,30 @@ Fancourier::deleteAwb(Fancourier\Request\DeleteAwb $request): Fancourier\Respons
 | `getAwb(): ?string` | Configured AWB number. |
 
 Response: `getData()` returns `bool` — `true` when the API reports `status:"success"`.
+
+### createAwbBankAccount
+
+```php
+Fancourier::createAwbBankAccount(Fancourier\Request\CreateAwbBankAccount $request): Fancourier\Response\CreateAwbBankAccount
+```
+
+- Gateway: `POST awb-bank-account`
+- Body: a **bare JSON array** of `{"awb": "...", "iban": "..."}` records (no wrapper object).
+
+| Request method | Description |
+|---|---|
+| `addRecord(string $awb, string $iban): static` | Append one AWB/IBAN record (repeatable). |
+| `getRecords(): array` | The configured records (`list<array{awb: string, iban: string}>`). |
+
+| Response method | Returns |
+|---|---|
+| `getInserted()` | `?int` — number of inserted records (`inserted`). |
+| `getMessage()` | `?string` — the success message. |
+| `getData()` | The raw `inserted` value. |
+
+Success bodies are a plain object (`{"message": "Records inserted successfully",
+"inserted": 10}`), not the `{status, data}` envelope; every other body is reported as an
+error.
 
 ---
 

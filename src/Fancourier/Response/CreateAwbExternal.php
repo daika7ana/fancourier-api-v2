@@ -14,6 +14,15 @@ class CreateAwbExternal extends Generic implements ResponseInterface
     protected array $awbList = [];
 
     #[\Override]
+    public function reset(): static
+    {
+        $this->result = null;
+        $this->awbList = [];
+
+        return parent::reset();
+    }
+
+    #[\Override]
     public function setData(mixed $datastr): static
     {
         $response_json = json_decode($datastr, true);

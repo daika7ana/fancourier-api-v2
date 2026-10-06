@@ -8,6 +8,8 @@ use Fancourier\Objects\CourierOrderEvent;
 
 class GetCourierOrderEvents extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var array<int|string, CourierOrderEvent>|null */
     protected ?array $result = null;
 

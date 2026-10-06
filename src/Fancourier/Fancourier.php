@@ -7,6 +7,7 @@ namespace Fancourier;
 use Fancourier\Request\RequestInterface;
 use Fancourier\Request\CreateAwb;
 use Fancourier\Request\CreateAwbExternal;
+use Fancourier\Request\CreateAwbBankAccount;
 use Fancourier\Request\DeleteAwb;
 use Fancourier\Request\GetServices;
 use Fancourier\Request\GetServiceOptions;
@@ -31,6 +32,7 @@ use Fancourier\Request\GetCourierOrders;
 use Fancourier\Request\GetCourierOrderEvents;
 use Fancourier\Request\TrackCourierOrder;
 use Fancourier\Request\GetBranches;
+use Psr\Log\LoggerInterface;
 
 class Fancourier
 {
@@ -44,9 +46,84 @@ class Fancourier
     protected int $conTimeout = 3;
     protected int $timeout = 6;
 
+    protected string $baseUrl = self::API_URL;
+
+    /** Optional shared transport; null means each request keeps its own. */
+    protected ?Client $client = null;
+
+    protected ?LoggerInterface $logger = null;
+    protected ?RetryPolicy $retryPolicy = null;
+
     public function __construct(string $clientId, string $username, string $password, string $bearer_token = '')
     {
         $this->auth = new Auth($clientId, $username, $password, $bearer_token);
+    }
+
+    /**
+     * Normalize a base URL to trailing-slash form; an empty string yields the
+     * given default.
+     *
+     * @internal
+     */
+    public static function normalizeBaseUrl(string $baseUrl, string $default = ''): string
+    {
+        return $baseUrl === '' ? $default : rtrim($baseUrl, '/') . '/';
+    }
+
+    /**
+     * Point the client at another base URL (sandbox, proxy, mock server).
+     */
+    public function setBaseUrl(string $baseUrl): static
+    {
+        $this->baseUrl = self::normalizeBaseUrl($baseUrl, self::API_URL);
+        $this->auth->setBaseUrl($this->baseUrl);
+
+        return $this;
+    }
+
+    /**
+     * Replace the transport for every request sent through this facade.
+     * Useful to inject a fake/custom HTTP client (e.g. in tests).
+     */
+    public function setClient(Client $client): static
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    /**
+     * Share a PSR-16 cache with the authentication layer so bearer tokens
+     * survive across processes/requests.
+     */
+    public function setTokenCache(\Psr\SimpleCache\CacheInterface $cache, string $key = 'fancourier.token'): static
+    {
+        $this->auth->setTokenCache($cache, $key);
+
+        return $this;
+    }
+
+    /**
+     * Attach a PSR-3 logger for request and token-lifecycle records. Tokens,
+     * passwords and request bodies are never logged.
+     */
+    public function setLogger(LoggerInterface $logger): static
+    {
+        $this->logger = $logger;
+        $this->auth->setLogger($logger);
+
+        return $this;
+    }
+
+    /**
+     * Opt in to retry/backoff for transient failures. `null` disables retries
+     * (the default). See {@see RetryPolicy} for the non-idempotent POST guard.
+     */
+    public function setRetryPolicy(?RetryPolicy $policy): static
+    {
+        $this->retryPolicy = $policy;
+
+        return $this;
     }
 
     /**
@@ -96,6 +173,18 @@ class Fancourier
     public function createAwbExternal(CreateAwbExternal $request): Response\CreateAwbExternal
     {
         /** @var Response\CreateAwbExternal $response */
+        $response = $this->send($request);
+
+        return $response;
+    }
+
+    /**
+     * @param CreateAwbBankAccount $request
+     * @return \Fancourier\Response\CreateAwbBankAccount
+     */
+    public function createAwbBankAccount(CreateAwbBankAccount $request): Response\CreateAwbBankAccount
+    {
+        /** @var Response\CreateAwbBankAccount $response */
         $response = $this->send($request);
 
         return $response;
@@ -245,11 +334,11 @@ class Fancourier
 
     /**
      * @param TrackAwb $request
-     * @return \Fancourier\Response\Generic
+     * @return \Fancourier\Response\TrackAwb
      */
-    public function trackAwb(TrackAwb $request): Response\Generic
+    public function trackAwb(TrackAwb $request): Response\TrackAwb
     {
-        /** @var Response\Generic $response */
+        /** @var Response\TrackAwb $response */
         $response = $this->send($request);
 
         return $response;
@@ -417,8 +506,19 @@ class Fancourier
      */
     protected function send(RequestInterface $request): Response\ResponseInterface
     {
+        $request = $request->authenticate($this->auth);
+
+        if ($this->client !== null) {
+            $request = $request->setClient($this->client);
+        }
+
+        if ($this->logger !== null) {
+            $request = $request->setLogger($this->logger);
+        }
+
         return $request
-            ->authenticate($this->auth)
+            ->setRetryPolicy($this->retryPolicy)
+            ->setBaseUrl($this->baseUrl)
             ->setVerify($this->verifyHost, $this->verifyPeer)
             ->setTimeout($this->conTimeout, $this->timeout)
             ->send();

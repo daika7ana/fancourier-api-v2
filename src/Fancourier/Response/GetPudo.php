@@ -8,6 +8,8 @@ use Fancourier\Objects\Pudo;
 
 class GetPudo extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var array<int|string, Pudo>|null */
     protected ?array $result = null;
 

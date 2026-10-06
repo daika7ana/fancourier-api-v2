@@ -15,7 +15,7 @@ says so explicitly instead of guessing.
 | [Getting started](getting-started.md) | Requirements, installation, authentication/token lifecycle, client configuration, and the request/response execution flow. |
 | [Endpoint reference](endpoints.md) | Every facade method with its request class, gateway, HTTP method, input setters, response class, response getters, and the FAN Courier docs ↔ PHP class map. |
 | [Objects reference](objects.md) | The `Fancourier\Objects\*` data holders (`AwbIntern`, `AwbExtern`, `Pudo`, …) and their getters/setters. |
-| [Enums and code lists](enums.md) | The string-backed enums in `Fancourier\Enums\` and the parallel code-list constants on `AbstractRequest`. |
+| [Enums and code lists](enums.md) | The string-backed enums in `Fancourier\Enums\`; setters accept either the enum or its string value. |
 | [Error handling](errors.md) | `isOk()`, `getErrorCode()` / `getErrorMessage()`, `status:"fail"` bodies, empty-body failures, and auth failures. |
 | [Upgrading to 2.0](upgrading-to-2.0.md) | Pointer to the full 1.x → 2.0 migration guide and the high-level break list. |
 

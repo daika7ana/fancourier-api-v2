@@ -12,4 +12,10 @@ interface ResponseInterface
     public function setErrorMessage(?string $errorMessage): static;
     public function getData(): mixed;
     public function setData(mixed $data): static;
+
+    /**
+     * HTTP status code of the transfer, or null when unknown (e.g. transport
+     * failure before a response was received).
+     */
+    public function getHttpStatusCode(): ?int;
 }

@@ -8,6 +8,8 @@ use Fancourier\Objects\AwbTracker;
 
 class TrackAwb extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var array<int|string, AwbTracker>|null */
     protected ?array $result = null;
 

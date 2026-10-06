@@ -8,6 +8,8 @@ use Fancourier\Objects\Street;
 
 class GetStreets extends PaginatedResponse
 {
+    use ResetsResult;
+
     /** @var array<int|string, Street>|null */
     protected ?array $result = null;
 

@@ -8,6 +8,8 @@ use Fancourier\Objects\Branch;
 
 class GetBranches extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var array<int|string, Branch>|null */
     protected ?array $result = null;
 

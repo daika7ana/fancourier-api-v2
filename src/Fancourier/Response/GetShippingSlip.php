@@ -8,6 +8,8 @@ use Fancourier\Objects\ShippingSlip;
 
 class GetShippingSlip extends PaginatedResponse
 {
+    use ResetsResult;
+
     /** @var array<int, ShippingSlip>|null */
     protected ?array $result = null;
 

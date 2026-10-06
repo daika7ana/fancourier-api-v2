@@ -8,6 +8,8 @@ use Fancourier\Objects\BankTransfer;
 
 class GetBankTransfers extends PaginatedResponse
 {
+    use ResetsResult;
+
     /** @var array<int, BankTransfer>|null */
     protected ?array $result = null;
 

@@ -8,6 +8,8 @@ use Fancourier\Objects\CityExternal;
 
 class GetCitiesExternal extends PaginatedResponse
 {
+    use ResetsResult;
+
     /** @var array<int|string, CityExternal>|null */
     protected ?array $result = null;
 

@@ -40,8 +40,10 @@ if ($clientId === false || $username === false || $password === false) {
 $fan = new Fancourier\Fancourier($clientId, $username, $password, $token);
 
 // examples often run from local machines; disable cURL certificate validation
-// (keep it enabled in production)
-$fan->setVerify(false, false);
+// only when explicitly opted in (keep it enabled in production)
+if (getenv('FANCOURIER_INSECURE') === '1') {
+    $fan->setVerify(false, false);
+}
 
 // without a cached token, fetch one now. Requests also fetch a token
 // automatically on first use; doing it here lets us cache it and fail fast.

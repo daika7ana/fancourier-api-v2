@@ -8,6 +8,8 @@ use Fancourier\Objects\County;
 
 class GetCounties extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var array<int|string, County>|null */
     protected ?array $result = null;
 

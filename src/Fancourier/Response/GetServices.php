@@ -8,6 +8,8 @@ use Fancourier\Objects\Service;
 
 class GetServices extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var array<int|string, Service>|null */
     protected ?array $result = null;
 

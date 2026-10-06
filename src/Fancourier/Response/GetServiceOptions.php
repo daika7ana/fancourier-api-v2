@@ -8,6 +8,8 @@ use Fancourier\Objects\ServiceOption;
 
 class GetServiceOptions extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var array<int|string, ServiceOption>|null */
     protected ?array $result = null;
 

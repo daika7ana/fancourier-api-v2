@@ -26,7 +26,7 @@ echo $cost->isOk() ? $cost->getCostTotal() : $cost->getErrorMessage();
 
 ## Why this client
 
-- **Complete coverage** — all 28 documented v2.0 endpoints, mapped 1:1 to the official spec.
+- **Complete coverage** — all documented v2.0 endpoints, mapped 1:1 to the official spec.
 - **Typed end to end** — typed requests, responses and data objects; `declare(strict_types=1)`
   repo-wide; **PHPStan level 8** with no baseline.
 - **Enums, not magic strings** — every code list ships as a string-backed enum in
@@ -37,6 +37,8 @@ echo $cost->isOk() ? $cost->getCostTotal() : $cost->getErrorMessage();
   example for every endpoint in [`examples/`](./examples/README.md).
 - **A real upgrade path** — the 1.x → 2.0 renames are codemoddable via Rector, with the full
   break list in [`MIGRATION.md`](./MIGRATION.md).
+- **Production ready** — opt-in retry/backoff (`RetryPolicy`), PSR-3 logging and a PSR-16
+  token cache; secrets are never logged and non-idempotent `POST`s are not retried by default.
 
 ## Requirements
 
@@ -241,6 +243,7 @@ Setters accept `string|Enum` throughout, so migration is opt-in. The complete li
 | `getBranches()` | `GET /reports/branches` | [`getBranches.php`](./examples/getBranches.php) |
 | `getPudo()` | `GET /reports/pickup-points` | [`getPudo.php`](./examples/getPudo.php) |
 | `getBankTransfers()` | `GET /reports/bank-transfers` | [`getBankTransfers.php`](./examples/getBankTransfers.php) |
+| `createAwbBankAccount()` | `POST /awb-bank-account` | [`create_awb_bank_account.php`](./examples/create_awb_bank_account.php) |
 
 Authentication uses `POST /login` (handled by the client).
 

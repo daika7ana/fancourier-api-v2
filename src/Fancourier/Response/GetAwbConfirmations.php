@@ -6,6 +6,8 @@ namespace Fancourier\Response;
 
 class GetAwbConfirmations extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var string|null Raw ZIP payload when the API returns a binary body. */
     protected ?string $result = null;
 

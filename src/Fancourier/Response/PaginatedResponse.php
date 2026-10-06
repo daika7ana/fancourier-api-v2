@@ -17,6 +17,17 @@ class PaginatedResponse extends Generic implements ResponseInterface
     protected ?int $currentPage = null;
     protected ?int $totalPages = null;	// total page count (computed)
 
+    #[\Override]
+    public function reset(): static
+    {
+        $this->total = null;
+        $this->perPage = null;
+        $this->currentPage = null;
+        $this->totalPages = null;
+
+        return parent::reset();
+    }
+
     public function getTotal(): int
     {
         return $this->total ?? 0;

@@ -6,6 +6,8 @@ namespace Fancourier\Response;
 
 class GetCosts extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var array<string, mixed>|null Decoded `data`; money keys normalized below, `errors` kept as-is. */
     protected ?array $result = null;
 

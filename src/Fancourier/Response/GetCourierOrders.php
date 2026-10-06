@@ -15,6 +15,17 @@ class GetCourierOrders extends Generic implements ResponseInterface
     protected ?int $currentPage = null;
 
     #[\Override]
+    public function reset(): static
+    {
+        $this->result = null;
+        $this->total = null;
+        $this->perPage = null;
+        $this->currentPage = null;
+
+        return parent::reset();
+    }
+
+    #[\Override]
     public function setData(mixed $datastr): static
     {
         $response_json = json_decode($datastr, true);

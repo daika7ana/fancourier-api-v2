@@ -8,6 +8,8 @@ use Fancourier\Objects\CourierOrderTracker;
 
 class TrackCourierOrder extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var array<int|string, CourierOrderTracker>|null */
     protected ?array $result = null;
 

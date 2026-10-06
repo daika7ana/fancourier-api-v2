@@ -327,6 +327,165 @@ final class AbstractRequestSendTest extends TestCase
         $this->assertFalse($response->isOk());
         $this->assertSame('curl boom', $response->getErrorMessage());
     }
+    #[Test]
+    public function it_uses_a_custom_base_url_when_set(): void
+    {
+        $client = (new FakeClient())->setResponse('{"ok":true}');
+        $request = $this->makeRequest('GET', ['foo' => 'bar'])
+            ->injectClient($client)
+            ->setBaseUrl('https://sandbox.example');
+        $request->authenticate($this->auth());
+
+        $request->send();
+
+        $this->assertSame('https://sandbox.example/test/gateway?foo=bar', $client->lastUrl);
+    }
+
+    #[Test]
+    public function it_uses_a_client_injected_through_set_client(): void
+    {
+        $client = (new FakeClient())->setResponse('{"ok":true}');
+        $request = $this->makeRequest('GET', ['foo' => 'bar']);
+        $request->authenticate($this->auth());
+        $request->setClient($client);
+
+        $response = $request->send();
+
+        $this->assertSame('get', $client->lastCall);
+        $this->assertSame('https://api.fancourier.ro/test/gateway?foo=bar', $client->lastUrl);
+        $this->assertTrue($response->isOk());
+    }
+
+    #[Test]
+    public function it_exposes_the_http_status_on_the_response(): void
+    {
+        $client = new class extends Client {
+            public function get(string $url): string|false
+            {
+                return '{"ok":true}';
+            }
+
+            public function getStatusCode(): int
+            {
+                return 200;
+            }
+        };
+
+        $request = $this->makeRequest('GET', [])->injectClient($client);
+        $request->authenticate($this->auth());
+
+        $response = $request->send();
+
+        $this->assertSame(200, $response->getHttpStatusCode());
+    }
+
+    /**
+     * #27 (P0): the server rejects the bearer with 401 even though the local
+     * expiry still looks valid (timezone skew). send() must refresh and retry
+     * exactly once.
+     */
+    #[Test]
+    public function it_refreshes_and_retries_when_the_api_rejects_the_bearer_with_401(): void
+    {
+        $auth = new class (1, 'u', 'p', 'stale-token') extends Auth {
+            public int $refreshCalls = 0;
+
+            public function getToken(bool $refresh = false): string|false
+            {
+                if ($refresh) {
+                    $this->refreshCalls++;
+
+                    return 'fresh-token';
+                }
+
+                return 'stale-token';
+            }
+
+            public function isTokenExpired(): bool
+            {
+                return false;
+            }
+        };
+
+        $client = new class extends Client {
+            public int $calls = 0;
+            public int $status = 0;
+
+            /** @var list<string> */
+            public array $authHeaders = [];
+
+            /** @var list<int> */
+            private array $statuses = [401, 200];
+
+            public function addHeader(string $name, string $value): static
+            {
+                if (strtolower((string) $name) === 'authorization') {
+                    $this->authHeaders[] = (string) $value;
+                }
+
+                return $this;
+            }
+
+            public function postJson(string $url, array $data): string|false
+            {
+                $this->calls++;
+                $this->status = $this->statuses[$this->calls - 1] ?? 200;
+
+                return $this->calls === 1
+                    ? '{"status":"fail","message":"Unauthorized"}'
+                    : '{"ok":true}';
+            }
+
+            public function getStatusCode(): int
+            {
+                return $this->status;
+            }
+        };
+
+        $request = $this->makeRequest('POST', ['foo' => 'bar'])->injectClient($client);
+        $request->authenticate($auth);
+
+        $response = $request->send();
+
+        $this->assertSame(2, $client->calls);
+        $this->assertSame(1, $auth->refreshCalls);
+        $this->assertSame(['Bearer stale-token', 'Bearer fresh-token'], $client->authHeaders);
+        $this->assertTrue($response->isOk());
+        $this->assertSame('{"ok":true}', $response->getData());
+    }
+
+    /**
+     * #27 (P0): a non-auth HTTP error (e.g. validation 422) must be surfaced as
+     * the API body, not trigger a pointless token refresh.
+     */
+    #[Test]
+    public function it_does_not_retry_a_non_auth_http_error(): void
+    {
+        $client = new class extends Client {
+            public int $calls = 0;
+
+            public function postJson(string $url, array $data): string|false
+            {
+                $this->calls++;
+
+                return '{"status":"fail","message":"Validation error"}';
+            }
+
+            public function getStatusCode(): int
+            {
+                return 422;
+            }
+        };
+
+        $request = $this->makeRequest('POST', [])->injectClient($client);
+        $request->authenticate($this->auth());
+
+        $response = $request->send();
+
+        $this->assertSame(1, $client->calls);
+        $this->assertSame('{"status":"fail","message":"Validation error"}', $response->getData());
+    }
+
     private function makeRequest(string $method, array $payload, string $gateway = 'test/gateway'): AbstractRequest
     {
         $request = new class ($gateway, $method, $payload) extends AbstractRequest {

@@ -8,6 +8,8 @@ use Fancourier\Objects\Country;
 
 class GetCountries extends Generic implements ResponseInterface
 {
+    use ResetsResult;
+
     /** @var array<int|string, Country>|null */
     protected ?array $result = null;
 
