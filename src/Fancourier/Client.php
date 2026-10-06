@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Fancourier;
 
 class Client {
@@ -227,7 +230,7 @@ class Client {
 	*
 	* @return string|false
 	*/
-	private function complete_transfer(string $response): string|false
+	private function complete_transfer(string|false $response): string|false
 		{
 		$curl_error = curl_error($this->curl);
 

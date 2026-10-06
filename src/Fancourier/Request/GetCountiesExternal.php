@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fancourier\Request;
 
 use Fancourier\Response\GetCountiesExternal as GetCountiesExternalResponse;

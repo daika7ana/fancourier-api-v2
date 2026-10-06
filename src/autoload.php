@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 function fancourier_autoload_class($class_name)
 	{
 	$class_name = ltrim($class_name, '\\');

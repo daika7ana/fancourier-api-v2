@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 // load the class autoloader. If you're using Composer, you don't need to use this autoloader
 require '../src/autoload.php';
 

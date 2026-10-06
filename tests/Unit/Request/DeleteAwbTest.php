@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fancourier\Tests\Unit\Request;
 
 use Fancourier\Auth;

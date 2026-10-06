@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fancourier\Response;
 
 use Fancourier\Objects\Country;
@@ -58,4 +60,3 @@ class GetCountries extends Generic implements ResponseInterface
 		return $this->result[ $name ] ?? false;
 		}
 }
-

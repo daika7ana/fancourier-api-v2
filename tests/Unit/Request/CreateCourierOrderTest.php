@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fancourier\Tests\Unit\Request;
 
 use Fancourier\Auth;
@@ -70,7 +72,7 @@ final class CreateCourierOrderTest extends TestCase
             ->setCounty('Cluj')
             ->setCity('Cluj-Napoca')
             ->setStreet('Main')
-            ->setNumber(12)
+            ->setNumber('12')
             ->setPostalCode('400001')
             ->setBuilding('B1')
             ->setEntrance('2')

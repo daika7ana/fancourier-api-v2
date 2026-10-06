@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 // initialize examples instance and autoloader
 require __DIR__.'/_init.php';
 
